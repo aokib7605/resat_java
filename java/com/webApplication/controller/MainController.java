@@ -59,16 +59,23 @@ public class MainController {
 	}
 	
 	@GetMapping("/index")
-	public String getRoot(Model model) {
+	public String goRootPage(Model model) {
 		pageName = "index";
 		pageName = checkSession(model, pageName);
 		return pageName;
 	}
 
 	@PostMapping("/index")
-	public String root(Model model, String mode) {
+	public String accessRoot(Model model, String mode, String userId, String userPass) {
 		if(mode.equals("login")) {
-			pageName = getRoot(model);
+			pageName = ls.checkLoginData(model, mode, userId, userPass);
+			if(pageName.equals("login")) {
+				System.out.println(goLoginPage(model));
+				return goLoginPage(model);
+			} else {
+				System.out.println(goRootPage(model));
+				return goRootPage(model);
+			}
 		}
 //		if(mode.equals("stageLogin")) {
 //			return oc.exeStageLogin(model, fd);
@@ -76,7 +83,6 @@ public class MainController {
 //		if(mode.equals("newStage")) {
 //			return oc.createStage(model, fd);
 //		}
-		pageName = checkSession(model, pageName);
 		return pageName;
 	}
 

@@ -2,6 +2,7 @@ package com.webApplication.entity;
 
 import java.lang.reflect.Method;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,8 +29,11 @@ public class DataEntity {
     private Date user_last_login;
     private Date user_birthday;
     private int user_hide_age;
+    
+    private String sys_stage_id;
 	
 	public void setEntity(String column, String value) {
+		System.out.println(column + " : " +value);
 		try {
 			String methodName = "set" + column.substring(0, 1).toUpperCase() + column.substring(1);
 			
@@ -46,7 +50,6 @@ public class DataEntity {
 		}
 	}
 	
-
     // 値を型に合わせて変換するヘルパーメソッド
     private Object convertValue(String value, Class<?> targetType) {
         if (targetType == int.class || targetType == Integer.class) {
@@ -55,6 +58,15 @@ public class DataEntity {
             return Double.parseDouble(value);
         } else if (targetType == boolean.class || targetType == Boolean.class) {
             return Boolean.parseBoolean(value);
+        } else if (targetType == Date.class) { // java.sql.Date に対応
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                java.util.Date parsed = formatter.parse(value);
+                return new Date(parsed.getTime()); // java.sql.Date に変換
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
         return value; // デフォルトは文字列
     }

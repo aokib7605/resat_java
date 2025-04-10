@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle}"></title>
+</head>
+
+<body>
+    <h1 th:text="${title}"></h1>
+    <h2 th:text="${title2}"></h2>
+
+    <p>ログイン中のユーザー：　<span th:text="${user.userName}"></span>　さん</p>
+
+    <h3 th:text="${stage.stageName}"></h3>
+
+    <p>
+        <a th:href="${back}">戻る</a>
+    </p>
+
+    <!-- allReservationList -->
+    <table>
+        <tr>
+            <td>公演日時</td>
+            <td>残席数</td>
+        </tr>
+        <th:block th:each="column : ${restSeatList}">
+            <tr>
+                <td><span th:text="${column.stageDate}"></span></td>
+                <td><span th:text="${column.restSeat}"></span></td>
+            </tr>
+        </th:block>
+    </table>
+
+</body>
+
+</html>

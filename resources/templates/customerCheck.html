@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle}"></title>
+</head>
+
+<body>
+    <h1 th:text="${title}"></h1>
+    <h2 th:text="${title2}"></h2>
+
+    <p>ログイン中のユーザー：　<span th:text="${user.userName}"></span>　さん</p>
+
+    <h3 th:text="${stage.stageName}"></h3>
+
+    <!-- 各種メニュー -->
+    <ul>
+        <th:block th:each="column : ${linkList}">
+            <li><a th:href="${column.value}"><span th:text="${column.page}"></span></a></li>
+        </th:block>
+    </ul>
+    <hr>
+
+    <!-- customerCheckメニュー -->
+    <ul>
+        <th:block th:each="column : ${customerCheckLinkList}">
+            <li><a th:href="${column.value}"><span th:text="${column.page}"></span></a></li>
+        </th:block>
+    </ul>
+
+    <hr>
+    <p>
+    <form action="/" method="post">
+        <input type="hidden" name="mode" value="logout">
+        <input type="submit" value="ログアウト">
+    </form>
+    </p>
+
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle}"></title>
+</head>
+
+<body>
+    <h1 th:text="${title}"></h1>
+    <h2 th:text="${title2}"></h2>
+
+    <p>ログイン中のユーザー：　<span th:text="${user.userName}"></span>　さん</p>
+
+    <h3 th:text="${stage.stageName}"></h3>
+
+    <p th:if="${myReserveList.size == 0}" th:text="予約されたステージがありません" style="color: red;"></p>
+
+    <p>
+        <a th:href="${back}">戻る</a>
+    </p>
+
+    <!-- myReservationList -->
+    <table th:if="${myReserveList.size != 0}">
+        <tr>
+            <td>お名前</td>
+            <td>フリガナ</td>
+            <td>公演日時</td>
+            <td>チケット料金</td>
+            <td>枚数</td>
+            <td>お支払い金額</td>
+            <td>扱い</td>
+            <td>団体メモ</td>
+            <td>購入日</td>
+            <td>備考</td>
+            <td>メールアドレス</td>
+            <td>電話番号</td>
+        </tr>
+        <th:block th:each="column : ${myReserveList}">
+            <tr>
+                <td><span th:text="${column.customerName}"></span></td>
+                <td><span th:text="${column.customerKanaName}"></span></td>
+                <td><span th:text="${column.stageDate}"></span></td>
+                <td><span th:text="${column.ticketPrice}"></span></td>
+                <td><span th:text="${column.amount}"></span></td>
+                <td><span th:text="${column.totalPrice}"></span></td>
+                <td><span th:text="${column.manager}"></span></td>
+                <td><span th:text="${column.memo}"></span></td>
+                <td><span th:text="${column.date}"></span></td>
+                <td><span th:text="${column.comment}"></span></td>
+                <td><span th:text="${column.email}" th:if="${column.email != null}"></span></td>
+                <td><span th:text="${column.tell}" th:if="${column.tell != null}"></span></td>
+            </tr>
+        </th:block>
+    </table>
+
+</body>
+
+</html>

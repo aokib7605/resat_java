@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle}"></title>
+</head>
+
+<body>
+    <h1 th:text="${title}"></h1>
+    <h2 th:text="${title2}"></h2>
+
+    <p>ログイン中のユーザー：　<span th:text="${user.userName}"></span>　さん</p>
+
+    <h3 th:text="${stage.stageName}"></h3>
+
+    <p th:if="${myReserveList == null}" th:text="予約されたステージがありません" style="color: red;"></p>
+
+    <p>
+        <a th:href="${back}">戻る</a>
+    </p>
+
+    <!-- totalCustomer -->
+    <table th:if="${myReserveList.size != 0}">
+        <tr>
+            <td>日時</td>
+            <td>人数</td>
+        </tr>
+        <th:block th:each="column : ${totalCustomer}">
+            <tr>
+                <td><span th:text="${column.stageDate}"></span></td>
+                <td><span th:text="${column.totalCustomer}"></span></td>
+            </tr>
+        </th:block>
+    </table>
+
+    <hr>
+
+    <!-- totalTicketCustomer -->
+    <table th:if="${myReserveList.size != 0}">
+        <tr>
+            <td>チケット名</td>
+            <td>チケット料金</td>
+            <td>日時</td>
+            <td>人数</td>
+            <td>チケット別合計金額</td>
+        </tr>
+        <th:block th:each="column : ${totalTicketCustomer}">
+            <tr>
+                <td><span th:text="${column.ticketName}"></span></td>
+                <td><span th:text="${column.ticketPrice}"></span></td>
+                <td><span th:text="${column.stageDate}"></span></td>
+                <td><span th:text="${column.totalCustomer}"></span></td>
+                <td><span th:text="${column.totalPrice}"></span></td>
+            </tr>
+        </th:block>
+    </table>
+
+    <hr>
+
+    <!-- totalManagerCustomer -->
+    <table th:if="${myReserveList.size != 0}">
+        <tr>
+            <td>担当</td>
+            <td>人数</td>
+            <td>売り上げ金額</td>
+        </tr>
+        <th:block th:each="column : ${totalManagerCustomer}">
+            <tr>
+                <td><span th:text="${column.manager}"></span></td>
+                <td><span th:text="${column.totalCustomer}"></span></td>
+                <td><span th:text="${column.totalPrice}"></span></td>
+            </tr>
+        </th:block>
+    </table>
+
+</body>
+
+</html>

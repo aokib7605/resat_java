@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DataEntity {
 	
+	//users
     private String sys_user_id;
     private String sys_user_mode;
     private int sys_user_ev;
@@ -30,7 +31,22 @@ public class DataEntity {
     private Date user_birthday;
     private int user_hide_age;
     
+    //stages
     private String sys_stage_id;
+    private String sys_group_id;
+    private String stage_id;
+    private String stage_pass;
+    private String stage_name;
+    private Integer stage_attract_customers;
+    private String stage_url_title;
+    private String stage_place_name;
+    private String stage_open_minutes;
+    private String stage_runtime;
+    private String stage_story;
+    private Date stage_cre_date;
+    private Integer stage_opener;
+    private String stage_flyer_1;
+    private String stage_flyer_2;
 	
 	public void setEntity(String column, String value) {
 		System.out.println(column + " : " +value);
@@ -58,7 +74,8 @@ public class DataEntity {
             return Double.parseDouble(value);
         } else if (targetType == boolean.class || targetType == Boolean.class) {
             return Boolean.parseBoolean(value);
-        } else if (targetType == Date.class) { // java.sql.Date に対応
+        } else if (targetType == Date.class) { 
+        	// java.sql.Date に対応
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 java.util.Date parsed = formatter.parse(value);

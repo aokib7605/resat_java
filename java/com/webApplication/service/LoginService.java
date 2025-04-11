@@ -1,7 +1,5 @@
 package com.webApplication.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
@@ -25,24 +23,7 @@ public class LoginService {
 	}
 	
 	public String checkLoginData(Model model, String pageName, String userId, String userPass) {
-		List<String> columns = new ArrayList<String>(Arrays.asList(
-				"sys_user_id",
-				"sys_user_mode",
-				"sys_user_ev",
-				"user_id",
-				"user_mail",
-				"user_tell",
-				"user_name",
-				"user_kana_name",
-				"user_stage_name",
-				"user_stage_kana_name",
-				"user_pass",
-				"user_def_stage",
-				"user_cre_date",
-				"user_last_login",
-				"user_birthday",
-				"user_hide_age"
-				));
+		List<String> columns = mr.getUsersTableColumns();
 		String where = "where user_id = '" + userId + "'";
 		DataEntity userData = mr.getData("users", columns, where);
 		if(userData == null) {
@@ -62,7 +43,7 @@ public class LoginService {
 	}
 	
 	public void setDefaultStage(DataEntity userData) {
-		List<String> columns = new ArrayList<String>(Arrays.asList("sys_stage_id"));
+		List<String> columns = mr.getStagesTableColumns();
 		String where = "where sys_stage_id = '" + userData.getUser_def_stage() + "'";
 		DataEntity stageData = mr.getData("stages", columns, where);
 		if(stageData != null) {

@@ -10,20 +10,20 @@
     <h1 th:text="${title}"></h1>
     <h2 th:text="${title2}"></h2>
 
-    <p>ログイン中のユーザー：　<span th:text="${user.userName}"></span>　さん</p>
+    <p>ログイン中のユーザー：　<span th:text="${user.user_name}"></span>　さん</p>
 
-    <h3 th:text="${stage.stageName}"></h3>
+    <h3 th:text="${stage.stage_name}"></h3>
 
     <!-- 各種メニュー -->
     <ul>
-        <th:block th:each="column : ${linkList}">
+        <!--<th:block th:each="column : ${linkList}">
             <li><a th:href="${column.value}"><span th:text="${column.page}"></span></a></li>
-        </th:block>
+        </th:block>-->
     </ul>
     <hr>
 
     <p>
-    <form action="/" method="post">
+    <form action="/login" method="post">
         <input type="hidden" name="mode" value="logout">
         <input type="submit" value="ログアウト">
     </form>

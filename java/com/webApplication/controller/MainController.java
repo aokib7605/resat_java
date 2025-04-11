@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.webApplication.service.IndexService;
 import com.webApplication.service.LoginService;
 
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,7 @@ public class MainController {
 	// ===================================================================
 	// 各メニューへの遷移メソッド
 	private final LoginService ls;
+	private final IndexService is;
 	
 	@GetMapping("/login")
 	public String goLoginPage(Model model) {
@@ -58,8 +60,15 @@ public class MainController {
 		return pageName;
 	}
 	
+	@PostMapping("/login")
+	public String accessLogin(Model model, String mode) {
+		return goLoginPage(model);
+	}
+	
 	@GetMapping("/index")
 	public String goRootPage(Model model) {
+		setEnvData(model);
+		is.setPageInfo(model);
 		pageName = "index";
 		pageName = checkSession(model, pageName);
 		return pageName;
@@ -70,10 +79,8 @@ public class MainController {
 		if(mode.equals("login")) {
 			pageName = ls.checkLoginData(model, mode, userId, userPass);
 			if(pageName.equals("login")) {
-				System.out.println(goLoginPage(model));
 				return goLoginPage(model);
 			} else {
-				System.out.println(goRootPage(model));
 				return goRootPage(model);
 			}
 		}

@@ -2,6 +2,8 @@ package com.webApplication.repository;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -56,5 +58,48 @@ public class MainRepository {
 			// TODO: handle exception
 		}
 		return null;
+	}
+	
+	public List<String> getUsersTableColumns(){
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_user_id",
+				"sys_user_mode",
+				"sys_user_ev",
+				"user_id",
+				"user_mail",
+				"user_tell",
+				"user_name",
+				"user_kana_name",
+				"user_stage_name",
+				"user_stage_kana_name",
+				"user_pass",
+				"user_def_stage",
+				"user_cre_date",
+				"user_last_login",
+				"user_birthday",
+				"user_hide_age"
+				));
+		return columns;
+	}
+	
+	public List<String> getStagesTableColumns(){
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_stage_id",
+				"sys_group_id",
+				"stage_id",
+				"stage_pass",
+				"stage_name",
+				"stage_attract_customers",
+				"stage_url_title",
+				"stage_place_name",
+				"stage_open_minutes",
+				"stage_runtime",
+				"stage_story",
+				"stage_cre_date",
+				"stage_opener",
+				"stage_flyer_1",
+				"stage_flyer_2"
+				));
+		return columns;
 	}
 }

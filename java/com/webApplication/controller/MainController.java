@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.webApplication.service.EnvService;
 import com.webApplication.service.IndexService;
 import com.webApplication.service.LoginService;
 
@@ -19,6 +20,7 @@ public class MainController {
 	
 	// ===================================================================
 	private final HttpSession session;
+	private final EnvService es;
 	private String pageName = "";	//遷移先のページ名
 	
 	private String checkSession(Model model, String pageName) {
@@ -43,8 +45,14 @@ public class MainController {
 		}
 	}
 	
-	private void setEnvData(Model model) {
+	private void setEnvData(Model model, String mode) {
 		model.addAttribute("title", "予約管理システム りざっと");
+		setMenuList(model, mode);
+	}
+	
+	private void setMenuList(Model model, String mode) {
+		//mode には「manager」「customer」のいずれかを格納
+		es.setMenuList(model, mode);
 	}
 	
 	// ===================================================================
@@ -54,7 +62,7 @@ public class MainController {
 	
 	@GetMapping("/login")
 	public String goLoginPage(Model model) {
-		setEnvData(model);
+		setEnvData(model, "manager");
 		ls.setPageInfo(model);
 		pageName = "login";
 		return pageName;
@@ -67,7 +75,7 @@ public class MainController {
 	
 	@GetMapping("/index")
 	public String goRootPage(Model model) {
-		setEnvData(model);
+		setEnvData(model, "manager");
 		is.setPageInfo(model);
 		pageName = "index";
 		pageName = checkSession(model, pageName);
@@ -107,14 +115,14 @@ public class MainController {
 //		pageName = checkSession(pageName);
 //		return pageName;
 //	}
-//
-//	@GetMapping("/forms")
-//	public String clickForms(Model model) {
-//		pageName = "option";
-//		pageName = checkSession(pageName);
-//		return pageName;
-//	}
-//
+
+	@GetMapping("/forms")
+	public String clickForms(Model model) {
+		pageName = "option";
+		pageName = checkSession(model, pageName);
+		return pageName;
+	}
+
 //	@GetMapping("/forms/ownerForm")
 //	public String clickOwnerForm(Model model) {
 //		pageName = "option";
@@ -150,7 +158,7 @@ public class MainController {
 //			return rc.goReservationPage(model, fd.getForm(), fd.getSt(), fd.getMa());
 //		}
 //	}
-//
+
 //	@PostMapping("/reservation")
 //	public String confiInputForm(Model model, @ModelAttribute FormData fd) {
 //		if(fd.getMode().equals("inputForm")) {
@@ -495,12 +503,12 @@ public class MainController {
 //		return pageName;
 //	}
 //
-//	@GetMapping("/option")
-//	public String clickOption(Model model) {
-//		pageName = "option";
-//		pageName = checkSession(pageName);
-//		return pageName;
-//	}
+	@GetMapping("/option")
+	public String clickOption(Model model) {
+		pageName = "option";
+		pageName = checkSession(model, pageName);
+		return pageName;
+	}
 
 	@GetMapping("option/stageSelect")
 	public String goStageSelect(Model model) {

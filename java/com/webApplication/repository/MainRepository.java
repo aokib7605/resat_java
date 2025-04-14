@@ -19,7 +19,10 @@ import lombok.RequiredArgsConstructor;
 public class MainRepository {
 	private final JdbcTemplate tmp;
 	private String sql = "";
-	
+
+	// 基本のメソッド
+	// ===================================================================== //
+
 	private DataEntity setData(Map<String, Object> dbObj, List<String> columns) {
 		DataEntity data = new DataEntity();
 		try {
@@ -47,11 +50,10 @@ public class MainRepository {
 		}
 		return data;
 	}
-	
+
 	public DataEntity getData(String table, List<String> columns, String where) {
 		try {
-			String columnsStr = String.join(", ", columns);
-			sql = "select " + columnsStr + " from " + table + " " + where;
+			sql = "select " + "*" + " from " + table + " " + where;
 			Map<String, Object> dbObj = tmp.queryForMap(sql);
 			return setData(dbObj, columns);
 		} catch (Exception e) {
@@ -59,7 +61,11 @@ public class MainRepository {
 		}
 		return null;
 	}
-	
+
+
+	// カラム一覧をまとめたメソッド
+	// ===================================================================== //
+
 	public List<String> getUsersTableColumns(){
 		List<String> columns = new ArrayList<String>(Arrays.asList(
 				"sys_user_id",
@@ -81,7 +87,7 @@ public class MainRepository {
 				));
 		return columns;
 	}
-	
+
 	public List<String> getStagesTableColumns(){
 		List<String> columns = new ArrayList<String>(Arrays.asList(
 				"sys_stage_id",
@@ -99,6 +105,31 @@ public class MainRepository {
 				"stage_opener",
 				"stage_flyer_1",
 				"stage_flyer_2"
+				));
+		return columns;
+	}
+
+	public List<String> getGroupesTableColumns(){
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_group_id",
+				"group_id",
+				"group_name",
+				"group_kana_name",
+				"group_pass",
+				"group_mail",
+				"group_cre_date",
+				"group_last_login"
+				));
+		return columns;
+	}
+
+	public List<String> getGroupe_login_listTableColumns(){
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_group_id",
+				"sys_user_id",
+				"group_authority",
+				"user_spe_name",
+				"user_spe_name_ev"
 				));
 		return columns;
 	}

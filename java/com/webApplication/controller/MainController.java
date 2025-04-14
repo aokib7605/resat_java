@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.webApplication.service.CreateUserService;
 import com.webApplication.service.EnvService;
 import com.webApplication.service.IndexService;
 import com.webApplication.service.LoginService;
@@ -59,26 +60,33 @@ public class MainController {
 	// 各メニューへの遷移メソッド
 	private final LoginService ls;
 	private final IndexService is;
+	private final CreateUserService cus;
 	
 	@GetMapping("/login")
 	public String goLoginPage(Model model) {
-		setEnvData(model, "manager");
-		ls.setPageInfo(model);
 		pageName = "login";
+		setEnvData(model, "login");
+		ls.setPageInfo(model);
 		return pageName;
 	}
 	
 	@PostMapping("/login")
 	public String accessLogin(Model model, String mode) {
+		if(mode.equals("logout")) {
+			session.invalidate();
+			model.addAttribute("message", "ログアウトしました");
+		}
 		return goLoginPage(model);
 	}
 	
 	@GetMapping("/index")
 	public String goRootPage(Model model) {
-		setEnvData(model, "manager");
-		is.setPageInfo(model);
 		pageName = "index";
 		pageName = checkSession(model, pageName);
+		if(pageName.equals("index")) {
+			setEnvData(model, "manager");
+			is.setPageInfo(model);
+		}
 		return pageName;
 	}
 
@@ -312,14 +320,18 @@ public class MainController {
 //		pageName = checkSession(pageName);
 //		return pageName;
 //	}
-//
-//	@GetMapping("/stageSetting")
-//	public String clickStageSetting(Model model) {
-//		pageName = "option";
-//		pageName = checkSession(pageName);
-//		return pageName;
-//	}
-//
+
+	@GetMapping("/setStage")
+	public String goSetStage(Model model) {
+		pageName = "setStage";
+		pageName = checkSession(model, pageName);
+		if(pageName.equals("setStage")) {
+			setEnvData(model, "manager");
+			is.setPageInfo(model);
+		}
+		return pageName;
+	}
+
 //	@GetMapping("/stageSetting/stageInfo")
 //	public String clickStageInfo(Model model) {
 //		pageName = "option";
@@ -682,16 +694,39 @@ public class MainController {
 //		pageName = checkSession(pageName);
 //		return pageName;
 //	}
-//
-//	@GetMapping("/userCreate")
-//	public String clickUserCreate(Model model) {
-//		pageName = "option";
-//		pageName = checkSession(pageName);
-//		return pageName;
-//	}
-//
-//	@PostMapping("/userCreate")
-//	public String inputUserCreateForm(Model model, @ModelAttribute FormData fd) {
-//		return sc.confiUserCreate(model, fd);
-//	}
+
+	@GetMapping("/createUser")
+	public String goCreateUser(Model model, String mode, String data) {
+		pageName = "createUser";
+		setEnvData(model, "createUser");
+		if(mode.equals("start")) {
+			cus.start(model);
+		} else if(mode.equals("confiData")){
+			cus.confiMail(model, data);
+		}
+		return pageName;
+	}
+
+	@PostMapping("/createUser")
+	public String inputUserCreateForm(Model model, String mode, String userMail) {
+		String pageName = "createUser";
+		switch (mode) {
+		case "checkMail": {
+			if(cus.checkMail(model, userMail) == false) {
+				mode = "start";
+			}
+			break;
+		}
+		case "confiMail":{
+			cus.confiMail(model, mode);
+		}
+		default:
+			
+		}
+		if(pageName.equals("createUser")) {
+			return goCreateUser(model, mode, null);
+		} else {
+			return goRootPage(model);
+		}
+	}
 }

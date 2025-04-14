@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}"></title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <div class="center_container">
+        <h1 th:text="${title}"></h1>
+        <h2 th:text="${title2}"></h2>
+
+        <div th:switch="${mode}">
+            <div th:case="'checkMail'">
+                <form action="/createUser" method="post">
+                    <input type="hidden" name="mode" value="checkMail">
+                    <p>
+                        メールアドレス<br>
+                        <input type="email" name="userMail" required placeholder="登録済みアドレスは使用不可">
+                    </p>
+                    <p> <input type="submit" value="確認"></p>
+                    <p th:text="${message}" style="color: red;"></p>
+                </form>
+            </div>
+            <div th:case="'confiMail'">
+                <p th:utext="${message}"></p>
+            </div>
+            <div th:case="'inputStart'">
+                <form action="/createUser" method="post">
+                    <input type="hidden" name="mode" value="createUser">
+                    <input type="hidden" name="userMail" th:value="${userMail}">
+                    <p>
+                        ユーザーID<br>
+                        <input type="text" name="userId" required>
+                    </p>
+                    <p>
+                        ユーザーネーム<br>
+                        <input type="text" name="userName" required>
+                    </p>
+                    <p>
+                        ユーザーネーム（フリガナ）<br>
+                        <input type="text" name="userKanaName" required>
+                    </p>
+                    <p>
+                        パスワード<br>
+                        <input type="text" name="userPass" required>
+                    </p>
+                    <p>
+                        パスワード再入力<br>
+                        <input type="text" name="rePass" required>
+                    </p>
+                    <p>
+                        電話番号<br>
+                        <input type="tel" name="userTel" placeholder="任意入力">
+                    </p>
+                    <p>
+                        芸名<br>
+                        <input type="text" name="userStageName" placeholder="任意入力">
+                    </p>
+                    <p>
+                        芸名（フリガナ）<br>
+                        <input type="text" name="userStageKanaName" placeholder="任意入力">
+                    </p>
+                    <p>
+                        生年月日<br>
+                        <input type="date" name="userBirthday" id="userBirthday" required><br>
+                        生まれ年を非公開にする <input type="checkbox"><br>
+                        誕生日を非公開にする <input type="checkbox">
+                    </p>
+                    <p> <input type="submit" value="新規登録"></p>
+                    <p th:text="${message}" style="color: red;"></p>
+                </form>
+            </div>
+        </div>
+        <p>
+            <a href="/login">キャンセル</a>
+        </p>
+    </div>
+</body>
+
+</html>

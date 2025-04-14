@@ -47,6 +47,24 @@ public class DataEntity {
     private Integer stage_opener;
     private String stage_flyer_1;
     private String stage_flyer_2;
+    
+    //groupes
+//    private String sys_group_id;	//(= stages, group_login_list)
+    private String group_id;
+    private String group_name;
+    private String group_kana_name;
+    private String group_pass;
+    private String group_mail;
+    private Date group_cre_date;
+    private Date group_last_login;
+    
+    //group_login_list
+//    private String sys_group_id;	//(= stages, groupes)
+//    private String sys_user_id;	//(= users)
+    private Integer group_authority;
+    private String user_spe_name;
+    private Integer user_spe_name_ev;
+
 	
 	public void setEntity(String column, String value) {
 		System.out.println(column + " : " +value);

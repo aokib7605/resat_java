@@ -41,23 +41,27 @@ public class EnvService {
 			model.addAttribute("menuList_manage", menuList_manage);
 			model.addAttribute("menuList_manage_title", "票券管理");
 			
+			ArrayList<MenuEntity> menuList_tools = new ArrayList<MenuEntity>();
+			menuList_tools.add(getMenuObject("メール配信", "sendMail"));
+			menuList_tools.add(getMenuObject("Excel出力", "exportExcel"));
+			model.addAttribute("menuList_tools", menuList_tools);
+			model.addAttribute("menuList_tools_title", "便利機能");
+			
 			ArrayList<MenuEntity> menuList_group = new ArrayList<MenuEntity>();
 			menuList_group.add(getMenuObject("公演の新規作成", "createStage"));
 			menuList_group.add(getMenuObject("公演一覧", "checkStageList"));
 			menuList_group.add(getMenuObject("団体基本情報", "setGroup"));
 			menuList_group.add(getMenuObject("団体メンバー", "setGroupGroupMember"));
 			model.addAttribute("menuList_group", menuList_group);
-//			model.addAttribute("menuList_group_title", stageData.getStage_name());
-			model.addAttribute("menuList_group_title", "劇団抜きにくい釘");
+			model.addAttribute("menuList_group_title", userData.getGroup_name());
 			
 			ArrayList<MenuEntity> menuList_user = new ArrayList<MenuEntity>();
 			menuList_user.add(getMenuObject("公演の切替・参加", "changeStage"));
-			menuList_user.add(getMenuObject("団体の切替・参加", "changeStage"));
-			menuList_user.add(getMenuObject("ユーザー基本情報", "changeStage"));
+			menuList_user.add(getMenuObject("団体の切替・参加", "changeGroup"));
+			menuList_user.add(getMenuObject("ユーザー基本情報", "setUser"));
 			model.addAttribute("menuList_user", menuList_user);
 			model.addAttribute("menuList_user_title", userData.getUser_name());
 		}
-		
 	}
 	
 	private MenuEntity getMenuObject(String pageName, String pageUrl) {

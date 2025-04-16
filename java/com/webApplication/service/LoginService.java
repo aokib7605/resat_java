@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.webApplication.entity.DataEntity;
+import com.webApplication.functions.Pub;
 import com.webApplication.repository.MainRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class LoginService {
 		}
 		pageName = "index";
 		session.setAttribute("userSession", userData);
+		updateLastLogin(userData.getSys_user_id(), userData.getSys_group_id());
 		setDefaultStage(userData);
 		return pageName;
 	}
@@ -51,6 +53,15 @@ public class LoginService {
 		DataEntity stageData = mr.getData("stages", columns, where);
 		if(stageData != null) {
 			session.setAttribute("defStSession", stageData);
+		}
+	}
+	
+	private void updateLastLogin(String sysUserId, String sysGroupId) {
+		String where = "where sys_user_id = '" + sysUserId + "'";
+		mr.updateData("users", "user_last_login", Pub.getCurrentDate() + "", where);
+		if(sysGroupId != null) {
+			where = "where sys_group_id = '" + sysGroupId + "'";
+			mr.updateData("groupes", "group_last_login", Pub.getCurrentDate() + "", where);
 		}
 	}
 }

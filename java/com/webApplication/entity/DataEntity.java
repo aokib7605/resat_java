@@ -86,6 +86,9 @@ public class DataEntity {
 	
     // 値を型に合わせて変換するヘルパーメソッド
     private Object convertValue(String value, Class<?> targetType) {
+    	if(value == null) {
+    		return null;
+    	}
         if (targetType == int.class || targetType == Integer.class) {
             return Integer.parseInt(value);
         } else if (targetType == double.class || targetType == Double.class) {

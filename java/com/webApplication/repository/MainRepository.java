@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.webApplication.entity.DataEntity;
+import com.webApplication.functions.Pub;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,22 +28,24 @@ public class MainRepository {
 		DataEntity data = new DataEntity();
 		try {
 			for(String column : columns) {
-				try {
-					String record = (Integer)dbObj.get(column) + "";
-					data.setEntity(column, record);
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-				try {
-					String record = new SimpleDateFormat("yyyy-MM-dd").format((Date)dbObj.get(column));
-					data.setEntity(column, record);
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-				try {
-					data.setEntity(column, (String)dbObj.get(column));					
-				} catch (Exception e) {
-					// TODO: handle exception
+				if(dbObj.get(column) != null) {
+					try {
+						String record = (Integer)dbObj.get(column) + "";
+						data.setEntity(column, record);
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+					try {
+						String record = new SimpleDateFormat("yyyy-MM-dd").format((Date)dbObj.get(column));
+						data.setEntity(column, record);
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+					try {
+						data.setEntity(column, (String)dbObj.get(column));					
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -60,6 +63,24 @@ public class MainRepository {
 			// TODO: handle exception
 		}
 		return null;
+	}
+
+	public void insertData(String table, List<String> columns, List<String> values) {
+		try {
+			sql = "insert into " + table + "(" + Pub.convertListToStr(columns) + ") values(" + Pub.convertListToQuotedStr(values) + ")";
+			tmp.update(sql);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void updateData(String table, String column, String value, String where) {
+		try {
+			sql = "update " + table + " set " + column + " = '" + value + "' " + where;
+			tmp.update(sql);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 	}
 
 

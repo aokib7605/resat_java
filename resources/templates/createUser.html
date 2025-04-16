@@ -12,6 +12,7 @@
         <h1 th:text="${title}"></h1>
         <h2 th:text="${title2}"></h2>
 
+        <!-- model.addAttribute('mode')の値で表示内容を分岐 -->
         <div th:switch="${mode}">
             <div th:case="'checkMail'">
                 <form action="/createUser" method="post">
@@ -27,21 +28,38 @@
             <div th:case="'confiMail'">
                 <p th:utext="${message}"></p>
             </div>
-            <div th:case="'inputStart'">
+            <div th:case="'inputUserId'">
                 <form action="/createUser" method="post">
-                    <input type="hidden" name="mode" value="createUser">
+                    <input type="hidden" name="mode" value="inputUserId">
                     <input type="hidden" name="userMail" th:value="${userMail}">
                     <p>
                         ユーザーID<br>
-                        <input type="text" name="userId" required>
+                        <input type="text" name="userId" th:value="${userId}" required>
                     </p>
+                    <p> <input type="submit" value="確定"></p>
+                    <p th:text="${message}" style="color: red;"></p>
+                </form>
+            </div>
+            <div th:case="'inputBaseData'">
+                <form action="/createUser" method="post">
+                    <input type="hidden" name="mode" value="inputBaseData">
+                    <input type="hidden" name="userMail" th:value="${userMail}">
+                    <input type="hidden" name="userId" th:value="${userId}">
                     <p>
                         ユーザーネーム<br>
-                        <input type="text" name="userName" required>
+                        <input type="text" name="userName" th:value="${userName}" required>
                     </p>
                     <p>
                         ユーザーネーム（フリガナ）<br>
-                        <input type="text" name="userKanaName" required>
+                        <input type="text" name="userKanaName" th:value="${userKanaName}" required>
+                    </p>
+                    <p>
+                        芸名<br>
+                        <input type="text" name="userStageName" th:value="${userStageName}" placeholder="任意入力">
+                    </p>
+                    <p>
+                        芸名（フリガナ）<br>
+                        <input type="text" name="userStageKanaName" th:value="${userStageKanaName}" placeholder="任意入力">
                     </p>
                     <p>
                         パスワード<br>
@@ -51,28 +69,130 @@
                         パスワード再入力<br>
                         <input type="text" name="rePass" required>
                     </p>
+                    <p> <input type="submit" value="確定"></p>
+                    <p th:text="${message}" style="color: red;"></p>
+                </form>
+                <form action="/createUser" method="post">
+                    <input type="hidden" name="mode" value="inputBaseData">
+                    <input type="hidden" name="userMail" th:value="${userMail}">
+                    <input type="hidden" name="userId" th:value="${userId}">
+                    <input type="hidden" name="back" value="back">
+                    <p> <input type="submit" value="戻る"></p>
+                </form>
+            </div>
+            <div th:case="'inputContactData'">
+                <form action="/createUser" method="post">
+                    <input type="hidden" name="mode" value="inputContactData">
+                    <input type="hidden" name="userMail" th:value="${userMail}">
+                    <input type="hidden" name="userId" th:value="${userId}">
+                    <input type="hidden" name="userName" th:value="${userName}">
+                    <input type="hidden" name="userKanaName" th:value="${userKanaName}">
+                    <input type="hidden" name="userStageName" th:value="${userStageName}">
+                    <input type="hidden" name="userStageKanaName" th:value="${userStageKanaName}">
+                    <input type="hidden" name="userPass" th:value="${userPass}">
                     <p>
                         電話番号<br>
-                        <input type="tel" name="userTel" placeholder="任意入力">
-                    </p>
-                    <p>
-                        芸名<br>
-                        <input type="text" name="userStageName" placeholder="任意入力">
-                    </p>
-                    <p>
-                        芸名（フリガナ）<br>
-                        <input type="text" name="userStageKanaName" placeholder="任意入力">
+                        <input type="tel" name="userTel" placeholder="任意入力" th:value="${userTel}">
                     </p>
                     <p>
                         生年月日<br>
-                        <input type="date" name="userBirthday" id="userBirthday" required><br>
-                        生まれ年を非公開にする <input type="checkbox"><br>
-                        誕生日を非公開にする <input type="checkbox">
+                        <input type="date" name="userBirthday" id="userBirthday" th:value="${userBirthday}" required><br>
+                        生まれ年を非公開にする <span th:if="${hideBirthYear == null || hideBirthYear == ''}"><input type="checkbox" name="hideBirthYear"></span>
+                        <span th:if="${hideBirthYear != null && hideBirthYear != ''}"><input type="checkbox" name="hideBirthYear" checked></span><br>
                     </p>
-                    <p> <input type="submit" value="新規登録"></p>
+                    <p>
+                        アカウント設定<br>
+                        顧客アカウントと併用する <span th:if="${userMode == null || userMode == ''}"><input type="checkbox" name="userMode"></span>
+                        <span th:if="${userMode != null && userMode != ''}"><input type="checkbox" name="userMode" checked></span>
+                        <br>
+                        ※お客様として公演を予約する際、このアカウントが使用可能になります
+                    </p>
+                    <p> <input type="submit" value="確定"></p>
                     <p th:text="${message}" style="color: red;"></p>
                 </form>
+                <form action="/createUser" method="post">
+                    <input type="hidden" name="mode" value="inputContactData">
+                    <input type="hidden" name="userMail" th:value="${userMail}">
+                    <input type="hidden" name="userId" th:value="${userId}">
+                    <input type="hidden" name="userName" th:value="${userName}">
+                    <input type="hidden" name="userKanaName" th:value="${userKanaName}">
+                    <input type="hidden" name="userStageName" th:value="${userStageName}">
+                    <input type="hidden" name="userStageKanaName" th:value="${userStageKanaName}">
+                    <input type="hidden" name="userPass" th:value="${userPass}">
+                    <input type="hidden" name="back" value="back">
+                    <p> <input type="submit" value="戻る"></p>
+                </form>
             </div>
+            <div th:case="'confiResult'">
+                <p>
+                    下記の内容でユーザーを登録します。<br>
+                    よろしければ「登録」を、修正する場合は「戻る」を押してください。
+                </p>
+                <table>
+                    <tr>
+                        <th>Eメール</th>
+                        <td th:text="${userMail}"></td>
+                    </tr>
+                    <tr>
+                        <th>ユーザーID</th>
+                        <td th:text="${userId}"></td>
+                    </tr>
+                    <tr>
+                        <th>ユーザーネーム</th>
+                        <td th:text="${userName}"></td>
+                    </tr>
+                    <tr>
+                        <th>ユーザーネーム（フリガナ）</th>
+                        <td th:text="${userKanaName}"></td>
+                    </tr>
+                    <tr>
+                        <th>芸名</th>
+                        <td th:text="${userStageName}"></td>
+                    </tr>
+                    <tr>
+                        <th>芸名（フリガナ）</th>
+                        <td th:text="${userStageKanaName}"></td>
+                    </tr>
+                    <tr>
+                        <th>パスワード</th>
+                        <td th:text="${userPass}"></td>
+                    </tr>
+                    <tr>
+                        <th>電話番号</th>
+                        <td th:text="${userTel}"></td>
+                    </tr>
+                    <tr>
+                        <th>生年月日</th>
+                        <td th:text="${userBirthday}"></td>
+                    </tr>
+                    <tr>
+                        <th>生まれ年</th>
+                        <td th:if="${hideBirthYear != null}">非公開</td>
+                        <td th:if="${hideBirthYear == null}">公開する</td>
+                    </tr>
+                    <tr>
+                        <th>アカウント用途</th>
+                        <td th:if="${userMode == null}">予約管理者アカウント</td>
+                        <td th:if="${userMode != null}">予約管理・顧客併用アカウント</td>
+                    </tr>
+                </table>
+                <form action="/createUser" method="post">
+                    <input type="hidden" name="mode" value="confiResult">
+                    <input type="hidden" name="userMail" th:value="${userMail}">
+                    <input type="hidden" name="userId" th:value="${userId}">
+                    <input type="hidden" name="userName" th:value="${userName}">
+                    <input type="hidden" name="userKanaName" th:value="${userKanaName}">
+                    <input type="hidden" name="userStageName" th:value="${userStageName}">
+                    <input type="hidden" name="userStageKanaName" th:value="${userStageKanaName}">
+                    <input type="hidden" name="userPass" th:value="${userPass}">
+                    <input type="hidden" name="userTel"  th:value="${userTel}">
+                    <input type="hidden" name="userBirthday"  th:value="${userBirthday}">
+                    <input type="hidden" name="hideBirthYear"  th:value="${hideBirthYear}">
+                    <input type="hidden" name="userMode"  th:value="${userMode}">
+                    <p><button type="submit">確定</button>　<button type="submit" name="back" value="back">戻る</button></p>
+                </form>
+            </div>
+
         </div>
         <p>
             <a href="/login">キャンセル</a>

@@ -5,8 +5,10 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.webApplication.entity.FormData;
 import com.webApplication.service.CreateUserService;
 import com.webApplication.service.EnvService;
 import com.webApplication.service.IndexService;
@@ -40,7 +42,7 @@ public class MainController {
 	
 	private String checkDefStSession(Model model, String pageName) {
 		if(session.getAttribute("defStSession") == null) {
-			return goStageSelect(model);
+			return goSetFirstStage(model);
 		} else {
 			return pageName;
 		}
@@ -515,27 +517,30 @@ public class MainController {
 //		return pageName;
 //	}
 //
-	@GetMapping("/option")
-	public String clickOption(Model model) {
-		pageName = "option";
-		pageName = checkSession(model, pageName);
-		return pageName;
-	}
-
-	@GetMapping("option/stageSelect")
-	public String goStageSelect(Model model) {
-		pageName = "option";
-		return pageName;
-	}
-
-//	@PostMapping("/option/stageSelect")
-//	public String clickSelect(Model model, @ModelAttribute FormData fd) {
-//		if(fd.getMode().equals("change")) {
-//			return oc.setDefaultWorkNo(model, fd.getStageNo());
-//		}
-//		return clickStageSelect(model);
+//	@GetMapping("/option")
+//	public String clickOption(Model model) {
+//		pageName = "option";
+//		pageName = checkSession(model, pageName);
+//		return pageName;
 //	}
-//
+
+	@GetMapping("setFirstStage")
+	public String goSetFirstStage(Model model) {
+		pageName = "setFirstStage";
+		pageName = checkSession(model, pageName);
+		if(pageName.equals("index")) {
+			setEnvData(model, "manager");
+			is.setPageInfo(model);
+		}
+		return pageName;
+	}
+
+	@PostMapping("setFirstStage")
+	public String accessSetFirstStage(Model model, @ModelAttribute FormData fd) {
+
+		return goSetFirstStage(model);
+	}
+
 //	@GetMapping("/stageSelect/stageLogin")
 //	public String clickStageLogin(Model model) {
 //		pageName = "option";
@@ -699,6 +704,8 @@ public class MainController {
 	public String goCreateUser(Model model, String mode, String data) {
 		pageName = "createUser";
 		setEnvData(model, "createUser");
+		cus.setPageInfo(model);
+		
 		if(mode.equals("start")) {
 			cus.start(model);
 		} else if(mode.equals("confiData")){
@@ -708,7 +715,7 @@ public class MainController {
 	}
 
 	@PostMapping("/createUser")
-	public String inputUserCreateForm(Model model, String mode, String userMail) {
+	public String inputUserCreateForm(Model model, String back, String mode, String userMail, String userId, String userName, String userKanaName, String userStageName, String userStageKanaName, String userPass, String rePass, String userTel, String userBirthday, String hideBirthYear, String userMode) {
 		String pageName = "createUser";
 		switch (mode) {
 		case "checkMail": {
@@ -717,11 +724,28 @@ public class MainController {
 			}
 			break;
 		}
-		case "confiMail":{
+		case "confiMail": {
 			cus.confiMail(model, mode);
+			break;
+		}
+		case "inputUserId": {
+			mode = cus.inputUserId(model, mode, userMail, userId);
+			break;
+		}
+		case "inputBaseData": {
+			mode = cus.inputBaseData(model, mode, back, userMail, userId, userName, userKanaName, userStageName, userStageKanaName, userPass, rePass);
+			break;
+		}
+		case "inputContactData": {
+			mode = cus.inputContactData(model, mode, back, userMail, userId, userName, userKanaName, userStageName, userStageKanaName, userPass, userTel, userBirthday, hideBirthYear, userMode);
+			break;
+		}
+		case "confiResult": {
+			pageName = cus.confiResult(model, mode, back, userMail, userId, userName, userKanaName, userStageName, userStageKanaName, userPass, userTel, userBirthday, hideBirthYear, userMode);
+			break;
 		}
 		default:
-			
+			System.out.println("新規ユーザー作成で例外フローが発生しました");
 		}
 		if(pageName.equals("createUser")) {
 			return goCreateUser(model, mode, null);

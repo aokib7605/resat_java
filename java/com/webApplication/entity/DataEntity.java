@@ -30,6 +30,7 @@ public class DataEntity {
     private Date user_last_login;
     private Date user_birthday;
     private int user_hide_age;
+    private String user_def_group;
     
     //stages
     private String sys_stage_id;
@@ -47,6 +48,7 @@ public class DataEntity {
     private Integer stage_opener;
     private String stage_flyer_1;
     private String stage_flyer_2;
+    private String stage_place_address;
     
     //groupes
 //    private String sys_group_id;	//(= stages, group_login_list)
@@ -67,7 +69,6 @@ public class DataEntity {
 
 	
 	public void setEntity(String column, String value) {
-		System.out.println(column + " : " +value);
 		try {
 			String methodName = "set" + column.substring(0, 1).toUpperCase() + column.substring(1);
 			

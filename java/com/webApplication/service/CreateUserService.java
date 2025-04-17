@@ -226,11 +226,12 @@ public class CreateUserService {
 				Pub.getCurrentDate() + "",		//user_cre_date
 				Pub.getCurrentDate() + "",		//user_last_login
 				data.getUser_birthday() + "",	//user_birthday
-				data.getUser_hide_age() + ""	//user_hide_age
+				data.getUser_hide_age() + "",	//user_hide_age
+				data.getUser_def_group()		//user_def_group
 				));
 		mr.insertData("users", columns, values);
 		
-		String where = "left outer join group_login_list gll on u.sys_user_id = gll.sys_user_id left outer join groupes g on gll.sys_group_id = g.sys_group_id where user_id =  '" + data.getUser_id() + "'";
+		String where = "left outer join groupes on sys_group_id = user_def_group where user_id =  '" + data.getUser_id() + "'";
 		columns = Stream.concat(mr.getUsersTableColumns().stream(), mr.getGroupe_login_listTableColumns().stream()).collect(Collectors.toList());
 		columns = Stream.concat(columns.stream(), mr.getGroupesTableColumns().stream()).collect(Collectors.toList());
 		if(mr.getData("users u", columns, where) != null) {

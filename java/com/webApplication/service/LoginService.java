@@ -28,7 +28,7 @@ public class LoginService {
 	public String checkLoginData(Model model, String pageName, String userId, String userPass) {
 		List<String> columns = Stream.concat(mr.getUsersTableColumns().stream(), mr.getGroupe_login_listTableColumns().stream()).collect(Collectors.toList());
 		columns = Stream.concat(columns.stream(), mr.getGroupesTableColumns().stream()).collect(Collectors.toList());
-		String where = "left outer join group_login_list gll on u.sys_user_id = gll.sys_user_id left outer join groupes g on gll.sys_group_id = g.sys_group_id where user_id =  '" + userId + "'";
+		String where = "left outer join groupes on sys_group_id = user_def_group where user_id =  '" + userId + "'";
 		DataEntity userData = mr.getData("users u", columns, where);
 		if(userData == null) {
 			pageName = "login";

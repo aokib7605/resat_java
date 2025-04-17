@@ -42,7 +42,7 @@ public class MainRepository {
 						// TODO: handle exception
 					}
 					try {
-						data.setEntity(column, (String)dbObj.get(column));					
+						data.setEntity(column, (String)dbObj.get(column));
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
@@ -57,8 +57,40 @@ public class MainRepository {
 	public DataEntity getData(String table, List<String> columns, String where) {
 		try {
 			sql = "select " + "*" + " from " + table + " " + where;
+			System.out.println(sql);
 			Map<String, Object> dbObj = tmp.queryForMap(sql);
 			return setData(dbObj, columns);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
+	}
+	
+	public ArrayList<DataEntity> getDataList(String table, List<String> columns, String where){
+		try {
+			sql = "select " + "*" + " from " + table + " " + where;
+			List<Map<String, Object>> dbObjList = tmp.queryForList(sql);
+			ArrayList<DataEntity> resultList = new ArrayList<DataEntity>();
+			for(Map<String, Object> dbObj : dbObjList) {
+				resultList.add(setData(dbObj, columns));
+			}
+			return resultList;
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
+	}
+	
+	public ArrayList<DataEntity> getDataListBySelectColumn(String table, List<String> columns, String where){
+		try {
+			sql = "select " + Pub.convertListToStr(columns) + " from " + table + " " + where;
+			System.out.println(sql);
+			List<Map<String, Object>> dbObjList = tmp.queryForList(sql);
+			ArrayList<DataEntity> resultList = new ArrayList<DataEntity>();
+			for(Map<String, Object> dbObj : dbObjList) {
+				resultList.add(setData(dbObj, columns));
+			}
+			return resultList;
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -104,7 +136,8 @@ public class MainRepository {
 				"user_cre_date",
 				"user_last_login",
 				"user_birthday",
-				"user_hide_age"
+				"user_hide_age",
+				"user_def_group"
 				));
 		return columns;
 	}

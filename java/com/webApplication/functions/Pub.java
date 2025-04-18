@@ -1,11 +1,15 @@
 package com.webApplication.functions;
 
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class Pub {
     private static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789";
     private static final int DEFAULT_LENGTH = 20; // uuidの長さ
@@ -52,5 +56,10 @@ public class Pub {
                     }
                 })
                 .collect(Collectors.joining(", "));
+    }
+    
+    public static String convertByteArrayToString(byte[] bytes) {
+        if (bytes == null) return null;
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 }

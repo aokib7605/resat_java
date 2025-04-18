@@ -126,14 +126,27 @@
             <input type="hidden" name="stageAttractCustomers" th:value="${stageAttractCustomers}">
             <input type="hidden" name="stageUrlTitle" th:value="${stageUrlTitle}">
 
-            <select name="stage_place_name">
+            <input type="text" name="keyword" th:value="${keyword}"> 
+            <button type="submit" name="mode" value="inputPlaceData">検索</button><br>
+            ※キーワードに一致する会場があれば、下のリストに表示されます
+        </form>
+        <form action="/createStage" method="post">
+            <input type="hidden" name="sysGroupId" th:value="${sysGroupId}">
+            <input type="hidden" name="stageId" th:value="${stageId}">
+            <input type="hidden" name="stagePass" th:value="${stagePass}">
+            <input type="hidden" name="stageName" th:value="${stageName}">
+            <input type="hidden" name="stageAttractCustomers" th:value="${stageAttractCustomers}">
+            <input type="hidden" name="stageUrlTitle" th:value="${stageUrlTitle}">
+
+            <select name="stagePlaceName">
                 <option value="" disabled selected>会場を選択してください</option>
                 <th:block th:each="item : ${placeList}">
-                    <option th:value="${item.stage_place_name}"
+                    <option th:value="|${item.stage_place_name} (${item.stage_place_address})|"
                         th:text="|${item.stage_place_name} (${item.stage_place_address})|">
                     </option>
                 </th:block>
             </select>
+            <input type="hidden" name="stagePlaceAddress" value="selected">
             <button type="submit" name="mode" value="inputPlaceData">確認</button>
         </form>
 
@@ -146,11 +159,11 @@
             <input type="hidden" name="stageUrlTitle" th:value="${stageUrlTitle}">
             <p>
                 会場名<br>
-                <input type="text" name="stage_place_name" th:value="${stage_place_name}">
+                <input type="text" name="stagePlaceName" th:value="${stagePlaceName}" required>
             </p>
             <p>
                 会場住所<br>
-                <input type="text" name="stage_place_address" th:value="${stage_place_address}"><br>
+                <input type="text" name="stagePlaceAddress" th:value="${stagePlaceAddress}" required><br>
                 ※郵便番号不要<br>
             </p>
             <button type="submit" name="mode" value="inputPlaceData">確認</button>
@@ -165,6 +178,109 @@
             <input type="hidden" name="stageAttractCustomers" th:value="${stageAttractCustomers}">
             <input type="hidden" name="stageUrlTitle" th:value="${stageUrlTitle}">
             <button type="submit" name="mode" value="inputPlaceData">戻る</button>
+        </form>
+        <p th:text="${message}"></p>
+    </div>
+
+    <div th:if="${mode == 'uploadImages'}">
+        <p>
+            チラシ画像をアップロードできます<br>
+            アップロード不要の場合、そのまま「確認」を押してください
+        </p>
+        <form action="/createStage" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="sysGroupId" th:value="${sysGroupId}">
+            <input type="hidden" name="stageId" th:value="${stageId}">
+            <input type="hidden" name="stagePass" th:value="${stagePass}">
+            <input type="hidden" name="stageName" th:value="${stageName}">
+            <input type="hidden" name="stageAttractCustomers" th:value="${stageAttractCustomers}">
+            <input type="hidden" name="stageUrlTitle" th:value="${stageUrlTitle}">
+            <input type="hidden" name="stagePlaceName" th:value="${stagePlaceName}">
+            <input type="hidden" name="stagePlaceAddress" th:value="${stagePlaceAddress}">
+
+            <p>
+                表面<br>
+                <input type="file" name="file1">
+            </p>
+            <p>
+                裏面<br>
+                <input type="file" name="file2">
+            </p>
+            <button type="submit" name="mode" value="uploadImages">確認</button>
+        </form>
+        <form action="/createStage" method="post">
+            <input type="hidden" name="back" value="back">
+            <input type="hidden" name="sysGroupId" th:value="${sysGroupId}">
+            <input type="hidden" name="stageId" th:value="${stageId}">
+            <input type="hidden" name="stagePass" th:value="${stagePass}">
+            <input type="hidden" name="stageName" th:value="${stageName}">
+            <input type="hidden" name="stageAttractCustomers" th:value="${stageAttractCustomers}">
+            <input type="hidden" name="stageUrlTitle" th:value="${stageUrlTitle}">
+            <input type="hidden" name="stagePlaceName" th:value="${stagePlaceName}">
+            <input type="hidden" name="stagePlaceAddress" th:value="${stagePlaceAddress}">
+            <button type="submit" name="mode" value="uploadImages">戻る</button>
+        </form>
+        <p th:text="${message}"></p>
+    </div>
+
+    <div th:if="${mode == 'confiResult'}">
+        <p>
+            下記の内容で公演を登録します。<br>
+            よろしければ「確定」を、修正する場合は「戻る」を押してください。
+        </p>
+        <table>
+            <tr>
+                <th>団体名</th>
+                <td th:text="${groupName}"></td>
+            </tr>
+            <tr>
+                <th>公演ID</th>
+                <td th:text="${stageId}"></td>
+            </tr>
+            <tr>
+                <th>パスワード</th>
+                <td th:text="${stagePass}"></td>
+            </tr>
+            <tr>
+                <th>公演名</th>
+                <td th:text="${stageName}"></td>
+            </tr>
+            <tr>
+                <th>集客目標</th>
+                <td th:text="${stageAttractCustomers}"></td>
+            </tr>
+            <tr>
+                <th>予約フォームのベースURL名</th>
+                <td th:text="${stageUrlTitle}"></td>
+            </tr>
+            <tr>
+                <th>会場名</th>
+                <td th:text="${stagePlaceName}"></td>
+            </tr>
+            <tr>
+                <th>会場住所</th>
+                <td th:text="${stagePlaceAddress}"></td>
+            </tr>
+            <tr>
+                <th rowspan="2">登録画像</th>
+                <td th:text="${file1}"></td>
+            </tr>
+            <tr>
+                <td th:text="${file2Name}"></td></td>
+            </tr>
+        </table>
+        <form action="/createStage" method="post">
+            <input type="hidden" name="mode" value="confiResult">
+            <input type="hidden" name="sysGroupId" th:value="${sysGroupId}">
+            <input type="hidden" name="stageId" th:value="${stageId}">
+            <input type="hidden" name="stagePass" th:value="${stagePass}">
+            <input type="hidden" name="stageName" th:value="${stageName}">
+            <input type="hidden" name="stageAttractCustomers" th:value="${stageAttractCustomers}">
+            <input type="hidden" name="stageUrlTitle" th:value="${stageUrlTitle}">
+            <input type="hidden" name="stagePlaceName" th:value="${stagePlaceName}">
+            <input type="hidden" name="stagePlaceAddress" th:value="${stagePlaceAddress}">
+            <input type="hidden" name="file1" th:value="${file1}">
+            <input type="hidden" name="file2" th:value="${file2}">
+            <p><button type="submit">確定</button>　<button type="submit" name="back" value="back">戻る</button></p>
         </form>
         <p th:text="${message}"></p>
     </div>

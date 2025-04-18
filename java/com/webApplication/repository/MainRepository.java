@@ -65,7 +65,7 @@ public class MainRepository {
 		}
 		return null;
 	}
-	
+
 	public ArrayList<DataEntity> getDataList(String table, List<String> columns, String where){
 		try {
 			sql = "select " + "*" + " from " + table + " " + where;
@@ -80,7 +80,7 @@ public class MainRepository {
 		}
 		return null;
 	}
-	
+
 	public ArrayList<DataEntity> getDataListBySelectColumn(String table, List<String> columns, String where){
 		try {
 			sql = "select " + Pub.convertListToStr(columns) + " from " + table + " " + where;
@@ -105,10 +105,21 @@ public class MainRepository {
 			System.out.println(e);
 		}
 	}
-	
+
 	public void updateData(String table, String column, String value, String where) {
 		try {
 			sql = "update " + table + " set " + column + " = '" + value + "' " + where;
+			System.out.println(sql);
+			tmp.update(sql);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	public void createTable(String table, List<String> columns, String where) {
+		try {
+			sql = "create table " + table + " (" + Pub.convertListToStr(columns) + ") " + where;
+			System.out.println(sql);
 			tmp.update(sql);
 		} catch (Exception e) {
 			System.out.println(e);
@@ -158,7 +169,8 @@ public class MainRepository {
 				"stage_cre_date",
 				"stage_opener",
 				"stage_flyer_1",
-				"stage_flyer_2"
+				"stage_flyer_2",
+				"stage_place_address"
 				));
 		return columns;
 	}
@@ -177,13 +189,50 @@ public class MainRepository {
 		return columns;
 	}
 
-	public List<String> getGroupe_login_listTableColumns(){
+	public List<String> getGroupeLoginListTableColumns(){
 		List<String> columns = new ArrayList<String>(Arrays.asList(
 				"sys_group_id",
 				"sys_user_id",
 				"group_authority",
 				"user_spe_name",
 				"user_spe_name_ev"
+				));
+		return columns;
+	}
+
+	public List<String> getImagesTableColumns(){
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_image_id",
+				"file_name",
+				"file_type",
+				"binary_data"
+				));
+		return columns;
+	}
+
+	public List<String> getStageLoginListTableColumns(){
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_stage_id", 
+				"sys_user_id", 
+				"stage_authority"
+				));
+		return columns;
+	}
+
+	public List<String> getCast_sysStageIdTableColumns(){ 
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_user_id", 
+				"cast_chara_name", 
+				"cast_sort_num"
+				));
+		return columns;
+	}
+
+	public List<String> getStaff_sysStageIdTableColumns(){ 
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_user_id", 
+				"staff_dep_name", 
+				"staff_sort_num"
 				));
 		return columns;
 	}

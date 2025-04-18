@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.webApplication.service.CreateGroupService;
 import com.webApplication.service.CreateStageService;
@@ -196,7 +198,8 @@ public class MainController {
 	@PostMapping("/createStage")
 	public String accessCreateStage(
 			Model model, String mode, String back, String sysGroupId, String stageId, String stagePass, String rePass, String stageName, 
-			Integer stageAttractCustomers, String stageUrlTitle, String stagePlaceName, String stagePlaceAddress) {
+			Integer stageAttractCustomers, String stageUrlTitle, String stagePlaceName, String stagePlaceAddress, String keyword, 
+			@RequestParam(required = false) MultipartFile file1, @RequestParam(required = false) MultipartFile file2) {
 		pageName = "createStage";
 		switch (mode) {
 		case "inputSysGroupId": {
@@ -212,7 +215,18 @@ public class MainController {
 			break;
 		}
 		case "inputPlaceData": {
-			mode = css.inputPlaceData(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress);
+			mode = css.inputPlaceData(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword);
+			break;
+		}
+		case "uploadImages": {
+			mode = css.uploadImages(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword, file1, file2);
+			break;
+		}
+		case "confiResult": {
+			pageName = css.confiResult(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword, file1, file2);
+			if(pageName.equals("uploadImages")) {
+				pageName = "createStage";
+			}
 			break;
 		}
 		default:

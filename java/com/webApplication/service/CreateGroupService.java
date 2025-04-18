@@ -114,7 +114,7 @@ public class CreateGroupService {
 			addGroupLoginList(model, groupData.getSys_group_id(), userData.getSys_user_id());
 			
 			where = "left outer join groupes on sys_group_id = user_def_group where sys_user_id =  '" + userData.getSys_user_id() + "'";
-			columns = Stream.concat(mr.getUsersTableColumns().stream(), mr.getGroupe_login_listTableColumns().stream()).collect(Collectors.toList());
+			columns = Stream.concat(mr.getUsersTableColumns().stream(), mr.getGroupeLoginListTableColumns().stream()).collect(Collectors.toList());
 			columns = Stream.concat(columns.stream(), mr.getGroupesTableColumns().stream()).collect(Collectors.toList());
 			session.setAttribute("userSession", mr.getData("users u", columns, where));
 		} else {
@@ -123,7 +123,7 @@ public class CreateGroupService {
 	}
 	
 	private void addGroupLoginList(Model model, String sysGroupId, String sysUserId) {
-		List<String> columns = mr.getGroupe_login_listTableColumns();
+		List<String> columns = mr.getGroupeLoginListTableColumns();
 		List<String> values = new ArrayList<String>(Arrays.asList(
 				sysGroupId,		//sys_group_id
 				sysUserId,		//sys_user_id

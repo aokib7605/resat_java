@@ -232,7 +232,7 @@ public class CreateUserService {
 		mr.insertData("users", columns, values);
 		
 		String where = "left outer join groupes on sys_group_id = user_def_group where user_id =  '" + data.getUser_id() + "'";
-		columns = Stream.concat(mr.getUsersTableColumns().stream(), mr.getGroupe_login_listTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(mr.getUsersTableColumns().stream(), mr.getGroupeLoginListTableColumns().stream()).collect(Collectors.toList());
 		columns = Stream.concat(columns.stream(), mr.getGroupesTableColumns().stream()).collect(Collectors.toList());
 		if(mr.getData("users u", columns, where) != null) {
 			session.setAttribute("userSession", mr.getData("users u", columns, where));

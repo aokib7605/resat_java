@@ -66,7 +66,27 @@ public class DataEntity {
     private Integer group_authority;
     private String user_spe_name;
     private Integer user_spe_name_ev;
-
+    
+    //images
+    private String sys_image_id;
+    private String file_name;
+    private String file_type;
+    private byte[] binary_data;
+    
+    //cast_sys_stage_id
+//    private String sys_user_id;
+    private String cast_chara_name;
+    private Integer cast_sort_num;
+    
+    //staff_sys_stage_id
+//    private String sys_user_id;
+    private String staff_dep_name;
+    private Integer staff_sort_num;
+    
+    //stage_login_list
+//    private String sys_stage_id;
+//    private String sys_user_id;
+    private Integer stage_authority;
 	
 	public void setEntity(String column, String value) {
 		try {

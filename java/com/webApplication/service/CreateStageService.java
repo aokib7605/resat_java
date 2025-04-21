@@ -110,11 +110,11 @@ public class CreateStageService {
 	}
 
 	public String uploadImages(Model model, String back, String sysGroupId, String stageId, String stagePass, String rePass, String stageName, 
-			Integer stageAttractCustomers, String stageUrlTitle, String stagePlaceName, String stagePlaceAddress, String keyword, MultipartFile file1, MultipartFile file2) {
+			Integer stageAttractCustomers, String stageUrlTitle, String stagePlaceName, String stagePlaceAddress, String keyword, MultipartFile file1, MultipartFile file2) throws IOException {
 		setStageIdData(model, sysGroupId, stageId);
 		setBaseData(model, stagePass, stageName, stageAttractCustomers, stageUrlTitle);
 		setPlaceData(model, stagePlaceName, stagePlaceAddress, keyword);
-		setImageData(model, file1, file2);
+		setImagesSession(model, file1, file2);
 		if(back != null && back.equals("back")) {
 			model.addAttribute("mode", "inputPlaceData");
 			model.addAttribute("placeList", getPlaceList(""));
@@ -133,19 +133,24 @@ public class CreateStageService {
 	}
 	
 	public String confiResult(Model model, String back, String sysGroupId, String stageId, String stagePass, String rePass, String stageName, 
-			Integer stageAttractCustomers, String stageUrlTitle, String stagePlaceName, String stagePlaceAddress, String keyword, MultipartFile file1, MultipartFile file2) {
+			Integer stageAttractCustomers, String stageUrlTitle, String stagePlaceName, String stagePlaceAddress, String keyword) {
+		String file1 = (String)session.getAttribute("file1Name");
+		String file2 = (String)session.getAttribute("file2Name");
 		setStageIdData(model, sysGroupId, stageId);
 		setBaseData(model, stagePass, stageName, stageAttractCustomers, stageUrlTitle);
 		setPlaceData(model, stagePlaceName, stagePlaceAddress, keyword);
-		setImageData(model, file1, file2);
 		if(back != null && back.equals("back")) {
 			model.addAttribute("mode", "uploadImages");
 			return "uploadImages";
 		}
 		try {
 			addImages(file1, file2);
-			String file1Id = getSysImageId(file1);
-			String file2Id = getSysImageId(file2);
+			int num = 1;
+			String file1Id = getSysImageId(file1, num);
+			if(file1.equals(file2)) {
+				num = 2;
+			}
+			String file2Id = getSysImageId(file2, num);
 			createStage(sysGroupId, stageId, stagePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, file1Id, file2Id);
 			DataEntity stageData = setSession(model, stageId);
 			DataEntity userData = updateUserDefStage(model, stageData.getSys_stage_id());
@@ -198,37 +203,37 @@ public class CreateStageService {
 		model.addAttribute("keyword", keyword);
 	}
 
-	private void setImageData(Model model, MultipartFile file1, MultipartFile file2) {
-		model.addAttribute("file1", file1);
-		model.addAttribute("file2", file2);
+	private void setImagesSession(Model model, MultipartFile file1, MultipartFile file2) throws IOException {
+		session.setAttribute("file1Name", file1.getOriginalFilename());
+		session.setAttribute("file1Type", file1.getContentType());
+		session.setAttribute("file1Bytes", file1.getBytes());
+		session.setAttribute("file2Name", file2.getOriginalFilename());
+		session.setAttribute("file2Type", file2.getContentType());
+		session.setAttribute("file2Bytes", file2.getBytes());
 	}
 	
-	private void addImages(MultipartFile file1, MultipartFile file2) {
+	private void addImages(String file1, String file2) throws IOException {
 		if(file1 != null) {
-			addImage(file1);
+			String file1Name = (String)session.getAttribute("file1Name");
+			String file1Type = (String)session.getAttribute("file1Type");
+			byte[] file1Bytes = (byte[])session.getAttribute("file1Bytes");
+			addImage(file1Name, file1Type, file1Bytes);
 		}
 		if(file2 != null) {
-			addImage(file2);
+			String file2Name = (String)session.getAttribute("file2Name");
+			String file2Type = (String)session.getAttribute("file2Type");
+			byte[] file2Bytes = (byte[])session.getAttribute("file2Bytes");
+			addImage(file2Name, file2Type, file2Bytes);
 		}
 	}
 	
-	private void addImage(MultipartFile file) {
-	    try {
-	        List<String> values = new ArrayList<String>(Arrays.asList(
-	            Pub.createUuid(),
-	            file.getOriginalFilename(),
-	            file.getContentType(),
-	            Pub.convertByteArrayToString(file.getBytes())
-	        ));
-	        mr.insertData("images", mr.getImagesTableColumns(), values);
-	    } catch (IOException e) {
-	    	
-	    }
+	private void addImage(String fileName, String contentType, byte[] bytes) throws IOException {
+	    mr.insertImage(Pub.createUuid(), fileName, contentType, bytes);
 	}
 	
-	private String getSysImageId(MultipartFile file) {
+	private String getSysImageId(String fileName, int num) {
 		try {
-			DataEntity image = mr.getData("images", mr.getImagesTableColumns(), " where file_name = '" + file.getOriginalFilename() + "'");
+			DataEntity image = mr.getData("images", mr.getImagesTableColumns(), " where file_name = '" + fileName + "' limit 1 offset " + num);
 			return image.getSys_image_id();
 		} catch (Exception e) {
 			// TODO: handle exception

@@ -69,6 +69,7 @@ public class MainRepository {
 	public ArrayList<DataEntity> getDataList(String table, List<String> columns, String where){
 		try {
 			sql = "select " + "*" + " from " + table + " " + where;
+			System.out.println(sql);
 			List<Map<String, Object>> dbObjList = tmp.queryForList(sql);
 			ArrayList<DataEntity> resultList = new ArrayList<DataEntity>();
 			for(Map<String, Object> dbObj : dbObjList) {
@@ -100,7 +101,18 @@ public class MainRepository {
 	public void insertData(String table, List<String> columns, List<String> values) {
 		try {
 			sql = "insert into " + table + "(" + Pub.convertListToStr(columns) + ") values(" + Pub.convertListToQuotedStr(values) + ")";
+			System.out.println(sql);
 			tmp.update(sql);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void insertImage(String uuid, String fileName, String fileType, byte[] binaryData) {
+		try {
+			sql = "insert into " + "images" + " values( ?, ?, ?, ? )";
+			System.out.println(sql);
+			tmp.update(sql, uuid, fileName, fileType, binaryData);
 		} catch (Exception e) {
 			System.out.println(e);
 		}

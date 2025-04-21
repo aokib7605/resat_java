@@ -262,7 +262,7 @@
             </tr>
             <tr>
                 <th rowspan="2">登録画像</th>
-                <td th:text="${file1}"></td>
+                <td th:text="${file1Name}"></td>
             </tr>
             <tr>
                 <td th:text="${file2Name}"></td></td>
@@ -278,8 +278,6 @@
             <input type="hidden" name="stageUrlTitle" th:value="${stageUrlTitle}">
             <input type="hidden" name="stagePlaceName" th:value="${stagePlaceName}">
             <input type="hidden" name="stagePlaceAddress" th:value="${stagePlaceAddress}">
-            <input type="hidden" name="file1" th:value="${file1}">
-            <input type="hidden" name="file2" th:value="${file2}">
             <p><button type="submit">確定</button>　<button type="submit" name="back" value="back">戻る</button></p>
         </form>
         <p th:text="${message}"></p>

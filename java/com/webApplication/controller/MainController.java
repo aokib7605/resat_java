@@ -1,5 +1,7 @@
 package com.webApplication.controller;
 
+import java.io.IOException;
+
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -199,7 +201,7 @@ public class MainController {
 	public String accessCreateStage(
 			Model model, String mode, String back, String sysGroupId, String stageId, String stagePass, String rePass, String stageName, 
 			Integer stageAttractCustomers, String stageUrlTitle, String stagePlaceName, String stagePlaceAddress, String keyword, 
-			@RequestParam(required = false) MultipartFile file1, @RequestParam(required = false) MultipartFile file2) {
+			@RequestParam(required = false) MultipartFile file1, @RequestParam(required = false) MultipartFile file2) throws IOException {
 		pageName = "createStage";
 		switch (mode) {
 		case "inputSysGroupId": {
@@ -223,7 +225,7 @@ public class MainController {
 			break;
 		}
 		case "confiResult": {
-			pageName = css.confiResult(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword, file1, file2);
+			pageName = css.confiResult(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword);
 			if(pageName.equals("uploadImages")) {
 				pageName = "createStage";
 			}

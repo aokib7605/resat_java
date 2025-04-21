@@ -87,6 +87,10 @@ public class DataEntity {
 //    private String sys_stage_id;
 //    private String sys_user_id;
     private Integer stage_authority;
+    
+    //group_authority
+    private Integer authority_id;
+    private String authority_name;
 	
 	public void setEntity(String column, String value) {
 		try {

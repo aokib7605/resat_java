@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.webApplication.service.ChangeGroupService;
 import com.webApplication.service.CreateGroupService;
 import com.webApplication.service.CreateStageService;
 import com.webApplication.service.CreateUserService;
@@ -74,6 +75,7 @@ public class MainController {
 	private final LoginService ls;
 	private final IndexService is;
 	private final CreateUserService cus;
+	private final ChangeGroupService chgs;
 	private final CreateGroupService cgs;
 	private final CreateStageService css;
 
@@ -279,6 +281,30 @@ public class MainController {
 			break;
 		}
 		return goSetFirstStage(model);
+	}
+	
+	@GetMapping("/changeGroup")
+	public String goChangeGroup(Model model, Integer offset, String page) {
+		setEnvData(model, "manager");
+		chgs.setPageInfo(model, offset, page);
+		return goAnyPage(model, "changeGroup");
+	}
+	
+	@PostMapping("changeGroup")
+	public String accessChangeGroup(Model model, String mode, String keyword, Integer offset, String page) {
+		switch (mode) {
+		case "idSearch": {
+			offset = chgs.setSearchGroupList(model, mode, keyword, offset, page);
+			break;
+		}
+		case "nameSearch": {
+			offset = chgs.setSearchGroupList(model, mode, keyword, offset, page);
+			break;
+		}
+		default:
+			break;
+		}
+		return goChangeGroup(model, offset, page);
 	}
 
 	@GetMapping("/createGroup")

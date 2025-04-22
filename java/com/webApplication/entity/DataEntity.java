@@ -91,6 +91,10 @@ public class DataEntity {
     //group_authority
     private Integer authority_id;
     private String authority_name;
+    
+  //stage_authority
+//    private Integer authority_id;
+//    private String authority_name;
 	
 	public void setEntity(String column, String value) {
 		try {

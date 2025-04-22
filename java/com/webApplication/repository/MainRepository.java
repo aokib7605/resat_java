@@ -256,4 +256,12 @@ public class MainRepository {
 		));
 		return columns;
 	}
+	
+	public List<String> getStageAuthorityTableColumns(){ 
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+			"authority_id", 
+			"authority_name"
+		));
+		return columns;
+	}
 }

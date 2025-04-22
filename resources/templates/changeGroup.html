@@ -69,35 +69,28 @@
                 <input type="submit" value="検索">
             </p>
         </form>
-        <p th:text="${message}"></p>
+        <p th:text="${message}" style="color: red;"></p>
     </div>
 
-    <div th:if="${!#lists.isEmpty(searchGroupList)}">
-        <form action="/changeGroup" method="post">
-            <input type="hidden" name="mode" th:value="${mode}">
-            <input type="hidden" name="keyword" th:value="${keyword}">
-            <input type="hidden" name="searchOffset" th:value="${searchOffset}">
-            <p>
-                <button type="submit" name="page" value="searchNext" th:if="${searchNext != null}">次へ</button>
-                <button type="submit" name="page" value="searchPrev" th:if="${searchPrev != null}">前へ</button>
-            </p>
-        </form>
-        <form action="/changeGroup" method="post">
-            <input type="hidden" name="mode" th:value="${mode}">
-            <input type="hidden" name="keyword" th:value="${keyword}">
-            <input type="hidden" name="searchOffset" th:value="${searchOffset}">
-            <table>
+    <div th:if="${mode != 'login' and !#lists.isEmpty(searchGroupList)}">
+        <table>
+            <tr>
+                <th>団体ID</th>
+                <th>団体名</th>
+                <th>参加状況</th>
+                <th></th>
+            </tr>
+            <th:block th:each="item : ${searchGroupList}">
                 <tr>
-                    <th>団体ID</th>
-                    <th>団体名</th>
-                    <th>参加状況</th>
-                    <th></th>
-                </tr>
-                <th:block th:each="item : ${searchGroupList}">
-                    <tr>
+                    <form action="/changeGroup" method="post">
+                        <input type="hidden" name="keyword" th:value="${keyword}">
+                        <input type="hidden" name="searchOffset" th:value="${searchOffset}">
+                        <input type="hidden" name="sysGroupId" th:value="${item.sys_group_id}">
                         <td th:text="${item.group_id}"></td>
                         <td th:text="${item.group_name}"></td>
-                        <td th:text="${item.authority_name} + 'で参加中'"></td>
+                        <td th:if="${item.group_authority != null and item.group_authority > 0}"
+                            th:text="${item.authority_name}"></td>
+                        <td th:if="${item.group_authority == null or item.group_authority == 0}"></td>
                         <td>
                             <!-- item.group_authority が null または 0 の場合：ログインボタン -->
                             <button name="mode" value="login"
@@ -118,10 +111,35 @@
                                 選択
                             </button>
                         </td>
-                    </tr>
-                </th:block>
-            </table>
+                    </form>
+                </tr>
+            </th:block>
+        </table>
+        <form action="/changeGroup" method="post">
+            <input type="hidden" name="mode" th:value="${mode}">
+            <input type="hidden" name="keyword" th:value="${keyword}">
+            <input type="hidden" name="searchOffset" th:value="${searchOffset}">
+            <p>
+                <button type="submit" name="page" value="searchPrev" th:if="${searchPrev != null}">前へ</button>
+                <button type="submit" name="page" value="searchNext" th:if="${searchNext != null}">次へ</button>
+            </p>
         </form>
+    </div>
+
+    <div th:if="${mode == 'login' && loginMode == 'start'}">
+        <p th:text="${groupData.group_name + '（' + groupData.group_id + '）へのログインパスワードを入力してください'}"></p>
+
+        <form action="/changeGroup" method="post">
+            <input type="hidden" name="mode" value="login">
+            <input type="hidden" name="sysGroupId" th:value="${groupData.sys_group_id}">
+            <p>
+                <input type="text" name="groupPass" th:value="${groupPass}">
+            </p>
+            <p>
+                <button type="submit" name="loginMode" value="inputPass">ログイン</button>
+            </p>
+        </form>
+        <p th:text="${loginMessage}" style="color: red;"></p>
     </div>
 
     <h3>参加中の団体</h3>
@@ -134,27 +152,39 @@
                 <th></th>
             </tr>
             <th:block th:each="item : ${groupList}">
-                <tr>
-                    <td th:text="${item.group_id}"></td>
-                    <td th:text="${item.group_name}"></td>
-                    <td th:text="${item.authority_name} + 'で参加中'"></td>
-                    <td>
-                        <!-- item.group_authority が 1以上 かつ userData.user_def_group と一致する場合：選択中（赤文字） -->
-                        <span
-                            th:if="${item.group_authority != null and item.group_authority > 0 and userData.user_def_group == item.sys_group_id}"
-                            style="color: red;">
-                            選択中
-                        </span>
+                <form action="/changeGroup" method="post">
+                    <tr>
+                        <input type="hidden" name="sysGroupId" th:value="${item.sys_group_id}">
+                        <td th:text="${item.group_id}"></td>
+                        <td th:text="${item.group_name}"></td>
+                        <td th:text="${item.authority_name}"></td>
+                        <td>
+                            <!-- item.group_authority が 1以上 かつ userData.user_def_group と一致する場合：選択中（赤文字） -->
+                            <span
+                                th:if="${item.group_authority != null and item.group_authority > 0 and userData.user_def_group == item.sys_group_id}"
+                                style="color: red;">
+                                選択中
+                            </span>
 
-                        <!-- item.group_authority が 1以上 かつ user_def_group と違う場合：選択ボタン -->
-                        <button name="mode" value="select"
-                            th:if="${item.group_authority != null and item.group_authority > 0 and userData.user_def_group != item.sys_group_id}">
-                            選択
-                        </button>
-                    </td>
-                </tr>
+                            <!-- item.group_authority が 1以上 かつ user_def_group と違う場合：選択ボタン -->
+                            <button name="mode" value="select"
+                                th:if="${item.group_authority != null and item.group_authority > 0 and userData.user_def_group != item.sys_group_id}">
+                                選択
+                            </button>
+                        </td>
+                    </tr>
+                </form>
             </th:block>
         </table>
+        <form action="/changeGroup" method="post">
+            <input type="hidden" name="mode" value="stageList">
+            <input type="hidden" name="listOffset" th:value="${listOffset}">
+            <p>
+                <button type="submit" name="page" value="prev" th:if="${prev != null}">前へ</button>
+                <button type="submit" name="page" value="next" th:if="${next != null}">次へ</button>
+            </p>
+        </form>
+        <p th:text="${listMessage}"></p>
     </div>
 
     <p>

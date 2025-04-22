@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.webApplication.service.ChangeGroupService;
+import com.webApplication.service.ChangeStageService;
+import com.webApplication.service.CheckStageListService;
 import com.webApplication.service.CreateGroupService;
 import com.webApplication.service.CreateStageService;
 import com.webApplication.service.CreateUserService;
 import com.webApplication.service.EnvService;
 import com.webApplication.service.IndexService;
 import com.webApplication.service.LoginService;
+import com.webApplication.service.SetGroupMemberService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -75,9 +78,12 @@ public class MainController {
 	private final LoginService ls;
 	private final IndexService is;
 	private final CreateUserService cus;
+	private final ChangeStageService chss;
 	private final ChangeGroupService chgs;
 	private final CreateGroupService cgs;
 	private final CreateStageService css;
+	private final CheckStageListService csls;
+	private final SetGroupMemberService sgms; 
 
 	private String goAnyPage(Model model, String pageName) {
 		switch (pageName) {
@@ -185,6 +191,45 @@ public class MainController {
 		}
 	}
 
+	@GetMapping("setFirstStage")
+	public String goSetFirstStage(Model model) {
+		setEnvData(model, "setFirstStage");
+		is.setPageInfo(model);
+		return goAnyPage(model, "setFirstStage");
+	}
+
+	@PostMapping("setFirstStage")
+	public String accessSetFirstStage(Model model, String mode) {
+		switch (mode) {
+		case "changeStage": {
+			System.out.println(mode + "が選択されましたA");
+			break;
+		}
+		case "changeGroup": {
+			System.out.println(mode + "が選択されましたB");
+			break;
+		}
+		case "setUser": {
+			System.out.println(mode + "が選択されましたC");
+			break;
+		}
+		case "createGroup": {
+			System.out.println(mode + "が選択されましたD");
+			break;
+		}
+		default:
+			break;
+		}
+		return goSetFirstStage(model);
+	}
+	
+	@GetMapping("/setStage")
+	public String goSetStage(Model model) {
+		setEnvData(model, "manager");
+		is.setPageInfo(model);
+		return goAnyPage(model, "setStage");
+	}
+
 	@GetMapping("/createStage")
 	public String goCreateStage(Model model, String mode) {
 		setEnvData(model, "manager");
@@ -198,7 +243,7 @@ public class MainController {
 		}
 		return goAnyPage(model, "createStage");
 	}
-	
+
 	@PostMapping("/createStage")
 	public String accessCreateStage(
 			Model model, String mode, String back, String sysGroupId, String stageId, String stagePass, String rePass, String stageName, 
@@ -242,63 +287,142 @@ public class MainController {
 			return goRootPage(model);
 		}
 	}
-
-	@GetMapping("/setStage")
-	public String goSetStage(Model model) {
+	
+	@GetMapping("/checkStageList")
+	public String goCheckStageList(Model model, Integer offset, String page) {
 		setEnvData(model, "manager");
-		is.setPageInfo(model);
-
-		return goAnyPage(model, "setStage");
+		csls.setPageInfo(model, offset, page);
+		return goAnyPage(model, "checkStageList");
 	}
-
-	@GetMapping("setFirstStage")
-	public String goSetFirstStage(Model model) {
-		setEnvData(model, "setFirstStage");
-		is.setPageInfo(model);
-		return goAnyPage(model, "setFirstStage");
-	}
-
-	@PostMapping("setFirstStage")
-	public String accessSetFirstStage(Model model, String mode) {
+	
+	@PostMapping("/checkStageList")
+	public String accessCheckStageList(Model model, String mode, String loginMode, Integer offset, Integer listOffset, String page, String sysStageId, String stagePass) {
 		switch (mode) {
-		case "changeStage": {
-			System.out.println(mode + "が選択されましたA");
+		case "stageList": {
+			offset = listOffset;
 			break;
 		}
-		case "changeGroup": {
-			System.out.println(mode + "が選択されましたB");
-			break;
-		}
-		case "setUser": {
-			System.out.println(mode + "が選択されましたC");
-			break;
-		}
-		case "createGroup": {
-			System.out.println(mode + "が選択されましたD");
-			break;
-		}
+        case "select": {
+            pageName = chss.selectStage(model, sysStageId);
+            break;
+        }
+        case "login": {
+            loginMode = chss.loginStage(model, loginMode, sysStageId, stagePass);
+            break;
+        }
 		default:
 			break;
 		}
-		return goSetFirstStage(model);
+		return goCheckStageList(model, offset, page);
 	}
 	
+	@GetMapping("/setGroupMember")
+	public String goSetGroupMember(Model model, Integer offset, String page) {
+		setEnvData(model, "manager");
+		sgms.setPageInfo(model);
+		return goAnyPage(model, "setGroupMember");
+	}
+	
+	@PostMapping("/setGroupMember")
+	public String accessSetGroupMember(Model model, String mode, String loginMode, String keyword, Integer offset, Integer searchOffset, Integer listOffset, String page, String sysStageId, String stagePass) {
+		switch (mode) {
+        case "idSearch": {
+        	offset = searchOffset;
+            offset = sgms.setSearchUserList(model, mode, keyword, offset, page);
+            break;
+        }
+        case "nameSearch": {
+        	offset = searchOffset;
+            offset = sgms.setSearchUserList(model, mode, keyword, offset, page);
+            break;
+        }
+        case "mailSearch": {
+        	offset = searchOffset;
+            offset = sgms.setSearchUserList(model, mode, keyword, offset, page);
+            break;
+        }
+        case "select": {
+            pageName = chss.selectStage(model, sysStageId);
+            break;
+        }
+        case "login": {
+            loginMode = chss.loginStage(model, loginMode, sysStageId, stagePass);
+            break;
+        }
+		default:
+			break;
+		}
+		return goSetGroupMember(model, offset, page);
+	}
+
+	@GetMapping("/changeStage")
+	public String goChangeStage(Model model, Integer offset, String page) {
+		setEnvData(model, "manager");
+		chss.setPageInfo(model, offset, page);
+		return goAnyPage(model, "changeStage");
+	}
+
+	@PostMapping("/changeStage")
+	public String accessChangeStage(Model model, String mode, String loginMode, String keyword, Integer offset, Integer searchOffset, Integer listOffset, String page, String sysStageId, String stagePass) {
+		switch (mode) {
+		case "stageList": {
+			offset = listOffset;
+			break;
+		}
+        case "idSearch": {
+        	offset = searchOffset;
+            offset = chss.setSearchStageList(model, mode, keyword, offset, page);
+            break;
+        }
+        case "nameSearch": {
+        	offset = searchOffset;
+            offset = chss.setSearchStageList(model, mode, keyword, offset, page);
+            break;
+        }
+        case "select": {
+            pageName = chss.selectStage(model, sysStageId);
+            break;
+        }
+        case "login": {
+            loginMode = chss.loginStage(model, loginMode, sysStageId, stagePass);
+            break;
+        }
+		default:
+			break;
+		}
+		return goChangeStage(model, offset, page);
+	}
+
 	@GetMapping("/changeGroup")
 	public String goChangeGroup(Model model, Integer offset, String page) {
 		setEnvData(model, "manager");
 		chgs.setPageInfo(model, offset, page);
 		return goAnyPage(model, "changeGroup");
 	}
-	
+
 	@PostMapping("changeGroup")
-	public String accessChangeGroup(Model model, String mode, String keyword, Integer offset, String page) {
+	public String accessChangeGroup(Model model, String mode, String loginMode, String keyword, Integer offset, Integer searchOffset, Integer listOffset, String page, String sysGroupId, String groupPass) {
 		switch (mode) {
+		case "groupList": {
+			offset = listOffset;
+			break;
+		}
 		case "idSearch": {
+			offset = searchOffset;
 			offset = chgs.setSearchGroupList(model, mode, keyword, offset, page);
 			break;
 		}
 		case "nameSearch": {
+			offset = searchOffset;
 			offset = chgs.setSearchGroupList(model, mode, keyword, offset, page);
+			break;
+		}
+		case "select": {
+			pageName = chgs.selectGroup(model, sysGroupId);
+			break;
+		}
+		case "login": {
+			loginMode = chgs.loginGroup(model, loginMode, sysGroupId, groupPass);
 			break;
 		}
 		default:

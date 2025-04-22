@@ -324,7 +324,12 @@ public class MainController {
 	}
 	
 	@PostMapping("/setGroupMember")
-	public String accessSetGroupMember(Model model, String mode, String loginMode, String keyword, Integer offset, Integer searchOffset, Integer listOffset, String page, String sysStageId, String stagePass) {
+	public String accessSetGroupMember(Model model, String mode, String loginMode, String keyword, Integer offset, Integer searchOffset, Integer listOffset, String page, String sysUserId) {
+		if(loginMode != null) {
+			String tmp = mode;
+			mode = loginMode;
+			loginMode = tmp;
+		}
 		switch (mode) {
         case "idSearch": {
         	offset = searchOffset;
@@ -342,11 +347,13 @@ public class MainController {
             break;
         }
         case "select": {
-            pageName = chss.selectStage(model, sysStageId);
+            pageName = chss.selectStage(model, sysUserId);
             break;
         }
-        case "login": {
-            loginMode = chss.loginStage(model, loginMode, sysStageId, stagePass);
+        case "invite": {
+        	offset = searchOffset;
+        	mode = sgms.inviteGroup(model, sysUserId);
+            offset = sgms.setSearchUserList(model, loginMode, keyword, listOffset, page);
             break;
         }
 		default:

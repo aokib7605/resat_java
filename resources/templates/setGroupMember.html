@@ -81,12 +81,18 @@
             <th:block th:each="item : ${searchUserList}">
                 <tr>
                     <form action="/setGroupMember" method="post">
+                        <input type="hidden" name="mode" th:value="${mode}">
                         <input type="hidden" name="keyword" th:value="${keyword}">
                         <input type="hidden" name="searchOffset" th:value="${searchOffset}">
                         <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
                         <td th:text="${item.user_id}"></td>
                         <td th:text="${item.user_name}"></td>
-                        <td><button name="mode" value="login">招待</button></td>
+                        <td th:if="${item.sys_user_id != userData.sys_user_id && item.group_authority == null}">
+                            <button name="loginMode" value="invite">招待</button>
+                        </td>
+                        <td th:if="${item.sys_user_id == userData.sys_user_id || item.group_authority != null}">
+                            <span style="color: red;">参加中</span>
+                        </td>
                     </form>
                 </tr>
             </th:block>
@@ -119,14 +125,11 @@
                         <td th:text="${item.user_name}"></td>
                         <td th:text="${item.authority_name}"></td>
                         <td>
-                            <span
-                                th:if="${item.sys_user_id == userData.sys_user_id}"
-                                style="color: red;">
+                            <span th:if="${item.sys_user_id == userData.sys_user_id}" style="color: red;">
                                 編集不可
                             </span>
 
-                            <button name="mode" value="select"
-                                th:if="${item.sys_user_id != userData.sys_user_id}">
+                            <button name="mode" value="select" th:if="${item.sys_user_id != userData.sys_user_id}">
                                 編集
                             </button>
                         </td>

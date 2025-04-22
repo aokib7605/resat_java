@@ -147,7 +147,7 @@ public class SQL {
 	public ArrayList<DataEntity> getUserDataList(String column, String keyword, Integer limit, Integer offset){
 		List<String> columns = Stream.concat(mr.getUsersTableColumns().stream(), mr.getGroupeLoginListTableColumns().stream()).collect(Collectors.toList());
 
-		String joinTable = " left outer join group_login_list gll on gll.sys_group_id = u.user_def_group ";
+		String joinTable = " left outer join group_login_list gll on gll.sys_user_id = u.sys_user_id ";
 		String where = "";
 		if(offset != null) {
 			where = joinTable + " where " + column + " = '" + keyword + "' limit " + limit + " offset " + offset * limit;
@@ -198,7 +198,10 @@ public class SQL {
 				null,			//user_spe_name
 				0 + ""			//user_spe_name_ev
 				));
-		mr.insertData("group_login_list", columns, values);
+		String where = " where sys_user_id = '" + sysUserId + "' && sys_group_id = '" + sysGroupId + "'";
+		if(mr.getData("group_login_list", columns, where) == null) {
+			mr.insertData("group_login_list", columns, values);
+		}
 	}
 
 	private void addStageLoginList(String sysStageId, String sysUserId) {
@@ -208,6 +211,9 @@ public class SQL {
 				sysUserId,		//sys_user_id
 				1 + ""			//stage_authority
 				));
-		mr.insertData("stage_login_list", columns, values);
+		String where = " where sys_user_id = '" + sysUserId + "' && sys_stage_id = '" + sysStageId + "'";
+		if(mr.getData("stage_login_list", columns, where) == null) {
+			mr.insertData("stage_login_list", columns, values);
+		}
 	}
 }

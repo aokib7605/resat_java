@@ -97,7 +97,7 @@
                     <p>
                         生年月日<br>
                         <input type="date" name="userBirthday" id="userBirthday" th:value="${userBirthday}" required><br>
-                        生まれ年を非公開にする <span th:if="${hideBirthYear == null || hideBirthYear == ''}"><input type="checkbox" name="hideBirthYear"></span>
+                        年齢を非公開にする <span th:if="${hideBirthYear == null || hideBirthYear == ''}"><input type="checkbox" name="hideBirthYear"></span>
                         <span th:if="${hideBirthYear != null && hideBirthYear != ''}"><input type="checkbox" name="hideBirthYear" checked></span><br>
                     </p>
                     <p>
@@ -166,7 +166,7 @@
                         <td th:text="${userBirthday}"></td>
                     </tr>
                     <tr>
-                        <th>生まれ年</th>
+                        <th>年齢</th>
                         <td th:if="${hideBirthYear != null}">非公開</td>
                         <td th:if="${hideBirthYear == null}">公開する</td>
                     </tr>

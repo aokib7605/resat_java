@@ -92,6 +92,7 @@ public class CreateUserService {
 						+ "まだアカウント登録は完了しておりません。下記URLから以降の登録処理を進めてください。\n"
 						+ "http://localhost:8080/createUser?mode=confiData&data=" + mailBase64
 				);
+		System.out.println("http://localhost:8080/createUser?mode=confiData&data=" + mailBase64);
 
 		// メール送信を実施する。
 		mailSender.send(message);

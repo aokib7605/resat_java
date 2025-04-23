@@ -121,6 +121,19 @@ public class MainRepository {
 	public void updateData(String table, String column, String value, String where) {
 		try {
 			sql = "update " + table + " set " + column + " = '" + value + "' " + where;
+			if(value == null) {
+				sql = sql.replace("'" + value + "' ", "" + value + " ");
+			}
+			System.out.println(sql);
+			tmp.update(sql);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void deleteData(String table, String where) {
+		try {
+			sql = "delete from " + table + where;
 			System.out.println(sql);
 			tmp.update(sql);
 		} catch (Exception e) {
@@ -137,7 +150,6 @@ public class MainRepository {
 			System.out.println(e);
 		}
 	}
-
 
 	// カラム一覧をまとめたメソッド
 	// ===================================================================== //

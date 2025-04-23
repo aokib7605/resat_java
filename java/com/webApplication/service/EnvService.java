@@ -33,7 +33,7 @@ public class EnvService {
 					menuList_stage.add(getMenuObject("公演基本情報", "setStage"));
 					menuList_stage.add(getMenuObject("座席設定", "setSeat"));
 					menuList_stage.add(getMenuObject("予約フォーム作成", "setForm"));
-					menuList_stage.add(getMenuObject("公演メンバー", "setStageMember"));
+					menuList_stage.add(getMenuObject("公演メンバー", "setStageMember?offset=&page="));
 					model.addAttribute("menuList_stage", menuList_stage);
 					model.addAttribute("menuList_stage_title", stageData.getStage_name());
 

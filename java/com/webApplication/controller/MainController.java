@@ -21,6 +21,9 @@ import com.webApplication.service.EnvService;
 import com.webApplication.service.IndexService;
 import com.webApplication.service.LoginService;
 import com.webApplication.service.SetGroupMemberService;
+import com.webApplication.service.SetGroupService;
+import com.webApplication.service.SetStageMemberService;
+import com.webApplication.service.SetUserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -83,7 +86,10 @@ public class MainController {
 	private final CreateGroupService cgs;
 	private final CreateStageService css;
 	private final CheckStageListService csls;
-	private final SetGroupMemberService sgms; 
+	private final SetGroupMemberService sgms;
+	private final SetUserService sus;
+	private final SetGroupService sgs;
+	private final SetStageMemberService ssms;
 
 	private String goAnyPage(Model model, String pageName) {
 		switch (pageName) {
@@ -152,7 +158,8 @@ public class MainController {
 	}
 
 	@PostMapping("/createUser")
-	public String accessCreateUser(Model model, String back, String mode, String userMail, String userId, String userName, String userKanaName, String userStageName, String userStageKanaName, String userPass, String rePass, String userTel, String userBirthday, String hideBirthYear, String userMode) {
+	public String accessCreateUser(Model model, String back, String mode, String userMail, String userId, String userName, String userKanaName, 
+			String userStageName, String userStageKanaName, String userPass, String rePass, String userTel, String userBirthday, String hideBirthYear, String userMode) {
 		String pageName = "createUser";
 		switch (mode) {
 		case "checkMail": {
@@ -229,6 +236,57 @@ public class MainController {
 		is.setPageInfo(model);
 		return goAnyPage(model, "setStage");
 	}
+	
+	@GetMapping("/setStageMember")
+	public String goSetStageMember(Model model, Integer offset, String page) {
+		setEnvData(model, "manager");
+		ssms.setPageInfo(model);
+		return goAnyPage(model, "setStageMember");
+	}
+	
+    @PostMapping("/setStageMember")
+    public String accessSetStageMember(Model model, String mode, String loginMode, String keyword, 
+            Integer offset, Integer searchOffset, Integer listOffset, String page, String sysUserId, 
+            String nextMode, String stageAuthority) {
+        if(loginMode != null) {
+            String tmp = mode;
+            mode = loginMode;
+            loginMode = tmp;
+        }
+        switch (mode) {
+        case "idSearch": {
+            offset = searchOffset;
+            offset = ssms.setSearchUserList(model, mode, keyword, offset, page);
+            break;
+        }
+        case "nameSearch": {
+            offset = searchOffset;
+            offset = ssms.setSearchUserList(model, mode, keyword, offset, page);
+            break;
+        }
+        case "mailSearch": {
+            offset = searchOffset;
+            offset = ssms.setSearchUserList(model, mode, keyword, offset, page);
+            break;
+        }
+        case "select": {
+            if(nextMode != null) {
+                mode = nextMode;
+            }
+            pageName = ssms.setMember(model, mode, stageAuthority, sysUserId);
+            break;
+        }
+        case "invite": {
+            offset = searchOffset;
+            mode = ssms.inviteStage(model, sysUserId);
+            offset = ssms.setSearchUserList(model, loginMode, keyword, listOffset, page);
+            break;
+        }
+        default:
+            break;
+        }
+        return goSetStageMember(model, offset, page);
+    }
 
 	@GetMapping("/createStage")
 	public String goCreateStage(Model model, String mode) {
@@ -316,6 +374,50 @@ public class MainController {
 		return goCheckStageList(model, offset, page);
 	}
 	
+	@GetMapping("/setGroup")
+	public String goSetGroup(Model model) {
+		setEnvData(model, "manager");
+		sgs.setPageInfo(model);
+		return goAnyPage(model, "setGroup");
+	}
+	
+	@PostMapping("/setGroup")
+	public String accessSetGroup(Model model, String mode, String nextMode, String groupId, String groupMail,
+			String groupPass, String rePass, String groupName, String groupKanaName) {
+		switch (mode) {
+		case "setGroupId": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sgs.setGroupId(model, mode, null, groupId);
+			break;
+		}
+		case "setMail": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sgs.setGroupMail(model, mode, null, groupMail);
+			break;
+		}
+		case "setGroupPass": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sgs.setGroupPass(model, mode, null, groupPass, rePass);
+			break;
+		}
+		case "setGroupName": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sgs.setGroupName(model, mode, null, groupName, groupKanaName);
+			break;
+		}
+		default:
+		}
+		return goSetGroup(model);
+	}
+	
 	@GetMapping("/setGroupMember")
 	public String goSetGroupMember(Model model, Integer offset, String page) {
 		setEnvData(model, "manager");
@@ -324,7 +426,9 @@ public class MainController {
 	}
 	
 	@PostMapping("/setGroupMember")
-	public String accessSetGroupMember(Model model, String mode, String loginMode, String keyword, Integer offset, Integer searchOffset, Integer listOffset, String page, String sysUserId) {
+	public String accessSetGroupMember(Model model, String mode, String loginMode, String keyword, 
+			Integer offset, Integer searchOffset, Integer listOffset, String page, String sysUserId, 
+			String nextMode, String groupAuthority) {
 		if(loginMode != null) {
 			String tmp = mode;
 			mode = loginMode;
@@ -347,7 +451,10 @@ public class MainController {
             break;
         }
         case "select": {
-            pageName = chss.selectStage(model, sysUserId);
+        	if(nextMode != null) {
+        		mode = nextMode;
+        	}
+            pageName = sgms.setMember(model, mode, groupAuthority, sysUserId);
             break;
         }
         case "invite": {
@@ -436,6 +543,71 @@ public class MainController {
 			break;
 		}
 		return goChangeGroup(model, offset, page);
+	}
+	
+	@GetMapping("/setUser")
+	public String goSetUser(Model model) {
+		setEnvData(model, "manager");
+		sus.setPageInfo(model);
+		return goAnyPage(model, "setUser");
+	}
+	
+	@PostMapping("/setUser")
+	public String accessSetUser(Model model, String mode, String nextMode, String sysUserId, String userId, String userMail, String userPass, String rePass, 
+			String userTel, String userName, String userKanaName, String userBirthday, String hideBirthYear) {
+		switch (mode) {
+		case "setUserId": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sus.setUserId(model, mode, sysUserId, userId);
+			break;
+		}
+		case "setMail": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sus.setUserMail(model, mode, sysUserId, userMail);
+			break;
+		}
+		case "setUserPass": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sus.setUserPass(model, mode, sysUserId, userPass, rePass);
+			break;
+		}
+		case "setUserTel": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sus.setUserTel(model, mode, sysUserId, userTel);
+			break;
+		}
+		case "setUserName": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sus.setUserName(model, mode, sysUserId, userName, userKanaName);
+			break;
+		}
+		case "setUserStageName": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sus.setUserStageName(model, mode, sysUserId, userName, userKanaName);
+			break;
+		}
+		case "setUserBirthday": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sus.setUserBirthday(model, mode, sysUserId, userBirthday, hideBirthYear);
+			break;
+		}
+		default:
+		}
+		return goSetUser(model);
 	}
 
 	@GetMapping("/createGroup")

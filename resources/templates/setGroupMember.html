@@ -87,12 +87,7 @@
                         <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
                         <td th:text="${item.user_id}"></td>
                         <td th:text="${item.user_name}"></td>
-                        <td th:if="${item.sys_user_id != userData.sys_user_id && item.group_authority == null}">
-                            <button name="loginMode" value="invite">招待</button>
-                        </td>
-                        <td th:if="${item.sys_user_id == userData.sys_user_id || item.group_authority != null}">
-                            <span style="color: red;">参加中</span>
-                        </td>
+                        <td><button name="loginMode" value="invite">招待</button></td>
                     </form>
                 </tr>
             </th:block>
@@ -118,23 +113,39 @@
                 <th></th>
             </tr>
             <th:block th:each="item : ${memberList}">
-                <form action="/setGroupMember" method="post">
-                    <tr>
-                        <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
-                        <td th:text="${item.user_id}"></td>
-                        <td th:text="${item.user_name}"></td>
-                        <td th:text="${item.authority_name}"></td>
-                        <td>
-                            <span th:if="${item.sys_user_id == userData.sys_user_id}" style="color: red;">
-                                編集不可
-                            </span>
-
-                            <button name="mode" value="select" th:if="${item.sys_user_id != userData.sys_user_id}">
-                                編集
-                            </button>
-                        </td>
-                    </tr>
-                </form>
+                <tr>
+                    <td th:text="${item.user_id}"></td>
+                    <td th:text="${item.user_name}"></td>
+                    <td th:text="${item.authority_name}"></td>
+                    <td th:if="${item.sys_user_id == userData.sys_user_id && item.sys_user_id != sysUserId}">
+                        <span style="color: red;">編集不可</span>
+                    </td>
+                    <td th:if="${item.sys_user_id != userData.sys_user_id && item.sys_user_id != sysUserId}">
+                        <form action="/setGroupMember" method="post">
+                            <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
+                            <button name="mode" value="select">編集</button>
+                        </form>
+                    </td>
+                    <td th:if="${item.sys_user_id == sysUserId && mode == 'select'}">
+                        <form action="/setGroupMember" method="post">
+                            <input type="hidden" name="mode" value="select">
+                            <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
+                            <p>
+                                権限変更 <span th:text="${item.authority_name}"></span> ⇒ 
+                                <select name="groupAuthority">
+                                    <th:block th:each="opt : ${authorityList}">
+                                        <option th:value="${opt.authority_id}" th:text="${opt.authority_name}"></option>
+                                    </th:block>
+                                </select> 
+                                <button type="submit" name="nextMode" value="inputValue">決定</button>
+                            </p>
+                            <p>
+                                団体から退会 ⇒ 
+                                <button type="submit" name="nextMode" value="logout">退会</button>
+                            </p>
+                        </form>
+                    </td>
+                </tr>
             </th:block>
         </table>
         <form action="/setGroupMember" method="post">

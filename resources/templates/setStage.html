@@ -25,13 +25,13 @@
             <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
         </th:block>
     </ul>
-	
-	<h4 th:text="${menuList_tools_title}"></h4>
-	<ul>
-	    <th:block th:each="column : ${menuList_tools}">
-	        <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-	    </th:block>
-	</ul>
+
+    <h4 th:text="${menuList_tools_title}"></h4>
+    <ul>
+        <th:block th:each="column : ${menuList_tools}">
+            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+        </th:block>
+    </ul>
 
     <h3 th:text="${menuList_ctegory_group}"></h3>
     <h4 th:text="${menuList_group_title}"></h4>
@@ -49,6 +49,200 @@
         </th:block>
     </ul>
     <hr>
+
+    <!-- ページ内容 -->
+    <div>
+        <table>
+            <tr>
+                <th>公演ID</th>
+                <td th:text="${stageData.stage_id}"></td>
+                <td th:if="${mode != 'setStageId'}">
+                    <form action="/setStage" method="post">
+                        <button type="submit" name="mode" value="setStageId">編集</button>
+                    </form>
+                </td>
+                <td th:if="${mode == 'setStageId'}">
+                    <form action="/setStage" method="post">
+                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                        <input type="hidden" name="nextMode" th:value="inputValue">
+                        <p>
+                            新しい公演IDを入力してください<br>
+                            <input type="text" name="stageId" th:value="${stageId}" required><br>
+                            <button type="submit" name="mode" value="setStageId">決定</button>
+                        </p>
+                        <p th:text="${message}" style="color: red;"></p>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <th>パスワード</th>
+                <td>非表示</td>
+                <td th:if="${mode != 'setStagePass'}">
+                    <form action="/setStage" method="post">
+                        <button type="submit" name="mode" value="setStagePass">編集</button>
+                    </form>
+                </td>
+                <td th:if="${mode == 'setStagePass'}">
+                    <form action="/setStage" method="post">
+                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                        <input type="hidden" name="nextMode" th:value="inputValue">
+                        <p>
+                            現在のパスワード<br>
+                            <span th:text="${stageData.stage_pass}"></span>
+                        </p>
+                        <p>
+                            新しいパスワードを入力してください<br>
+                            <input type="password" name="stagePass" required><br>
+                            <input type="password" name="rePass" required placeholder="再度入力">
+                            <button type="submit" name="mode" value="setStagePass">決定</button>
+                        </p>
+                        <p th:text="${message}" style="color: red;"></p>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <th>公演名</th>
+                <td th:text="${stageData.stage_name}"></td>
+                <td th:if="${mode != 'setStageName'}">
+                    <form action="/setStage" method="post">
+                        <button type="submit" name="mode" value="setStageName">編集</button>
+                    </form>
+                </td>
+                <td th:if="${mode == 'setStageName'}">
+                    <form action="/setStage" method="post">
+                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                        <input type="hidden" name="nextMode" th:value="inputValue">
+                        <p>
+                            新しい公演名を入力してください<br>
+                            <input type="text" name="stageName" th:text="${stageName}" required><br>
+                            <button type="submit" name="mode" value="setStageName">決定</button>
+                        </p>
+                        <p th:text="${message}" style="color: red;"></p>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <th>集客目標</th>
+                <td th:text="${stageData.stage_attract_customers}"></td>
+                <td th:if="${mode != 'setAttractCustomers'}">
+                    <form action="/setStage" method="post">
+                        <button type="submit" name="mode" value="setAttractCustomers">編集</button>
+                    </form>
+                </td>
+                <td th:if="${mode == 'setAttractCustomers'}">
+                    <form action="/setStage" method="post">
+                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                        <input type="hidden" name="nextMode" th:value="inputValue">
+                        <p>
+                            新しい集客目標を入力してください<br>
+                            <input type="number" name="stageAttractCustomers" th:text="${stageAttractCustomers}"
+                                required><br>
+                            <button type="submit" name="mode" value="stageAttractCustomers">決定</button>
+                        </p>
+                        <p th:text="${message}" style="color: red;"></p>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <th>予約フォームのベースURL名</th>
+                <td th:text="${stageData.stage_url_title}"></td>
+                <td th:if="${mode != 'setUrlTitle'}">
+                    編集不可
+                </td>
+            </tr>
+            <tr>
+                <th>会場</th>
+                <td th:text="${stageData.stage_place_name} + '(' + ${stageData.stage_place_address} + ')'"></td>
+                <td th:if="${mode != 'setStagePlace'}">
+                    <form action="/setStage" method="post">
+                        <button type="submit" name="mode" value="setStagePlace">編集</button>
+                    </form>
+                </td>
+                <td th:if="${mode == 'setStagePlace'}">
+                    <form action="/setStage" method="post">
+                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                        <input type="hidden" name="nextMode" th:value="inputKeyword">
+                        <p>
+                            会場を選択、もしくは新規入力してください<br>
+                            <input type="text" name="keyword" th:value="${keyword}" placeholder="検索キーワードを入力">
+                            <button type="submit" name="mode" value="setStagePlace">検索</button><br>
+                        </p>
+                    </form>
+                    <form action="/setStage" method="post">
+                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                        <input type="hidden" name="nextMode" th:value="inputValue">
+                        <select name="stagePlaceName">
+                            <option value="" disabled selected>会場を選択してください</option>
+                            <th:block th:each="item : ${placeList}">
+                                <option th:value="|${item.stage_place_name} (${item.stage_place_address})|"
+                                    th:text="|${item.stage_place_name} (${item.stage_place_address})|">
+                                </option>
+                            </th:block>
+                        </select>
+                        <input type="hidden" name="stagePlaceAddress" value="selected">
+                        <button type="submit" name="mode" value="setStagePlace">決定</button>
+                    </form>
+                    <form action="/setStage" method="post">
+                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                        <input type="hidden" name="nextMode" th:value="inputValue">
+                        <p>
+                            会場名<br>
+                            <input type="text" name="stagePlaceName" th:value="${stagePlaceName}" required>
+                        </p>
+                        <p>
+                            会場住所<br>
+                            ※郵便番号不要<br>
+                            <input type="text" name="stagePlaceAddress" th:value="${stagePlaceAddress}" required><br>
+                        </p>
+                        <button type="submit" name="mode" value="setStagePlace">決定</button>
+                    </form>
+                    <p th:text="${message}" style="color: red;"></p>
+                </td>
+            </tr>
+            <tr>
+                <th>チラシ画像(表面)</th>
+                <td th:text="${stageData.stage_flyer_1}"></td>
+                <td th:if="${mode != 'setStageFlyer1'}">
+                    <form action="/setStage" method="post">
+                        <button type="submit" name="mode" value="setStageFlyer1">編集</button>
+                    </form>
+                </td>
+                <td th:if="${mode == 'setStageFlyer1'}">
+                    <form action="/setStage" method="post">
+                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                        <input type="hidden" name="nextMode" th:value="inputValue">
+                        <p>
+                            新しいチラシ画像をアップロードしてください<br>
+                            <input type="file" name="file" required><br>
+                            <button type="submit" name="mode" value="setStageFlyer1">決定</button>
+                        </p>
+                        <p th:text="${message}" style="color: red;"></p>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <th>チラシ画像(裏面)</th>
+                <td th:text="${stageData.stage_flyer_2}"></td>
+                <td th:if="${mode != 'setStageFlyer2'}">
+                    <form action="/setStage" method="post">
+                        <button type="submit" name="mode" value="setStageFlyer2">編集</button>
+                    </form>
+                </td>
+                <td th:if="${mode == 'setStageFlyer2'}">
+                    <form action="/setStage" method="post">
+                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                        <input type="hidden" name="nextMode" th:value="inputValue">
+                        <p>
+                            新しいチラシ画像をアップロードしてください<br>
+                            <input type="file" name="file" required><br>
+                            <button type="submit" name="mode" value="setStageFlyer2">決定</button>
+                        </p>
+                        <p th:text="${message}" style="color: red;"></p>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
 
     <p>
     <form action="/login" method="post">

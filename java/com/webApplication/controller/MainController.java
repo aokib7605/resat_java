@@ -23,6 +23,7 @@ import com.webApplication.service.LoginService;
 import com.webApplication.service.SetGroupMemberService;
 import com.webApplication.service.SetGroupService;
 import com.webApplication.service.SetStageMemberService;
+import com.webApplication.service.SetStageService;
 import com.webApplication.service.SetUserService;
 
 import lombok.RequiredArgsConstructor;
@@ -90,6 +91,7 @@ public class MainController {
 	private final SetUserService sus;
 	private final SetGroupService sgs;
 	private final SetStageMemberService ssms;
+	private final SetStageService sss;
 
 	private String goAnyPage(Model model, String pageName) {
 		switch (pageName) {
@@ -233,9 +235,39 @@ public class MainController {
 	@GetMapping("/setStage")
 	public String goSetStage(Model model) {
 		setEnvData(model, "manager");
-		is.setPageInfo(model);
+		sss.setPageInfo(model);
 		return goAnyPage(model, "setStage");
 	}
+	
+	@PostMapping("/setStage")
+    public String accessSetStage(Model model, String mode, String nextMode, String stageId,
+            String stagePass, String rePass, String stageName) {
+        switch (mode) {
+        case "setStageId": {
+            if(nextMode != null) {
+                mode = nextMode;
+            }
+            sss.setStageId(model, mode, null, stageId);
+            break;
+        }
+        case "setStagePass": {
+            if(nextMode != null) {
+                mode = nextMode;
+            }
+            sss.setStagePass(model, mode, null, stagePass, rePass);
+            break;
+        }
+        case "setStageName": {
+            if(nextMode != null) {
+                mode = nextMode;
+            }
+            sss.setStageName(model, mode, null, stageName);
+            break;
+        }
+        default:
+        }
+        return goSetStage(model);
+    }
 	
 	@GetMapping("/setStageMember")
 	public String goSetStageMember(Model model, Integer offset, String page) {

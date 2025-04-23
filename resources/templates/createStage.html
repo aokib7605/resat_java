@@ -103,6 +103,7 @@
             </p>
             <p>
                 予約フォームのベースURL名<br>
+                ※後での修正不可<br>
                 <input type="text" name="stageUrlTitle" th:value="${stageUrlTitle}" required>
             </p>
             <button type="submit" name="mode" value="inputBaseData">確認</button>
@@ -128,7 +129,7 @@
 
             <input type="text" name="keyword" th:value="${keyword}"> 
             <button type="submit" name="mode" value="inputPlaceData">検索</button><br>
-            ※キーワードに一致する会場があれば、下のリストに表示されます
+            ※キーワードに一致する会場があれば、下のプルダウンメニューに表示されます
         </form>
         <form action="/createStage" method="post">
             <input type="hidden" name="sysGroupId" th:value="${sysGroupId}">

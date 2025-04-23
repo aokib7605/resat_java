@@ -261,6 +261,18 @@ public class SQL {
 		return getUserData("sys_user_id", userData.getSys_user_id());
 	}
 	
+	public DataEntity updateStageData(String column, String value, String sysStageId) {
+		if(sysStageId == null) {
+			DataEntity userData = (DataEntity)session.getAttribute("userSession");
+			sysStageId = userData.getUser_def_stage();
+		}
+
+		String where = " where sys_stage_id = '" + sysStageId + "'";
+		mr.updateData("stages", column, value, where);
+
+		return getStageData("sys_stage_id", sysStageId);
+	}
+	
 	public DataEntity updateGroupData(String column, String value, String sysGroupId) {
 		if(sysGroupId == null) {
 			DataEntity userData = (DataEntity)session.getAttribute("userSession");

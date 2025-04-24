@@ -137,7 +137,7 @@
                             新しい集客目標を入力してください<br>
                             <input type="number" name="stageAttractCustomers" th:text="${stageAttractCustomers}"
                                 required><br>
-                            <button type="submit" name="mode" value="stageAttractCustomers">決定</button>
+                            <button type="submit" name="mode" value="setAttractCustomers">決定</button>
                         </p>
                         <p th:text="${message}" style="color: red;"></p>
                     </form>
@@ -185,6 +185,7 @@
                     <form action="/setStage" method="post">
                         <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
                         <input type="hidden" name="nextMode" th:value="inputValue">
+                        <input type="hidden" name="keyword" th:value="${keyword}">
                         <p>
                             会場名<br>
                             <input type="text" name="stagePlaceName" th:value="${stagePlaceName}" required>
@@ -208,12 +209,12 @@
                     </form>
                 </td>
                 <td th:if="${mode == 'setStageFlyer1'}">
-                    <form action="/setStage" method="post">
+                    <form action="/setStage" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
                         <input type="hidden" name="nextMode" th:value="inputValue">
                         <p>
                             新しいチラシ画像をアップロードしてください<br>
-                            <input type="file" name="file" required><br>
+                            <input type="file" name="file" accept=".png,.jpeg,.jpg" required><br>
                             <button type="submit" name="mode" value="setStageFlyer1">決定</button>
                         </p>
                         <p th:text="${message}" style="color: red;"></p>
@@ -229,12 +230,12 @@
                     </form>
                 </td>
                 <td th:if="${mode == 'setStageFlyer2'}">
-                    <form action="/setStage" method="post">
+                    <form action="/setStage" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
                         <input type="hidden" name="nextMode" th:value="inputValue">
                         <p>
                             新しいチラシ画像をアップロードしてください<br>
-                            <input type="file" name="file" required><br>
+                            <input type="file" name="file" accept=".png,.jpeg,.jpg" required><br>
                             <button type="submit" name="mode" value="setStageFlyer2">決定</button>
                         </p>
                         <p th:text="${message}" style="color: red;"></p>

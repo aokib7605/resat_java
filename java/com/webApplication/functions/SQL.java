@@ -1,5 +1,7 @@
 package com.webApplication.functions;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +24,7 @@ public class SQL {
 	private final MainRepository mr;
 	String column = "";
 	String where = "";
-	
+
 	public ArrayList<DataEntity> getAuthorityList(String tableName){
 		List<String> columns = null;
 		if(tableName.equals("group_authorities")) {
@@ -32,7 +34,7 @@ public class SQL {
 		}
 		return mr.getDataList(tableName, columns, "");
 	}
-	
+
 	public ArrayList<DataEntity> getLoginList(String tableName){
 		List<String> columns = null;
 		if(tableName.equals("group_login_list")) {
@@ -41,6 +43,15 @@ public class SQL {
 			columns = mr.getStageLoginListTableColumns();
 		}
 		return mr.getDataList(tableName, columns, "");
+	}
+
+	public ArrayList<DataEntity> getPlaceList(String keyword){
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"stage_place_name",
+				"stage_place_address"
+				));
+		String where = " where stage_place_name like '%" + keyword + "%' group by stage_place_name, stage_place_address";
+		return mr.getDataListBySelectColumn("stages", columns, where);
 	}
 
 	public DataEntity getUserData(String column, String anyValue) {
@@ -90,8 +101,10 @@ public class SQL {
 	}
 
 	public DataEntity getStageData(String column, String anyId) {
-		List<String> columns = mr.getStagesTableColumns();
-		where = " where <ID> = '" + anyId + "' limit 1";
+		List<String> columns = Stream.concat(mr.getStagesTableColumns().stream(), mr.getImagesTableColumns().stream()).collect(Collectors.toList());
+		String joinTable = " left outer join images i1 on stage_flyer_1 = i1.sys_image_id"
+				+ " left outer join images i2 on stage_flyer_2 = i2.sys_image_id";
+		where = joinTable + " where <ID> = '" + anyId + "' limit 1";
 
 		switch (column) {
 		case "stage_id": {
@@ -107,6 +120,56 @@ public class SQL {
 		}
 		}   
 		return mr.getData("stages", columns, where);
+	}
+
+	public DataEntity getFormData(String sysFormId) {
+		List<String> columns = mr.getFormsTableColumns();
+		where = " where sys_form_id = '" + sysFormId + "'";
+		return mr.getData("forms", columns, where);
+	}
+
+	public DataEntity getDateData(String sysDateId) {
+		List<String> columns = mr.getDatesTableColumns();
+		where = " where sys_date_id = '" + sysDateId + "'";
+		return mr.getData("dates", columns, where);
+	}
+
+	public DataEntity getTicketData(String sysTicketId) {
+		List<String> columns = mr.getTicketsTableColumns();
+		where = " where sys_ticket_id = '" + sysTicketId + "'";
+		return mr.getData("tickets", columns, where);
+	}
+
+	public DataEntity getFormsetData(String sysStageId, String sysFormId, String sysTicketId, String sysDateId) {
+		if(sysStageId == null) {
+			DataEntity userData = (DataEntity)session.getAttribute("userSession");
+			sysStageId = userData.getUser_def_stage();
+		}
+
+		List<String> columns = mr.getFormsetTableColumns();
+		where = " where sys_stage_id = '" + sysStageId + "'";
+		if(sysFormId != null) {
+			where = where + " && sys_form_id = '" + sysFormId + "'";
+		}
+		if(sysTicketId != null) {
+			where = where + " && sys_ticket_id = '" + sysTicketId + "'";
+		}
+		if(sysDateId != null) {
+			where = where + " && sys_date_id = '" + sysDateId + "'";
+		}
+		return mr.getData("formset", columns, where);
+	}
+
+	public DataEntity getImageData(String column, String value, String contentType, String sysAnyId) {
+		List<String> columns = mr.getImagesTableColumns();
+		String where = " where <COLUMN> = '<VALUE>' && content_type = '" + contentType + "' && sys_any_id = '" + sysAnyId + "' limit 1";
+		if(column != null) {
+			where = where.replace("<COLUMN>", column);
+			where = where.replace("<VALUE>", value);
+		} else {
+			where = where.replace("<COLUMN> = '<VALUE>' && ", "");
+		}
+		return mr.getData("images", columns, where);
 	}
 
 	public DataEntity getGroupLoginData(String sysUserId, String sysGroupId) {
@@ -221,6 +284,50 @@ public class SQL {
 		return mr.getDataList(tableName, columns, where);
 	}
 
+	public ArrayList<DataEntity> getFormDataList(String sysStageId){
+		List<String> columns = mr.getFormsTableColumns();
+		where = " where sys_stage_id = '" + sysStageId + "' order by date_st ";
+		return mr.getDataList("forms", columns, where);
+	}
+
+	public ArrayList<DataEntity> getTicketDataList(String sysStageId){
+		List<String> columns = mr.getTicketsTableColumns();
+		where = " where sys_stage_id = '" + sysStageId + "' ";
+		return mr.getDataList("tickets", columns, where);
+	}
+
+	public ArrayList<DataEntity> getFormsetDataList(String column, String sysAnyId){
+		List<String> columns = mr.getFormsetTableColumns();
+		where = " where " + column + " = '" + sysAnyId + "' ";
+		return mr.getDataList("formset", columns, where);
+	}
+
+	public ArrayList<DataEntity> getDateDataList(String sysStageId){
+		List<String> columns = mr.getDatesTableColumns();
+		where = " where sys_stage_id = '" + sysStageId + "' ";
+		return mr.getDataList("dates", columns, where);
+	}
+	
+	public ArrayList<DataEntity> getFormsetDataListGroupByColumn(String sysStageId, String sysFormId, String column){
+		List<String> columns = new ArrayList<String>(Arrays.asList(column));
+		where = " where sys_stage_id = '" + sysStageId + "'";
+		if(sysFormId != null) {
+			where = where + " && sys_form_id = '" + sysFormId + "'";
+		}
+		where = where + " group by " + column;
+		return mr.getDataListBySelectColumn("formset", columns, where);
+	}
+
+	public String getSysImageId(String column, String value, String contentType, String sysAnyId) {
+		try {
+			DataEntity image = getImageData(column, value, contentType, sysAnyId);
+			return image.getSys_image_id();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
+	}
+
 	public void addGroupLoginList(String sysGroupId, String sysUserId) {
 		List<String> columns = mr.getGroupeLoginListTableColumns();
 		List<String> values = new ArrayList<String>(Arrays.asList(
@@ -249,6 +356,80 @@ public class SQL {
 		}
 	}
 
+	public DataEntity addForm(String sysFormId, String sysStageId, String formName, LocalDateTime dateSt, LocalDateTime dateEd) {
+		if(sysStageId == null) {
+			DataEntity userData = (DataEntity)session.getAttribute("userSession");
+			sysStageId = userData.getUser_def_stage();
+		}
+		List<String> columns = mr.getFormsTableColumns();
+		List<String> values = new ArrayList<String>(Arrays.asList(
+				sysFormId,		//sys_form_id
+				sysStageId,		//sys_stage_id
+				formName,		//form_name
+				dateSt + "",	//date_st
+				dateEd + ""		//date_ed
+				));
+		mr.insertData("forms", columns, values);
+
+		return getFormData(sysFormId);
+	}
+
+	public DataEntity addDate(String sysDateId, String sysStageId, String stDate, Integer stSeat, String stInfo) {
+		if(sysStageId == null) {
+			DataEntity userData = (DataEntity)session.getAttribute("userSession");
+			sysStageId = userData.getUser_def_stage();
+		}
+		List<String> columns = mr.getDatesTableColumns();
+		List<String> values = new ArrayList<String>(Arrays.asList(
+				sysDateId,		//sys_date_id
+				sysStageId,		//sys_stage_id
+				stDate,			//st_date
+				stSeat + "",	//st_seat
+				stInfo			//st_info
+				));
+		mr.insertData("dates", columns, values);
+
+		return getDateData(sysDateId);
+	}
+
+	public DataEntity addTicket(String sysTicketId, String sysStageId, String ticketName, Integer ticketPrice) {
+		if(sysStageId == null) {
+			DataEntity userData = (DataEntity)session.getAttribute("userSession");
+			sysStageId = userData.getUser_def_stage();
+		}
+		List<String> columns = mr.getTicketsTableColumns();
+		List<String> values = new ArrayList<String>(Arrays.asList(
+				sysTicketId,		//sys_ticket_id
+				sysStageId,			//sys_stage_id
+				ticketName,			//ticket_name
+				ticketPrice + ""	//ticket_price
+				));
+		mr.insertData("tickets", columns, values);
+
+		return getTicketData(sysTicketId);
+	}
+
+	public DataEntity addFormset(String sysStageId, String sysFormId, String sysTicketId, String sysDateId) {
+		if(sysStageId == null) {
+			DataEntity userData = (DataEntity)session.getAttribute("userSession");
+			sysStageId = userData.getUser_def_stage();
+		}
+		List<String> columns = mr.getFormsTableColumns();
+		List<String> values = new ArrayList<String>(Arrays.asList(
+				sysStageId,		//sys_stage_id
+				sysFormId,		//sys_form_id
+				sysTicketId,	//sys_ticket_id
+				sysDateId		//sys_date_id
+				));
+		mr.insertData("formset", columns, values);
+
+		return getFormData(sysFormId);
+	}
+
+	public void addImage(String fileName, String fileType, byte[] bytes, String sysAnyId, String contentType) throws IOException {
+		mr.insertImage(Pub.createUuid(), fileName, fileType, bytes, sysAnyId, contentType);
+	}
+
 	public DataEntity updateUserData(String column, String value, String sysUserId) {
 		DataEntity userData = (DataEntity)session.getAttribute("userSession");
 		if(sysUserId != null) {
@@ -260,7 +441,7 @@ public class SQL {
 
 		return getUserData("sys_user_id", userData.getSys_user_id());
 	}
-	
+
 	public DataEntity updateStageData(String column, String value, String sysStageId) {
 		if(sysStageId == null) {
 			DataEntity userData = (DataEntity)session.getAttribute("userSession");
@@ -272,7 +453,7 @@ public class SQL {
 
 		return getStageData("sys_stage_id", sysStageId);
 	}
-	
+
 	public DataEntity updateGroupData(String column, String value, String sysGroupId) {
 		if(sysGroupId == null) {
 			DataEntity userData = (DataEntity)session.getAttribute("userSession");
@@ -283,6 +464,27 @@ public class SQL {
 		mr.updateData("groupes", column, value, where);
 
 		return getGroupData("sys_group_id", sysGroupId);
+	}
+
+	public DataEntity updateFormsetData(String column, String value, String sysStageId, String sysFormId, String sysTicketId, String sysDateId) {
+		if(sysStageId == null) {
+			DataEntity userData = (DataEntity)session.getAttribute("userSession");
+			sysStageId = userData.getUser_def_stage();
+		}
+
+		String where = " where sys_stage_id = '" + sysStageId + "'";
+		if(sysFormId != null) {
+			where = where + " && sys_form_id = '" + sysFormId + "'";
+		}
+		if(sysTicketId != null) {
+			where = where + " && sys_ticket_id = '" + sysTicketId + "'";
+		}
+		if(sysDateId != null) {
+			where = where + " && sys_date_id = '" + sysDateId + "'";
+		}
+		mr.updateData("formset", column, value, where);
+
+		return getFormsetData(sysStageId, sysFormId, sysTicketId, sysDateId);
 	}
 
 	public DataEntity updateUserDefGroup(String column, String id, boolean newGroup) {
@@ -320,7 +522,7 @@ public class SQL {
 			//model.addAttribute("message", "公演登録時にエラーが発生しました");
 		}
 	}
-	
+
 	public ArrayList<DataEntity> updateLoginList(String tableName, String column, String value, String sysUserId){
 		DataEntity userData = (DataEntity)session.getAttribute("userSession");
 		if(sysUserId != null) {
@@ -329,10 +531,17 @@ public class SQL {
 
 		String where = " where sys_user_id = '" + userData.getSys_user_id() + "'";
 		mr.updateData(tableName, column, value, where);
-		
+
 		return getLoginList(tableName);
 	}
-	
+
+	public void updateImage(String sysImageId, String fileName, String fileType, byte[] binaryData) {
+		where = " where sys_image_id = '" + sysImageId + "'";
+		mr.updateData("images", "file_name", fileName, where);
+		mr.updateData("images", "file_type", fileType, where);
+		mr.updateData("images", "binary_data", binaryData, where);
+	}
+
 	public ArrayList<DataEntity> deleteLoginData(String tableName, String sysUserId, String sysAnyId){
 		where = " where ";
 		if(sysUserId != null) {
@@ -350,5 +559,16 @@ public class SQL {
 		}
 		mr.deleteData(tableName, where);
 		return getLoginList(tableName);
+	}
+
+	public void deleteFormsetData(String sysStageId, String sysFormId, String column) {
+		where = " where sys_stage_id = '" + sysStageId + "'";
+		if(sysFormId != null) {
+			where = where + " && sys_form_id = '" + sysFormId + "'";
+		}
+		if(column != null) {
+			where = where + " && " + column + " = null";
+		}
+		mr.deleteData("formset", where);
 	}
 }

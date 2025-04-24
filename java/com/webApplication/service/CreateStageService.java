@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.webApplication.entity.DataEntity;
 import com.webApplication.functions.Pub;
+import com.webApplication.functions.SQL;
 import com.webApplication.repository.MainRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class CreateStageService {
 	private final HttpSession session;
 	private final MainRepository mr;
+	private final SQL sql;
 
 	public void setPageInfo(Model model) {
 		model.addAttribute("title2", "公演の新規作成");
@@ -72,7 +74,7 @@ public class CreateStageService {
 			model.addAttribute("mode", "inputBaseData");
 			return "inputBaseData";
 		}
-		model.addAttribute("placeList", getPlaceList(""));
+		model.addAttribute("placeList", sql.getPlaceList(""));
 		model.addAttribute("mode", "inputPlaceData");
 		return "inputPlaceData";
 	}
@@ -89,7 +91,7 @@ public class CreateStageService {
 			}
 		}
 		if(keyword != null && !keyword.equals("")) {
-			model.addAttribute("placeList", getPlaceList(keyword));
+			model.addAttribute("placeList", sql.getPlaceList(keyword));
 			model.addAttribute("mode", "inputPlaceData");
 			return "inputPlaceData";
 		}
@@ -117,7 +119,7 @@ public class CreateStageService {
 		setImagesSession(model, file1, file2);
 		if(back != null && back.equals("back")) {
 			model.addAttribute("mode", "inputPlaceData");
-			model.addAttribute("placeList", getPlaceList(""));
+			model.addAttribute("placeList", sql.getPlaceList(""));
 			return "inputPlaceData";
 		}
 		model.addAttribute("groupName", getGroup(sysGroupId).getGroup_name());
@@ -144,14 +146,11 @@ public class CreateStageService {
 			return "uploadImages";
 		}
 		try {
-			addImages(file1, file2);
-			int num = 1;
-			String file1Id = getSysImageId(file1, num);
-			if(file1.equals(file2)) {
-				num = 2;
-			}
-			String file2Id = getSysImageId(file2, num);
-			createStage(sysGroupId, stageId, stagePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, file1Id, file2Id);
+			String uuid = Pub.createUuid();
+			addImages(file1, file2, uuid);
+			String file1Id = sql.getSysImageId("file_name", file1, "flyer1", uuid);
+			String file2Id = sql.getSysImageId("file_name", file2, "flyer2", uuid);
+			createStage(uuid, sysGroupId, stageId, stagePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, file1Id, file2Id);
 			DataEntity stageData = setSession(model, stageId);
 			DataEntity userData = updateUserDefStage(model, stageData.getSys_stage_id());
 			createCastTable(model, stageData.getSys_stage_id());
@@ -168,15 +167,6 @@ public class CreateStageService {
 		List<String> columns = Stream.concat(mr.getGroupeLoginListTableColumns().stream(), mr.getGroupesTableColumns().stream()).collect(Collectors.toList());
 		String where = " gll left outer join groupes g on g.sys_group_id = gll.sys_group_id where sys_user_id = '" + userData.getSys_user_id() + "'";
 		return mr.getDataList("group_login_list", columns, where);
-	}
-
-	private ArrayList<DataEntity> getPlaceList(String keyword){
-		List<String> columns = new ArrayList<String>(Arrays.asList(
-				"stage_place_name",
-				"stage_place_address"
-				));
-		String where = " where stage_place_name like '%" + keyword + "%' group by stage_place_name, stage_place_address";
-		return mr.getDataListBySelectColumn("stages", columns, where);
 	}
 	
 	private DataEntity getGroup(String sysGroupId) {
@@ -212,41 +202,27 @@ public class CreateStageService {
 		session.setAttribute("file2Bytes", file2.getBytes());
 	}
 	
-	private void addImages(String file1, String file2) throws IOException {
+	private void addImages(String file1, String file2, String uuid) throws IOException {
 		if(file1 != null) {
 			String file1Name = (String)session.getAttribute("file1Name");
 			String file1Type = (String)session.getAttribute("file1Type");
 			byte[] file1Bytes = (byte[])session.getAttribute("file1Bytes");
-			addImage(file1Name, file1Type, file1Bytes);
+			sql.addImage(file1Name, file1Type, file1Bytes, uuid, "flyer1");
 		}
 		if(file2 != null) {
 			String file2Name = (String)session.getAttribute("file2Name");
 			String file2Type = (String)session.getAttribute("file2Type");
 			byte[] file2Bytes = (byte[])session.getAttribute("file2Bytes");
-			addImage(file2Name, file2Type, file2Bytes);
+			sql.addImage(file2Name, file2Type, file2Bytes, uuid, "flyer2");
 		}
 	}
 	
-	private void addImage(String fileName, String contentType, byte[] bytes) throws IOException {
-	    mr.insertImage(Pub.createUuid(), fileName, contentType, bytes);
-	}
-	
-	private String getSysImageId(String fileName, int num) {
-		try {
-			DataEntity image = mr.getData("images", mr.getImagesTableColumns(), " where file_name = '" + fileName + "' limit 1 offset " + num);
-			return image.getSys_image_id();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return null;
-	}
-	
-	private void createStage(String sysGroupId, String stageId, String stagePass, String stageName, Integer stageAttractCustomers, String stageUrlTitle,
+	private void createStage(String uuid, String sysGroupId, String stageId, String stagePass, String stageName, Integer stageAttractCustomers, String stageUrlTitle,
 			String stagePlaceName, String stagePlaceAddress, String file1Id, String file2Id) {
 		try {
 			List<String> columns = mr.getStagesTableColumns();
 			List<String> values = new ArrayList<String>(Arrays.asList(
-					Pub.createUuid(),//sys_stage_id
+					uuid,//sys_stage_id
 					sysGroupId,//sys_group_id
 					stageId,//stage_id
 					stagePass,//stage_pass

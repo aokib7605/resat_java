@@ -20,6 +20,7 @@ import com.webApplication.service.CreateUserService;
 import com.webApplication.service.EnvService;
 import com.webApplication.service.IndexService;
 import com.webApplication.service.LoginService;
+import com.webApplication.service.SetFormService;
 import com.webApplication.service.SetGroupMemberService;
 import com.webApplication.service.SetGroupService;
 import com.webApplication.service.SetStageMemberService;
@@ -92,6 +93,7 @@ public class MainController {
 	private final SetGroupService sgs;
 	private final SetStageMemberService ssms;
 	private final SetStageService sss;
+	private final SetFormService sfs;
 
 	private String goAnyPage(Model model, String pageName) {
 		switch (pageName) {
@@ -233,7 +235,7 @@ public class MainController {
 	}
 	
 	@GetMapping("/setStage")
-	public String goSetStage(Model model) {
+	public String goSetStage(Model model){
 		setEnvData(model, "manager");
 		sss.setPageInfo(model);
 		return goAnyPage(model, "setStage");
@@ -241,7 +243,8 @@ public class MainController {
 	
 	@PostMapping("/setStage")
     public String accessSetStage(Model model, String mode, String nextMode, String stageId,
-            String stagePass, String rePass, String stageName) {
+            String stagePass, String rePass, String stageName, Integer stageAttractCustomers, String stagePlaceName, String stagePlaceAddress, String keyword,
+            MultipartFile file) throws IOException {
         switch (mode) {
         case "setStageId": {
             if(nextMode != null) {
@@ -264,10 +267,83 @@ public class MainController {
             sss.setStageName(model, mode, null, stageName);
             break;
         }
+        case "setAttractCustomers": {
+            if(nextMode != null) {
+                mode = nextMode;
+            }
+            sss.setAttractCustomers(model, mode, null, stageAttractCustomers);
+            break;
+        }
+        case "setStagePlace": {
+            if(nextMode != null) {
+                mode = nextMode;
+            }
+            sss.setStagePlace(model, mode, null, stagePlaceName, stagePlaceAddress, keyword);
+            break;
+        }
+        case "setStageFlyer1": {
+            if(nextMode != null) {
+                mode = nextMode;
+            }
+            sss.setStageFlyer(model, mode, null, 1, file);
+            break;
+        }
+        case "setStageFlyer2": {
+            if(nextMode != null) {
+                mode = nextMode;
+            }
+            sss.setStageFlyer(model, mode, null, 2, file);
+            break;
+        }
         default:
         }
         return goSetStage(model);
     }
+	
+	@GetMapping("/setForm")
+	public String goSetForm(Model model) {
+		setEnvData(model, "manager");
+		sfs.setPageInfo(model);
+		return goAnyPage(model, "setForm");
+	}
+	
+	@PostMapping("/setForm")
+	public String accessSetForm(Model model, String mode, String nextMode, String sysStageId, String formName, String dateSt, String dateEd,
+			String stDate, String stInfo, String ticketName, Integer ticketPrice, String sysFormId, String[] selectArrays) {
+		switch (mode) {
+		case "createForm": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sfs.createForm(model, mode, sysStageId, formName, dateSt, dateEd);
+			break;
+		}
+		case "createDate": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sfs.createDate(model, mode, sysStageId, stDate, stInfo);
+			break;
+		}
+		case "createTicket": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sfs.createTicket(model, mode, sysStageId, ticketName, ticketPrice);
+			break;
+		}
+		case "setTicketToForm": {
+			if(nextMode != null) {
+				mode = nextMode;
+			}
+			sfs.setTicketToForm(model, mode, sysStageId, sysFormId, selectArrays);
+			break;
+		}
+		default:
+			break;
+		}
+		return goSetForm(model);
+	}
 	
 	@GetMapping("/setStageMember")
 	public String goSetStageMember(Model model, Integer offset, String page) {

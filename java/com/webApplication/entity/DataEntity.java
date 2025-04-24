@@ -3,6 +3,8 @@ package com.webApplication.entity;
 import java.lang.reflect.Method;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -72,6 +74,8 @@ public class DataEntity {
     private String file_name;
     private String file_type;
     private byte[] binary_data;
+    private String sys_any_id;
+    private String content_type;
     
     //cast_sys_stage_id
 //    private String sys_user_id;
@@ -95,6 +99,32 @@ public class DataEntity {
   //stage_authority
 //    private Integer authority_id;
 //    private String authority_name;
+    
+    //forms
+    private String sys_form_id;
+//    private String sys_stage_id;
+    private String form_name;
+    private LocalDateTime date_st;
+    private LocalDateTime date_ed;
+    
+    //tickets
+    private String sys_ticket_id;
+//    private String sys_stage_id;
+    private String ticket_name;
+    private int ticket_price;
+    
+    //dates
+    private String sys_date_id;
+//    private String sys_stage_id;
+    private Date st_date;
+    private int st_seat;
+    private String st_info;
+    
+    //formset
+//    private String sys_stage_id;
+//    private String sys_form_id;
+//    private String sys_ticket_id;
+//    private String sys_date_id;
 	
 	public void setEntity(String column, String value) {
 		try {
@@ -115,17 +145,18 @@ public class DataEntity {
 	
     // 値を型に合わせて変換するヘルパーメソッド
     private Object convertValue(String value, Class<?> targetType) {
-    	if(value == null) {
-    		return null;
-    	}
+        if (value == null) {
+            return null;
+        }
+
         if (targetType == int.class || targetType == Integer.class) {
             return Integer.parseInt(value);
         } else if (targetType == double.class || targetType == Double.class) {
             return Double.parseDouble(value);
         } else if (targetType == boolean.class || targetType == Boolean.class) {
             return Boolean.parseBoolean(value);
-        } else if (targetType == Date.class) { 
-        	// java.sql.Date に対応
+        } else if (targetType == Date.class) {
+            // java.sql.Date に対応
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 java.util.Date parsed = formatter.parse(value);
@@ -134,7 +165,17 @@ public class DataEntity {
                 e.printStackTrace();
                 return null;
             }
+        } else if (targetType == LocalDateTime.class) {
+            // LocalDateTime に対応（フォーマットに応じて調整可能）
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            try {
+                return LocalDateTime.parse(value, formatter);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
+
         return value; // デフォルトは文字列
     }
 }

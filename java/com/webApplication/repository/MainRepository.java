@@ -2,6 +2,8 @@ package com.webApplication.repository;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,22 +29,35 @@ public class MainRepository {
 	private DataEntity setData(Map<String, Object> dbObj, List<String> columns) {
 		DataEntity data = new DataEntity();
 		try {
-			for(String column : columns) {
-				if(dbObj.get(column) != null) {
+			for (String column : columns) {
+				if (dbObj.get(column) != null) {
+					// Integer 型処理
 					try {
-						String record = (Integer)dbObj.get(column) + "";
+						String record = (Integer) dbObj.get(column) + "";
 						data.setEntity(column, record);
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
+					
+					// Date 型処理（java.sql.Date）
 					try {
-						String record = new SimpleDateFormat("yyyy-MM-dd").format((Date)dbObj.get(column));
+						String record = new SimpleDateFormat("yyyy-MM-dd").format((Date) dbObj.get(column));
 						data.setEntity(column, record);
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
+
+					// LocalDateTime 型処理（java.time.LocalDateTime）
 					try {
-						data.setEntity(column, (String)dbObj.get(column));
+						String record = ((LocalDateTime) dbObj.get(column)).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+						data.setEntity(column, record);
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+
+					// String 型処理
+					try {
+						data.setEntity(column, (String) dbObj.get(column));
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
@@ -108,17 +123,30 @@ public class MainRepository {
 		}
 	}
 	
-	public void insertImage(String uuid, String fileName, String fileType, byte[] binaryData) {
+	public void insertImage(String uuid, String fileName, String fileType, byte[] binaryData, String sysAnyId, String contentType) {
 		try {
-			sql = "insert into " + "images" + " values( ?, ?, ?, ? )";
+			sql = "insert into " + "images" + " values( ?, ?, ?, ?, ?, ? )";
 			System.out.println(sql);
-			tmp.update(sql, uuid, fileName, fileType, binaryData);
+			tmp.update(sql, uuid, fileName, fileType, binaryData, sysAnyId, contentType);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
 
 	public void updateData(String table, String column, String value, String where) {
+		try {
+			sql = "update " + table + " set " + column + " = '" + value + "' " + where;
+			if(value == null) {
+				sql = sql.replace("'" + value + "' ", "" + value + " ");
+			}
+			System.out.println(sql);
+			tmp.update(sql);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void updateData(String table, String column, byte[] value, String where) {
 		try {
 			sql = "update " + table + " set " + column + " = '" + value + "' " + where;
 			if(value == null) {
@@ -229,7 +257,9 @@ public class MainRepository {
 				"sys_image_id",
 				"file_name",
 				"file_type",
-				"binary_data"
+				"binary_data",
+				"sys_any_id",
+				"content_type"
 				));
 		return columns;
 	}
@@ -275,5 +305,47 @@ public class MainRepository {
 			"authority_name"
 		));
 		return columns;
+	}
+	
+	public List<String> getFormsTableColumns(){ 
+	    List<String> columns = new ArrayList<String>(Arrays.asList(
+	            "sys_form_id",
+	            "sys_stage_id",
+	            "form_name",
+	            "date_st",
+	            "date_ed"
+	    ));
+	    return columns; 
+	}
+	
+	public List<String> getTicketsTableColumns(){ 
+	    List<String> columns = new ArrayList<String>(Arrays.asList(
+	            "sys_ticket_id",
+	            "sys_stage_id",
+	            "ticket_name",
+	            "ticket_price"
+	            ));
+	    return columns; 
+	}
+	
+	public List<String> getDatesTableColumns(){ 
+	    List<String> columns = new ArrayList<String>(Arrays.asList(
+	            "sys_date_id",
+	            "sys_stage_id",
+	            "st_date",
+	            "st_seat",
+	            "st_info"
+	            ));
+	    return columns; 
+	}
+	
+	public List<String> getFormsetTableColumns(){ 
+	    List<String> columns = new ArrayList<String>(Arrays.asList(
+	        "sys_stage_id",
+	        "sys_form_id",
+	        "sys_ticket_id",
+	        "sys_date_id"
+	    ));
+	    return columns; 
 	}
 }

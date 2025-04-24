@@ -4,6 +4,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,5 +64,15 @@ public class Pub {
     public static String convertByteArrayToString(byte[] bytes) {
         if (bytes == null) return null;
         return new String(bytes, StandardCharsets.UTF_8);
+    }
+    
+    public static LocalDateTime convertStrToDateTime(String dateTimeStr) {
+    	dateTimeStr = dateTimeStr.replace("T", " ");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        try {
+            return LocalDateTime.parse(dateTimeStr, formatter);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("日付の形式が正しくありません: " + dateTimeStr, e);
+        }
     }
 }

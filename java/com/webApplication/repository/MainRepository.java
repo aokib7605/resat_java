@@ -30,6 +30,9 @@ public class MainRepository {
 		DataEntity data = new DataEntity();
 		try {
 			for (String column : columns) {
+				if (column.contains(".")) {
+				    column = column.substring(column.indexOf(".") + 1);
+				}
 				if (dbObj.get(column) != null) {
 					// Integer 型処理
 					try {
@@ -97,17 +100,20 @@ public class MainRepository {
 		return null;
 	}
 
-	public ArrayList<DataEntity> getDataListBySelectColumn(String table, List<String> columns, String where){
+	public ArrayList<DataEntity> getDataListBySelectColumn(String table, List<String> columns, List<String> getColumns, String where){
 		try {
 			sql = "select " + Pub.convertListToStr(columns) + " from " + table + " " + where;
 			System.out.println(sql);
 			List<Map<String, Object>> dbObjList = tmp.queryForList(sql);
 			ArrayList<DataEntity> resultList = new ArrayList<DataEntity>();
+			
+			List<String> targetColumns = (getColumns != null) ? getColumns : columns;
 			for(Map<String, Object> dbObj : dbObjList) {
-				resultList.add(setData(dbObj, columns));
+				resultList.add(setData(dbObj, targetColumns));
 			}
 			return resultList;
 		} catch (Exception e) {
+			System.out.println(e);
 			// TODO: handle exception
 		}
 		return null;
@@ -273,22 +279,28 @@ public class MainRepository {
 		return columns;
 	}
 
-	public List<String> getCast_sysStageIdTableColumns(){ 
+	public List<String> getCastTableColumns(){ 
 		List<String> columns = new ArrayList<String>(Arrays.asList(
-				"sys_user_id", 
-				"cast_chara_name", 
-				"cast_sort_num"
+				"sys_cast_id", 
+				"sys_stage_id",
+				"cast_chara_name",
+				"sys_user_id",
+				"cast_sort_num",
+				"user_sort_num"
 				));
-		return columns;
+		return columns; 
 	}
 
-	public List<String> getStaff_sysStageIdTableColumns(){ 
-		List<String> columns = new ArrayList<String>(Arrays.asList(
-				"sys_user_id", 
-				"staff_dep_name", 
-				"staff_sort_num"
-				));
-		return columns;
+	public List<String> getStaffTableColumns(){ 
+	    List<String> columns = new ArrayList<String>(Arrays.asList(
+	    		"sys_staff_id", 
+	            "sys_stage_id", 
+	            "staff_dep_name", 
+	            "sys_user_id", 
+	            "staff_sort_num", 
+	            "user_sort_num" 
+	            ));
+	    return columns; 
 	}
 	
 	public List<String> getGroupAuthorityTableColumns(){ 

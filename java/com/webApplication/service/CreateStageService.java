@@ -153,8 +153,6 @@ public class CreateStageService {
 			createStage(uuid, sysGroupId, stageId, stagePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, file1Id, file2Id);
 			DataEntity stageData = setSession(model, stageId);
 			DataEntity userData = updateUserDefStage(model, stageData.getSys_stage_id());
-			createCastTable(model, stageData.getSys_stage_id());
-			createStaffTable(model, stageData.getSys_stage_id());
 			addStageLoginList(model, stageData.getSys_stage_id(), userData.getSys_user_id());
 		} catch (Exception e) {
 			model.addAttribute("message", "公演登録時にエラーが発生しました");
@@ -274,23 +272,5 @@ public class CreateStageService {
 				1 + ""			//stage_authority
 				));
 		mr.insertData("stage_login_list", columns, values);
-	}
-	
-	private void createCastTable(Model model, String sysStageId) {
-		List<String> columns = new ArrayList<String>(Arrays.asList(
-				"`sys_user_id` varchar(20) DEFAULT NULL",
-				"`cast_chara_name` varchar(64) DEFAULT NULL",
-				"`cast_sort_num` int DEFAULT NULL"
-				));
-		mr.createTable("cast_" + sysStageId, columns, "");
-	}
-	
-	private void createStaffTable(Model model, String sysStageId) {
-		List<String> columns = new ArrayList<String>(Arrays.asList(
-				"`sys_user_id` varchar(20) DEFAULT NULL",
-				"`staff_dep_name` varchar(64) DEFAULT NULL",
-				"`staff_sort_num` int DEFAULT NULL"
-				));
-		mr.createTable("staff_" + sysStageId, columns, "");
 	}
 }

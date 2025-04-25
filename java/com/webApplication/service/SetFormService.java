@@ -104,6 +104,40 @@ public class SetFormService {
 		return "createForm";
 	}
 	
+    public String setDateToForm(Model model, String mode, String sysStageId, String sysFormId, String[] selectArrays) {
+        DataEntity userData = (DataEntity)session.getAttribute("userSession");
+        switch (mode) {
+        case "setDateToForm": {
+            model.addAttribute("mode", "setDateToForm");
+            model.addAttribute("sysFormId", sysFormId);
+            model.addAttribute("dateFormList", sql.getFormsetDataListGroupByColumn(sysStageId, sysFormId, "sys_date_id"));
+            break;
+        }
+        case "inputValue": {
+            sql.deleteFormsetData(sysStageId, sysFormId, "sys_date_id");
+            if(selectArrays != null) {
+                for(int i = 0; i < selectArrays.length; i++) {
+                    sql.addFormset(sysStageId, sysFormId, null, selectArrays[i]);
+                }
+            }
+//          model.addAttribute("mode", "createDate");
+            model.addAttribute("dateFormList", sql.getFormsetDataListGroupByColumn(sysStageId, sysFormId, "sys_date_id"));
+            model.addAttribute("dateList", sql.getDateDataList(sysStageId));
+            
+            userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+            DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
+            model.addAttribute("message", "公演日時を設定しました");
+            session.setAttribute("userSession", userData);
+            session.setAttribute("defStSession", stageData);
+            model.addAttribute("userData", userData);
+            break;
+        }
+        default:
+            break;
+        }
+        return "createForm";
+    }
+	
 	public String setTicketToForm(Model model, String mode, String sysStageId, String sysFormId, String[] selectArrays) {
 		DataEntity userData = (DataEntity)session.getAttribute("userSession");
 		switch (mode) {
@@ -115,17 +149,18 @@ public class SetFormService {
 		}
 		case "inputValue": {
 			sql.deleteFormsetData(sysStageId, sysFormId, "sys_ticket_id");
-			for(int i = 0; i < selectArrays.length; i++) {
-				sql.addFormset(sysStageId, sysFormId, selectArrays[i], null);
+			if(selectArrays != null) {
+				for(int i = 0; i < selectArrays.length; i++) {
+					sql.addFormset(sysStageId, sysFormId, selectArrays[i], null);
+				}
 			}
-//			model.addAttribute("mode", "createTicket");
 //			sql.addTicket(Pub.createUuid(), sysStageId, ticketName, ticketPrice);
 			model.addAttribute("ticketFormList", sql.getFormsetDataListGroupByColumn(sysStageId, sysFormId, "sys_ticket_id"));
 			model.addAttribute("ticketList", sql.getTicketDataList(sysStageId));
 			
             userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
             DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
-            model.addAttribute("message", "チケットを新規作成しました");
+            model.addAttribute("message", "チケットを設定しました");
             session.setAttribute("userSession", userData);
             session.setAttribute("defStSession", stageData);
             model.addAttribute("userData", userData);
@@ -135,5 +170,13 @@ public class SetFormService {
 			break;
 		}
 		return "createForm";
+	}
+	
+	public void deleteDate(Model model, String sysDateId) {
+		sql.deleteDateOrTicket("dates", sysDateId);
+	}
+	
+	public void deleteTicket(Model model, String sysTicketId) {
+		sql.deleteDateOrTicket("tickets", sysTicketId);
 	}
 }

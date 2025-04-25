@@ -95,7 +95,48 @@
                     <td th:text="${item.form_name}"></td>
                     <td th:text="${#temporals.format(item.date_st, 'yyyy-MM-dd HH:mm')}"></td>
                     <td th:text="${#temporals.format(item.date_ed, 'yyyy-MM-dd HH:mm')}"></td>
-                    <td></td>
+                    <td th:if="${mode != 'setDateToForm' || sysFormId != item.sys_form_id}">
+                        <form action="/setForm" method="post">
+                            <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                            <input type="hidden" name="sysFormId" th:value="${item.sys_form_id}">
+                            <button type="submit" name="mode" value="setDateToForm">設定</button>
+                        </form>
+                    </td>
+
+                    <td th:if="${mode == 'setDateToForm' && sysFormId == item.sys_form_id}">
+                        <form action="/setForm" method="post">
+                            <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                            <input type="hidden" name="sysFormId" th:value="${item.sys_form_id}">
+                            <input type="hidden" name="nextMode" value="inputValue">
+                            <table>
+                                <tr>
+                                    <td>現在の設定</td>
+                                    <td>新しく設定</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <th:block th:each="opt : ${dateFormList}">
+                                            <span
+                                                th:text="${#temporals.format(opt.st_date, 'yyyy-MM-dd HH:mm') + ' ' + opt.st_info}"></span><br>
+                                        </th:block>
+                                    </td>
+                                    <td>
+                                        <th:block th:each="opt : ${dateList}">
+                                            <input type="checkbox" name="selectArrays" th:value="${opt.sys_date_id}">
+                                            <span
+                                                th:text="${#temporals.format(opt.st_date, 'yyyy-MM-dd HH:mm') + ' ' + opt.st_info}"></span><br>
+                                        </th:block>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <button type="submit" name="mode" value="setDateToForm">確定</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </td>
 
                     <td th:if="${mode != 'setTicketToForm' || sysFormId != item.sys_form_id}">
                         <form action="/setForm" method="post">
@@ -119,7 +160,7 @@
                                     <td>
                                         <th:block th:each="opt : ${ticketFormList}">
                                             <span
-                                                th:text="${opt.sys_ticket_id + ' (' + opt.sys_ticket_id + ' 円)'}"></span><br>
+                                                th:text="${opt.ticket_name + ' (' + opt.ticket_price + ' 円)'}"></span><br>
                                         </th:block>
                                     </td>
                                     <td>
@@ -162,7 +203,7 @@
                 <input type="datetime-local" name="stDate" required>
             </p>
             <p>
-                諸注意<br>
+                備考<br>
                 <input type="text" name="stInfo">
             </p>
             <button type="submit" name="mode" value="createDate">確定</button>
@@ -173,12 +214,19 @@
         <table>
             <tr>
                 <th>公演日時</th>
-                <th>諸注意</th>
+                <th>備考</th>
+                <th></th>
             </tr>
             <th:block th:each="item : ${dateList}">
                 <tr>
-                    <td th:text="${item.st_date}"></td>
+                    <td th:text="${#temporals.format(item.st_date, 'yyyy-MM-dd HH:mm')}"></td>
                     <td th:text="${item.st_info}"></td>
+                    <td>
+                        <form action="" method="post">
+                            <input type="hidden" name="sysDateId" th:value="${item.sys_date_id}">
+                            <button type="submit" name="mode" value="deleteDate">削除</button>
+                        </form>
+                    </td>
                 </tr>
             </th:block>
         </table>
@@ -208,17 +256,25 @@
             <button type="submit" name="mode" value="createTicket">確定</button>
         </form>
     </div>
+
     <h3>チケット一覧</h3>
     <div>
         <table>
             <tr>
                 <th>チケット名</th>
                 <th>料金</th>
+                <th></th>
             </tr>
             <th:block th:each="item : ${ticketList}">
                 <tr>
                     <td th:text="${item.ticket_name}"></td>
                     <td th:text="${item.ticket_price}"></td>
+                    <td>
+                        <form action="" method="post">
+                            <input type="hidden" name="sysTicketId" th:value="${item.sys_ticket_id}">
+                            <button type="submit" name="mode" value="deleteTicket">削除</button>
+                        </form>
+                    </td>
                 </tr>
             </th:block>
         </table>

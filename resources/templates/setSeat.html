@@ -25,13 +25,13 @@
             <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
         </th:block>
     </ul>
-	
-	<h4 th:text="${menuList_tools_title}"></h4>
-	<ul>
-	    <th:block th:each="column : ${menuList_tools}">
-	        <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-	    </th:block>
-	</ul>
+
+    <h4 th:text="${menuList_tools_title}"></h4>
+    <ul>
+        <th:block th:each="column : ${menuList_tools}">
+            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+        </th:block>
+    </ul>
 
     <h3 th:text="${menuList_ctegory_group}"></h3>
     <h4 th:text="${menuList_group_title}"></h4>
@@ -49,6 +49,40 @@
         </th:block>
     </ul>
     <hr>
+
+    <!-- ページ内容 -->
+    <div>
+        <p>各公演日時ごとの座席数（予約登録可能数）を設定します</p>
+        <form action="/setSeat" method="post">
+            <table>
+                <tr>
+                    <th>公演日時</th>
+                    <th>座席数</th>
+                </tr>
+                <th:block th:each="item : ${dateList}">
+                    <tr>
+                        <td th:text="${#temporals.format(item.st_date, 'yyyy-MM-dd HH:mm') + ' ' + item.st_info}"></td>
+                        <td>
+                            <input type="hidden" name="sysDateId" th:value="${item.sys_date_id}">
+                            <input type="number" name="stSeat" th:value="${item.st_seat}">
+                        </td>
+                    </tr>
+                </th:block>
+            </table>
+            <button type="submit" name="mode" value="setSeat">登録</button>
+        </form>
+
+        <form action="/setSeat" method="post">
+            <p>
+                全日程一括変更<br>
+                座席数：<input type="number" name="stSeat">
+                <th:block th:each="item : ${dateList}">
+                    <input type="hidden" name="sysDateId" th:value="${item.sys_date_id}">
+                </th:block>
+                <button type="submit" name="mode" value="setAllSeat">一括登録</button>
+            </p>
+        </form>
+    </div>
 
     <p>
     <form action="/login" method="post">

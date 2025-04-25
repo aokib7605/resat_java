@@ -20,9 +20,11 @@ import com.webApplication.service.CreateUserService;
 import com.webApplication.service.EnvService;
 import com.webApplication.service.IndexService;
 import com.webApplication.service.LoginService;
+import com.webApplication.service.SetAdvertisementService;
 import com.webApplication.service.SetFormService;
 import com.webApplication.service.SetGroupMemberService;
 import com.webApplication.service.SetGroupService;
+import com.webApplication.service.SetSeatService;
 import com.webApplication.service.SetStageMemberService;
 import com.webApplication.service.SetStageService;
 import com.webApplication.service.SetUserService;
@@ -48,6 +50,7 @@ public class MainController {
 		}
 		if(checkUserSession(model, pageName).equals("login")) {
 			pageName = "login";
+			accessLogin(model, "logout");
 		}
 		return pageName;
 	}
@@ -94,6 +97,8 @@ public class MainController {
 	private final SetStageMemberService ssms;
 	private final SetStageService sss;
 	private final SetFormService sfs;
+	private final SetSeatService sss2;
+	private final SetAdvertisementService sas;
 
 	private String goAnyPage(Model model, String pageName) {
 		switch (pageName) {
@@ -127,36 +132,49 @@ public class MainController {
 
 	@GetMapping("/index")
 	public String goRootPage(Model model) {
-		if(session.getAttribute("defStSession") == null) {
-			setEnvData(model, "setFirstStage");
-		} else {
-			setEnvData(model, "manager");
+		try {
+			if(session.getAttribute("defStSession") == null) {
+				setEnvData(model, "setFirstStage");
+			} else {
+				setEnvData(model, "manager");
+			}
+			is.setPageInfo(model);
+		} catch (Exception e) {
+
 		}
-		is.setPageInfo(model);
 		return goAnyPage(model, "index");
 	}
 
 	@PostMapping("/index")
 	public String accessRoot(Model model, String mode, String userId, String userPass) {
-		if(mode.equals("login")) {
-			pageName = ls.checkLoginData(model, mode, userId, userPass);
-			if(pageName.equals("login")) {
-				return goLoginPage(model);
-			} else {
-				return goRootPage(model);
+		try {
+			if(mode.equals("login")) {
+				pageName = ls.checkLoginData(model, mode, userId, userPass);
+				if(pageName.equals("login")) {
+					return goLoginPage(model);
+				} else {
+					return goRootPage(model);
+				}
 			}
+		} catch (Exception e) {
+
 		}
+
 		return pageName;
 	}
 
 	@GetMapping("/createUser")
 	public String goCreateUser(Model model, String mode, String data) {
-		setEnvData(model, "createUser");
-		cus.setPageInfo(model);
-		if(mode.equals("start")) {
-			cus.start(model);
-		} else if(mode.equals("confiData")){
-			cus.confiMail(model, data);
+		try {
+			setEnvData(model, "createUser");
+			cus.setPageInfo(model);
+			if(mode.equals("start")) {
+				cus.start(model);
+			} else if(mode.equals("confiData")){
+				cus.confiMail(model, data);
+			}
+		} catch (Exception e) {
+
 		}
 		return goAnyPage(model, "createUser");
 	}
@@ -165,35 +183,39 @@ public class MainController {
 	public String accessCreateUser(Model model, String back, String mode, String userMail, String userId, String userName, String userKanaName, 
 			String userStageName, String userStageKanaName, String userPass, String rePass, String userTel, String userBirthday, String hideBirthYear, String userMode) {
 		String pageName = "createUser";
-		switch (mode) {
-		case "checkMail": {
-			if(cus.checkMail(model, userMail) == false) {
-				mode = "start";
+		try {
+			switch (mode) {
+			case "checkMail": {
+				if(cus.checkMail(model, userMail) == false) {
+					mode = "start";
+				}
+				break;
 			}
-			break;
-		}
-		case "confiMail": {
-			cus.confiMail(model, mode);
-			break;
-		}
-		case "inputUserId": {
-			mode = cus.inputUserId(model, mode, userMail, userId);
-			break;
-		}
-		case "inputBaseData": {
-			mode = cus.inputBaseData(model, mode, back, userMail, userId, userName, userKanaName, userStageName, userStageKanaName, userPass, rePass);
-			break;
-		}
-		case "inputContactData": {
-			mode = cus.inputContactData(model, mode, back, userMail, userId, userName, userKanaName, userStageName, userStageKanaName, userPass, userTel, userBirthday, hideBirthYear, userMode);
-			break;
-		}
-		case "confiResult": {
-			pageName = cus.confiResult(model, mode, back, userMail, userId, userName, userKanaName, userStageName, userStageKanaName, userPass, userTel, userBirthday, hideBirthYear, userMode);
-			break;
-		}
-		default:
-			System.out.println("新規ユーザー作成で例外フローが発生しました");
+			case "confiMail": {
+				cus.confiMail(model, mode);
+				break;
+			}
+			case "inputUserId": {
+				mode = cus.inputUserId(model, mode, userMail, userId);
+				break;
+			}
+			case "inputBaseData": {
+				mode = cus.inputBaseData(model, mode, back, userMail, userId, userName, userKanaName, userStageName, userStageKanaName, userPass, rePass);
+				break;
+			}
+			case "inputContactData": {
+				mode = cus.inputContactData(model, mode, back, userMail, userId, userName, userKanaName, userStageName, userStageKanaName, userPass, userTel, userBirthday, hideBirthYear, userMode);
+				break;
+			}
+			case "confiResult": {
+				pageName = cus.confiResult(model, mode, back, userMail, userId, userName, userKanaName, userStageName, userStageKanaName, userPass, userTel, userBirthday, hideBirthYear, userMode);
+				break;
+			}
+			default:
+				System.out.println("新規ユーザー作成で例外フローが発生しました");
+			}
+		} catch (Exception e) {
+
 		}
 		if(pageName.equals("createUser")) {
 			return goCreateUser(model, mode, null);
@@ -204,208 +226,342 @@ public class MainController {
 
 	@GetMapping("setFirstStage")
 	public String goSetFirstStage(Model model) {
-		setEnvData(model, "setFirstStage");
-		is.setPageInfo(model);
+		try {
+			setEnvData(model, "setFirstStage");
+			is.setPageInfo(model);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		return goAnyPage(model, "setFirstStage");
 	}
 
 	@PostMapping("setFirstStage")
 	public String accessSetFirstStage(Model model, String mode) {
-		switch (mode) {
-		case "changeStage": {
-			System.out.println(mode + "が選択されましたA");
-			break;
-		}
-		case "changeGroup": {
-			System.out.println(mode + "が選択されましたB");
-			break;
-		}
-		case "setUser": {
-			System.out.println(mode + "が選択されましたC");
-			break;
-		}
-		case "createGroup": {
-			System.out.println(mode + "が選択されましたD");
-			break;
-		}
-		default:
-			break;
+		try {
+			switch (mode) {
+			case "changeStage": {
+				System.out.println(mode + "が選択されましたA");
+				break;
+			}
+			case "changeGroup": {
+				System.out.println(mode + "が選択されましたB");
+				break;
+			}
+			case "setUser": {
+				System.out.println(mode + "が選択されましたC");
+				break;
+			}
+			case "createGroup": {
+				System.out.println(mode + "が選択されましたD");
+				break;
+			}
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		return goSetFirstStage(model);
 	}
-	
+
 	@GetMapping("/setStage")
 	public String goSetStage(Model model){
-		setEnvData(model, "manager");
-		sss.setPageInfo(model);
+		try {
+			setEnvData(model, "manager");
+			sss.setPageInfo(model);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		return goAnyPage(model, "setStage");
 	}
-	
+
 	@PostMapping("/setStage")
-    public String accessSetStage(Model model, String mode, String nextMode, String stageId,
-            String stagePass, String rePass, String stageName, Integer stageAttractCustomers, String stagePlaceName, String stagePlaceAddress, String keyword,
-            MultipartFile file) throws IOException {
-        switch (mode) {
-        case "setStageId": {
-            if(nextMode != null) {
-                mode = nextMode;
-            }
-            sss.setStageId(model, mode, null, stageId);
-            break;
-        }
-        case "setStagePass": {
-            if(nextMode != null) {
-                mode = nextMode;
-            }
-            sss.setStagePass(model, mode, null, stagePass, rePass);
-            break;
-        }
-        case "setStageName": {
-            if(nextMode != null) {
-                mode = nextMode;
-            }
-            sss.setStageName(model, mode, null, stageName);
-            break;
-        }
-        case "setAttractCustomers": {
-            if(nextMode != null) {
-                mode = nextMode;
-            }
-            sss.setAttractCustomers(model, mode, null, stageAttractCustomers);
-            break;
-        }
-        case "setStagePlace": {
-            if(nextMode != null) {
-                mode = nextMode;
-            }
-            sss.setStagePlace(model, mode, null, stagePlaceName, stagePlaceAddress, keyword);
-            break;
-        }
-        case "setStageFlyer1": {
-            if(nextMode != null) {
-                mode = nextMode;
-            }
-            sss.setStageFlyer(model, mode, null, 1, file);
-            break;
-        }
-        case "setStageFlyer2": {
-            if(nextMode != null) {
-                mode = nextMode;
-            }
-            sss.setStageFlyer(model, mode, null, 2, file);
-            break;
-        }
-        default:
-        }
-        return goSetStage(model);
-    }
-	
+	public String accessSetStage(Model model, String mode, String nextMode, String stageId,
+			String stagePass, String rePass, String stageName, Integer stageAttractCustomers, String stagePlaceName, String stagePlaceAddress, String keyword,
+			MultipartFile file) throws IOException {
+		try {
+			switch (mode) {
+			case "setStageId": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sss.setStageId(model, mode, null, stageId);
+				break;
+			}
+			case "setStagePass": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sss.setStagePass(model, mode, null, stagePass, rePass);
+				break;
+			}
+			case "setStageName": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sss.setStageName(model, mode, null, stageName);
+				break;
+			}
+			case "setAttractCustomers": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sss.setAttractCustomers(model, mode, null, stageAttractCustomers);
+				break;
+			}
+			case "setStagePlace": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sss.setStagePlace(model, mode, null, stagePlaceName, stagePlaceAddress, keyword);
+				break;
+			}
+			case "setStageFlyer1": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sss.setStageFlyer(model, mode, null, 1, file);
+				break;
+			}
+			case "setStageFlyer2": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sss.setStageFlyer(model, mode, null, 2, file);
+				break;
+			}
+			default:
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return goSetStage(model);
+	}
+
 	@GetMapping("/setForm")
 	public String goSetForm(Model model) {
-		setEnvData(model, "manager");
-		sfs.setPageInfo(model);
+		try {
+			setEnvData(model, "manager");
+			sfs.setPageInfo(model);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		return goAnyPage(model, "setForm");
 	}
-	
+
 	@PostMapping("/setForm")
 	public String accessSetForm(Model model, String mode, String nextMode, String sysStageId, String formName, String dateSt, String dateEd,
-			String stDate, String stInfo, String ticketName, Integer ticketPrice, String sysFormId, String[] selectArrays) {
-		switch (mode) {
-		case "createForm": {
-			if(nextMode != null) {
-				mode = nextMode;
+			String stDate, String stInfo, String ticketName, Integer ticketPrice, String sysFormId, String[] selectArrays,
+			String sysDateId, String sysTicketId) {
+		try {
+			switch (mode) {
+			case "createForm": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sfs.createForm(model, mode, sysStageId, formName, dateSt, dateEd);
+				break;
 			}
-			sfs.createForm(model, mode, sysStageId, formName, dateSt, dateEd);
-			break;
-		}
-		case "createDate": {
-			if(nextMode != null) {
-				mode = nextMode;
+			case "createDate": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sfs.createDate(model, mode, sysStageId, stDate, stInfo);
+				break;
 			}
-			sfs.createDate(model, mode, sysStageId, stDate, stInfo);
-			break;
-		}
-		case "createTicket": {
-			if(nextMode != null) {
-				mode = nextMode;
+			case "createTicket": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sfs.createTicket(model, mode, sysStageId, ticketName, ticketPrice);
+				break;
 			}
-			sfs.createTicket(model, mode, sysStageId, ticketName, ticketPrice);
-			break;
-		}
-		case "setTicketToForm": {
-			if(nextMode != null) {
-				mode = nextMode;
+			case "setDateToForm": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sfs.setDateToForm(model, mode, sysStageId, sysFormId, selectArrays);
+				break;
 			}
-			sfs.setTicketToForm(model, mode, sysStageId, sysFormId, selectArrays);
-			break;
-		}
-		default:
-			break;
+			case "setTicketToForm": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sfs.setTicketToForm(model, mode, sysStageId, sysFormId, selectArrays);
+				break;
+			}
+			case "deleteDate": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sfs.deleteDate(model, sysDateId);
+				break;
+			}
+			case "deleteTicket": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sfs.deleteTicket(model, sysTicketId);
+				break;
+			}
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		return goSetForm(model);
 	}
-	
-	@GetMapping("/setStageMember")
-	public String goSetStageMember(Model model, Integer offset, String page) {
-		setEnvData(model, "manager");
-		ssms.setPageInfo(model);
-		return goAnyPage(model, "setStageMember");
+
+	@GetMapping("/setSeat")
+	public String goSetSeat(Model model) {
+		try {
+			setEnvData(model, "manager");
+			sss2.setPageInfo(model);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return goAnyPage(model, "setSeat");
+	}
+
+	@PostMapping("/setSeat")
+	public String accessSetSeat(Model model, String mode, String[] sysDateId, Integer[] stSeat) {
+		try {
+			switch (mode) {
+			case "setSeat": {
+				sss2.setSeat(model, sysDateId, stSeat);
+				break;
+			}
+			case "setAllSeat": {
+				sss2.setAllSeat(model, sysDateId, stSeat);
+				break;
+			}
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return goSetSeat(model);
 	}
 	
-    @PostMapping("/setStageMember")
-    public String accessSetStageMember(Model model, String mode, String loginMode, String keyword, 
-            Integer offset, Integer searchOffset, Integer listOffset, String page, String sysUserId, 
-            String nextMode, String stageAuthority) {
-        if(loginMode != null) {
-            String tmp = mode;
-            mode = loginMode;
-            loginMode = tmp;
-        }
-        switch (mode) {
-        case "idSearch": {
-            offset = searchOffset;
-            offset = ssms.setSearchUserList(model, mode, keyword, offset, page);
-            break;
-        }
-        case "nameSearch": {
-            offset = searchOffset;
-            offset = ssms.setSearchUserList(model, mode, keyword, offset, page);
-            break;
-        }
-        case "mailSearch": {
-            offset = searchOffset;
-            offset = ssms.setSearchUserList(model, mode, keyword, offset, page);
-            break;
-        }
-        case "select": {
-            if(nextMode != null) {
-                mode = nextMode;
-            }
-            pageName = ssms.setMember(model, mode, stageAuthority, sysUserId);
-            break;
-        }
-        case "invite": {
-            offset = searchOffset;
-            mode = ssms.inviteStage(model, sysUserId);
-            offset = ssms.setSearchUserList(model, loginMode, keyword, listOffset, page);
-            break;
-        }
-        default:
-            break;
-        }
-        return goSetStageMember(model, offset, page);
-    }
+	@GetMapping("/setAdvertisement")
+	public String goSetAdvertisement(Model model) {
+		try {
+			setEnvData(model, "manager");
+			sas.setPageInfo(model);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return goAnyPage(model, "setAdvertisement");
+	}
+	
+	@PostMapping("/setAdvertisement")
+	public String accessSetAdvertisement(Model model, String mode, String nextMode, String sysStageId, String sysUserId, String castCharaName, String[] castCharaNames,
+			String sysCastId, String[] sysCastIds, String deleteId, Integer[] sortNums) {
+		try {
+			switch (mode) {
+			case "addCast": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sas.addCast(model, mode, sysStageId, sysUserId, castCharaName);
+				break;
+			}
+			case "changeCast": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				if(deleteId != null) {
+					mode = "deleteCast";
+					sysCastId = deleteId;
+				}
+				sas.changeCast(model, mode, sysStageId, sysCastId, sysCastIds, castCharaNames, sortNums);
+				break;
+			}
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+			// TODO: handle exception
+		}
+		return goSetAdvertisement(model);
+	}
+
+	@GetMapping("/setStageMember")
+	public String goSetStageMember(Model model, Integer offset, String page) {
+		try {
+			setEnvData(model, "manager");
+			ssms.setPageInfo(model);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return goAnyPage(model, "setStageMember");
+	}
+
+	@PostMapping("/setStageMember")
+	public String accessSetStageMember(Model model, String mode, String loginMode, String keyword, 
+			Integer offset, Integer searchOffset, Integer listOffset, String page, String sysUserId, 
+			String nextMode, String stageAuthority) {
+		try {
+			if(loginMode != null) {
+				String tmp = mode;
+				mode = loginMode;
+				loginMode = tmp;
+			}
+			switch (mode) {
+			case "idSearch": {
+				offset = searchOffset;
+				offset = ssms.setSearchUserList(model, mode, keyword, offset, page);
+				break;
+			}
+			case "nameSearch": {
+				offset = searchOffset;
+				offset = ssms.setSearchUserList(model, mode, keyword, offset, page);
+				break;
+			}
+			case "mailSearch": {
+				offset = searchOffset;
+				offset = ssms.setSearchUserList(model, mode, keyword, offset, page);
+				break;
+			}
+			case "select": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				pageName = ssms.setMember(model, mode, stageAuthority, sysUserId);
+				break;
+			}
+			case "invite": {
+				offset = searchOffset;
+				mode = ssms.inviteStage(model, sysUserId);
+				offset = ssms.setSearchUserList(model, loginMode, keyword, listOffset, page);
+				break;
+			}
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return goSetStageMember(model, offset, page);
+	}
 
 	@GetMapping("/createStage")
 	public String goCreateStage(Model model, String mode) {
-		setEnvData(model, "manager");
-		css.setPageInfo(model);
-		switch (mode) {
-		case "inputSysGroupId": {
-			model.addAttribute("mode", "inputSysGroupId");
-		}
-		default:
-			break;
+		try {
+			setEnvData(model, "manager");
+			css.setPageInfo(model);
+			switch (mode) {
+			case "inputSysGroupId": {
+				model.addAttribute("mode", "inputSysGroupId");
+			}
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		return goAnyPage(model, "createStage");
 	}
@@ -416,36 +572,40 @@ public class MainController {
 			Integer stageAttractCustomers, String stageUrlTitle, String stagePlaceName, String stagePlaceAddress, String keyword, 
 			@RequestParam(required = false) MultipartFile file1, @RequestParam(required = false) MultipartFile file2) throws IOException {
 		pageName = "createStage";
-		switch (mode) {
-		case "inputSysGroupId": {
-			mode = css.inputSysGroupId(model, sysGroupId);
-			break;
-		}
-		case "inputStageId": {
-			mode = css.inputStageId(model, back, sysGroupId, stageId);
-			break;
-		}
-		case "inputBaseData": {
-			mode = css.inputBaseData(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle);
-			break;
-		}
-		case "inputPlaceData": {
-			mode = css.inputPlaceData(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword);
-			break;
-		}
-		case "uploadImages": {
-			mode = css.uploadImages(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword, file1, file2);
-			break;
-		}
-		case "confiResult": {
-			pageName = css.confiResult(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword);
-			if(pageName.equals("uploadImages")) {
-				pageName = "createStage";
+		try {
+			switch (mode) {
+			case "inputSysGroupId": {
+				mode = css.inputSysGroupId(model, sysGroupId);
+				break;
 			}
-			break;
-		}
-		default:
-			break;
+			case "inputStageId": {
+				mode = css.inputStageId(model, back, sysGroupId, stageId);
+				break;
+			}
+			case "inputBaseData": {
+				mode = css.inputBaseData(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle);
+				break;
+			}
+			case "inputPlaceData": {
+				mode = css.inputPlaceData(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword);
+				break;
+			}
+			case "uploadImages": {
+				mode = css.uploadImages(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword, file1, file2);
+				break;
+			}
+			case "confiResult": {
+				pageName = css.confiResult(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword);
+				if(pageName.equals("uploadImages")) {
+					pageName = "createStage";
+				}
+				break;
+			}
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		if(pageName.equals("createStage")) {
 			return goCreateStage(model, mode);
@@ -453,282 +613,334 @@ public class MainController {
 			return goRootPage(model);
 		}
 	}
-	
+
 	@GetMapping("/checkStageList")
 	public String goCheckStageList(Model model, Integer offset, String page) {
-		setEnvData(model, "manager");
-		csls.setPageInfo(model, offset, page);
+		try {
+			setEnvData(model, "manager");
+			csls.setPageInfo(model, offset, page);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		return goAnyPage(model, "checkStageList");
 	}
-	
+
 	@PostMapping("/checkStageList")
 	public String accessCheckStageList(Model model, String mode, String loginMode, Integer offset, Integer listOffset, String page, String sysStageId, String stagePass) {
-		switch (mode) {
-		case "stageList": {
-			offset = listOffset;
-			break;
-		}
-        case "select": {
-            pageName = chss.selectStage(model, sysStageId);
-            break;
-        }
-        case "login": {
-            loginMode = chss.loginStage(model, loginMode, sysStageId, stagePass);
-            break;
-        }
-		default:
-			break;
+		try {
+			switch (mode) {
+			case "stageList": {
+				offset = listOffset;
+				break;
+			}
+			case "select": {
+				pageName = chss.selectStage(model, sysStageId);
+				break;
+			}
+			case "login": {
+				loginMode = chss.loginStage(model, loginMode, sysStageId, stagePass);
+				break;
+			}
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		return goCheckStageList(model, offset, page);
 	}
-	
+
 	@GetMapping("/setGroup")
 	public String goSetGroup(Model model) {
-		setEnvData(model, "manager");
-		sgs.setPageInfo(model);
+		try {
+			setEnvData(model, "manager");
+			sgs.setPageInfo(model);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		return goAnyPage(model, "setGroup");
 	}
-	
+
 	@PostMapping("/setGroup")
 	public String accessSetGroup(Model model, String mode, String nextMode, String groupId, String groupMail,
 			String groupPass, String rePass, String groupName, String groupKanaName) {
-		switch (mode) {
-		case "setGroupId": {
-			if(nextMode != null) {
-				mode = nextMode;
+		try {
+			switch (mode) {
+			case "setGroupId": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sgs.setGroupId(model, mode, null, groupId);
+				break;
 			}
-			sgs.setGroupId(model, mode, null, groupId);
-			break;
-		}
-		case "setMail": {
-			if(nextMode != null) {
-				mode = nextMode;
+			case "setMail": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sgs.setGroupMail(model, mode, null, groupMail);
+				break;
 			}
-			sgs.setGroupMail(model, mode, null, groupMail);
-			break;
-		}
-		case "setGroupPass": {
-			if(nextMode != null) {
-				mode = nextMode;
+			case "setGroupPass": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sgs.setGroupPass(model, mode, null, groupPass, rePass);
+				break;
 			}
-			sgs.setGroupPass(model, mode, null, groupPass, rePass);
-			break;
-		}
-		case "setGroupName": {
-			if(nextMode != null) {
-				mode = nextMode;
+			case "setGroupName": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sgs.setGroupName(model, mode, null, groupName, groupKanaName);
+				break;
 			}
-			sgs.setGroupName(model, mode, null, groupName, groupKanaName);
-			break;
-		}
-		default:
+			default:
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		return goSetGroup(model);
 	}
-	
+
 	@GetMapping("/setGroupMember")
 	public String goSetGroupMember(Model model, Integer offset, String page) {
-		setEnvData(model, "manager");
-		sgms.setPageInfo(model);
+		try {
+			setEnvData(model, "manager");
+			sgms.setPageInfo(model);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		return goAnyPage(model, "setGroupMember");
 	}
-	
+
 	@PostMapping("/setGroupMember")
 	public String accessSetGroupMember(Model model, String mode, String loginMode, String keyword, 
 			Integer offset, Integer searchOffset, Integer listOffset, String page, String sysUserId, 
 			String nextMode, String groupAuthority) {
-		if(loginMode != null) {
-			String tmp = mode;
-			mode = loginMode;
-			loginMode = tmp;
-		}
-		switch (mode) {
-        case "idSearch": {
-        	offset = searchOffset;
-            offset = sgms.setSearchUserList(model, mode, keyword, offset, page);
-            break;
-        }
-        case "nameSearch": {
-        	offset = searchOffset;
-            offset = sgms.setSearchUserList(model, mode, keyword, offset, page);
-            break;
-        }
-        case "mailSearch": {
-        	offset = searchOffset;
-            offset = sgms.setSearchUserList(model, mode, keyword, offset, page);
-            break;
-        }
-        case "select": {
-        	if(nextMode != null) {
-        		mode = nextMode;
-        	}
-            pageName = sgms.setMember(model, mode, groupAuthority, sysUserId);
-            break;
-        }
-        case "invite": {
-        	offset = searchOffset;
-        	mode = sgms.inviteGroup(model, sysUserId);
-            offset = sgms.setSearchUserList(model, loginMode, keyword, listOffset, page);
-            break;
-        }
-		default:
-			break;
+		try {
+			if(loginMode != null) {
+				String tmp = mode;
+				mode = loginMode;
+				loginMode = tmp;
+			}
+			switch (mode) {
+			case "idSearch": {
+				offset = searchOffset;
+				offset = sgms.setSearchUserList(model, mode, keyword, offset, page);
+				break;
+			}
+			case "nameSearch": {
+				offset = searchOffset;
+				offset = sgms.setSearchUserList(model, mode, keyword, offset, page);
+				break;
+			}
+			case "mailSearch": {
+				offset = searchOffset;
+				offset = sgms.setSearchUserList(model, mode, keyword, offset, page);
+				break;
+			}
+			case "select": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				pageName = sgms.setMember(model, mode, groupAuthority, sysUserId);
+				break;
+			}
+			case "invite": {
+				offset = searchOffset;
+				mode = sgms.inviteGroup(model, sysUserId);
+				offset = sgms.setSearchUserList(model, loginMode, keyword, listOffset, page);
+				break;
+			}
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		return goSetGroupMember(model, offset, page);
 	}
 
 	@GetMapping("/changeStage")
 	public String goChangeStage(Model model, Integer offset, String page) {
-		setEnvData(model, "manager");
-		chss.setPageInfo(model, offset, page);
+		try {
+			setEnvData(model, "manager");
+			chss.setPageInfo(model, offset, page);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		return goAnyPage(model, "changeStage");
 	}
 
 	@PostMapping("/changeStage")
 	public String accessChangeStage(Model model, String mode, String loginMode, String keyword, Integer offset, Integer searchOffset, Integer listOffset, String page, String sysStageId, String stagePass) {
-		switch (mode) {
-		case "stageList": {
-			offset = listOffset;
-			break;
-		}
-        case "idSearch": {
-        	offset = searchOffset;
-            offset = chss.setSearchStageList(model, mode, keyword, offset, page);
-            break;
-        }
-        case "nameSearch": {
-        	offset = searchOffset;
-            offset = chss.setSearchStageList(model, mode, keyword, offset, page);
-            break;
-        }
-        case "select": {
-            pageName = chss.selectStage(model, sysStageId);
-            break;
-        }
-        case "login": {
-            loginMode = chss.loginStage(model, loginMode, sysStageId, stagePass);
-            break;
-        }
-		default:
-			break;
+		try {
+			switch (mode) {
+			case "stageList": {
+				offset = listOffset;
+				break;
+			}
+			case "idSearch": {
+				offset = searchOffset;
+				offset = chss.setSearchStageList(model, mode, keyword, offset, page);
+				break;
+			}
+			case "nameSearch": {
+				offset = searchOffset;
+				offset = chss.setSearchStageList(model, mode, keyword, offset, page);
+				break;
+			}
+			case "select": {
+				pageName = chss.selectStage(model, sysStageId);
+				break;
+			}
+			case "login": {
+				loginMode = chss.loginStage(model, loginMode, sysStageId, stagePass);
+				break;
+			}
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		return goChangeStage(model, offset, page);
 	}
 
 	@GetMapping("/changeGroup")
 	public String goChangeGroup(Model model, Integer offset, String page) {
-		setEnvData(model, "manager");
-		chgs.setPageInfo(model, offset, page);
+		try {
+			setEnvData(model, "manager");
+			chgs.setPageInfo(model, offset, page);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		return goAnyPage(model, "changeGroup");
 	}
 
 	@PostMapping("changeGroup")
 	public String accessChangeGroup(Model model, String mode, String loginMode, String keyword, Integer offset, Integer searchOffset, Integer listOffset, String page, String sysGroupId, String groupPass) {
-		switch (mode) {
-		case "groupList": {
-			offset = listOffset;
-			break;
-		}
-		case "idSearch": {
-			offset = searchOffset;
-			offset = chgs.setSearchGroupList(model, mode, keyword, offset, page);
-			break;
-		}
-		case "nameSearch": {
-			offset = searchOffset;
-			offset = chgs.setSearchGroupList(model, mode, keyword, offset, page);
-			break;
-		}
-		case "select": {
-			pageName = chgs.selectGroup(model, sysGroupId);
-			break;
-		}
-		case "login": {
-			loginMode = chgs.loginGroup(model, loginMode, sysGroupId, groupPass);
-			break;
-		}
-		default:
-			break;
+		try {
+			switch (mode) {
+			case "groupList": {
+				offset = listOffset;
+				break;
+			}
+			case "idSearch": {
+				offset = searchOffset;
+				offset = chgs.setSearchGroupList(model, mode, keyword, offset, page);
+				break;
+			}
+			case "nameSearch": {
+				offset = searchOffset;
+				offset = chgs.setSearchGroupList(model, mode, keyword, offset, page);
+				break;
+			}
+			case "select": {
+				pageName = chgs.selectGroup(model, sysGroupId);
+				break;
+			}
+			case "login": {
+				loginMode = chgs.loginGroup(model, loginMode, sysGroupId, groupPass);
+				break;
+			}
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		return goChangeGroup(model, offset, page);
 	}
-	
+
 	@GetMapping("/setUser")
 	public String goSetUser(Model model) {
-		setEnvData(model, "manager");
-		sus.setPageInfo(model);
+		try {
+			setEnvData(model, "manager");
+			sus.setPageInfo(model);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		return goAnyPage(model, "setUser");
 	}
-	
+
 	@PostMapping("/setUser")
 	public String accessSetUser(Model model, String mode, String nextMode, String sysUserId, String userId, String userMail, String userPass, String rePass, 
 			String userTel, String userName, String userKanaName, String userBirthday, String hideBirthYear) {
-		switch (mode) {
-		case "setUserId": {
-			if(nextMode != null) {
-				mode = nextMode;
+		try {
+			switch (mode) {
+			case "setUserId": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sus.setUserId(model, mode, sysUserId, userId);
+				break;
 			}
-			sus.setUserId(model, mode, sysUserId, userId);
-			break;
-		}
-		case "setMail": {
-			if(nextMode != null) {
-				mode = nextMode;
+			case "setMail": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sus.setUserMail(model, mode, sysUserId, userMail);
+				break;
 			}
-			sus.setUserMail(model, mode, sysUserId, userMail);
-			break;
-		}
-		case "setUserPass": {
-			if(nextMode != null) {
-				mode = nextMode;
+			case "setUserPass": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sus.setUserPass(model, mode, sysUserId, userPass, rePass);
+				break;
 			}
-			sus.setUserPass(model, mode, sysUserId, userPass, rePass);
-			break;
-		}
-		case "setUserTel": {
-			if(nextMode != null) {
-				mode = nextMode;
+			case "setUserTel": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sus.setUserTel(model, mode, sysUserId, userTel);
+				break;
 			}
-			sus.setUserTel(model, mode, sysUserId, userTel);
-			break;
-		}
-		case "setUserName": {
-			if(nextMode != null) {
-				mode = nextMode;
+			case "setUserName": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sus.setUserName(model, mode, sysUserId, userName, userKanaName);
+				break;
 			}
-			sus.setUserName(model, mode, sysUserId, userName, userKanaName);
-			break;
-		}
-		case "setUserStageName": {
-			if(nextMode != null) {
-				mode = nextMode;
+			case "setUserStageName": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sus.setUserStageName(model, mode, sysUserId, userName, userKanaName);
+				break;
 			}
-			sus.setUserStageName(model, mode, sysUserId, userName, userKanaName);
-			break;
-		}
-		case "setUserBirthday": {
-			if(nextMode != null) {
-				mode = nextMode;
+			case "setUserBirthday": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sus.setUserBirthday(model, mode, sysUserId, userBirthday, hideBirthYear);
+				break;
 			}
-			sus.setUserBirthday(model, mode, sysUserId, userBirthday, hideBirthYear);
-			break;
-		}
-		default:
+			default:
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		return goSetUser(model);
 	}
 
 	@GetMapping("/createGroup")
 	public String goCreateGroup(Model model, String mode) {
-		setEnvData(model, "manager");
-		cgs.setPageInfo(model);
-		switch (mode) {
-		case "inputGroupId": {
-			model.addAttribute("mode", "inputGroupId");
-			break;
-		}
-		default:
-			break;
+		try {
+			setEnvData(model, "manager");
+			cgs.setPageInfo(model);
+			switch (mode) {
+			case "inputGroupId": {
+				model.addAttribute("mode", "inputGroupId");
+				break;
+			}
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		return goAnyPage(model, "createGroup");
 	}
@@ -736,24 +948,28 @@ public class MainController {
 	@PostMapping("/createGroup")
 	public String accessCreateGroup(Model model, String mode, String back, String groupId, String groupName, String groupKanaName, String groupPass, String rePass, String groupMail) {
 		pageName = "createGroup";
-		switch (mode) {
-		case "inputGroupId": {
-			mode = cgs.inputGroupId(model, groupId);
-			break;
-		}
-		case "inputGroupData": {
-			mode = cgs.inputGroupData(model, back, groupId, groupName, groupKanaName, groupPass, rePass, groupMail);
-			break;
-		}
-		case "confiResult": {
-			pageName = cgs.confiResult(model, back, groupId, groupName, groupKanaName, groupPass, rePass, groupMail);
-			if(pageName.equals("inputGroupData")) {
-				pageName = "createGroup";
+		try {
+			switch (mode) {
+			case "inputGroupId": {
+				mode = cgs.inputGroupId(model, groupId);
+				break;
 			}
-			break;
-		}
-		default:
-			break;
+			case "inputGroupData": {
+				mode = cgs.inputGroupData(model, back, groupId, groupName, groupKanaName, groupPass, rePass, groupMail);
+				break;
+			}
+			case "confiResult": {
+				pageName = cgs.confiResult(model, back, groupId, groupName, groupKanaName, groupPass, rePass, groupMail);
+				if(pageName.equals("inputGroupData")) {
+					pageName = "createGroup";
+				}
+				break;
+			}
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		if(pageName.equals("createGroup")) {
 			return goCreateGroup(model, mode);

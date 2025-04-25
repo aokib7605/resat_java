@@ -23,6 +23,7 @@ public class SQL {
 	private final HttpSession session;
 	private final MainRepository mr;
 	String column = "";
+	String joinTable = "";
 	String where = "";
 
 	public ArrayList<DataEntity> getAuthorityList(String tableName){
@@ -50,8 +51,8 @@ public class SQL {
 				"stage_place_name",
 				"stage_place_address"
 				));
-		String where = " where stage_place_name like '%" + keyword + "%' group by stage_place_name, stage_place_address";
-		return mr.getDataListBySelectColumn("stages", columns, where);
+		where = " where stage_place_name like '%" + keyword + "%' group by stage_place_name, stage_place_address";
+		return mr.getDataListBySelectColumn("stages", columns, null, where);
 	}
 
 	public DataEntity getUserData(String column, String anyValue) {
@@ -102,7 +103,7 @@ public class SQL {
 
 	public DataEntity getStageData(String column, String anyId) {
 		List<String> columns = Stream.concat(mr.getStagesTableColumns().stream(), mr.getImagesTableColumns().stream()).collect(Collectors.toList());
-		String joinTable = " left outer join images i1 on stage_flyer_1 = i1.sys_image_id"
+		joinTable = " left outer join images i1 on stage_flyer_1 = i1.sys_image_id"
 				+ " left outer join images i2 on stage_flyer_2 = i2.sys_image_id";
 		where = joinTable + " where <ID> = '" + anyId + "' limit 1";
 
@@ -149,25 +150,25 @@ public class SQL {
 		List<String> columns = mr.getFormsetTableColumns();
 		where = " where sys_stage_id = '" + sysStageId + "'";
 		if(sysFormId != null) {
-			where = where + " && sys_form_id = '" + sysFormId + "'";
+			where = where + " and sys_form_id = '" + sysFormId + "'";
 		}
 		if(sysTicketId != null) {
-			where = where + " && sys_ticket_id = '" + sysTicketId + "'";
+			where = where + " and sys_ticket_id = '" + sysTicketId + "'";
 		}
 		if(sysDateId != null) {
-			where = where + " && sys_date_id = '" + sysDateId + "'";
+			where = where + " and sys_date_id = '" + sysDateId + "'";
 		}
 		return mr.getData("formset", columns, where);
 	}
 
 	public DataEntity getImageData(String column, String value, String contentType, String sysAnyId) {
 		List<String> columns = mr.getImagesTableColumns();
-		String where = " where <COLUMN> = '<VALUE>' && content_type = '" + contentType + "' && sys_any_id = '" + sysAnyId + "' limit 1";
+		where = " where <COLUMN> = '<VALUE>' and content_type = '" + contentType + "' and sys_any_id = '" + sysAnyId + "' limit 1";
 		if(column != null) {
 			where = where.replace("<COLUMN>", column);
 			where = where.replace("<VALUE>", value);
 		} else {
-			where = where.replace("<COLUMN> = '<VALUE>' && ", "");
+			where = where.replace("<COLUMN> = '<VALUE>' and ", "");
 		}
 		return mr.getData("images", columns, where);
 	}
@@ -175,12 +176,12 @@ public class SQL {
 	public DataEntity getGroupLoginData(String sysUserId, String sysGroupId) {
 		List<String> columns = mr.getGroupeLoginListTableColumns();
 
-		String where = "where ";
+		where = "where ";
 		if(sysUserId != null) {
 			where = where + " sys_user_id = '" + sysUserId + "' ";
 		}
 		if(sysUserId != null && sysGroupId != null) {
-			where = where + " && ";
+			where = where + " and ";
 		}
 		if(sysGroupId != null) {
 			where = where + " sys_group_id = '" + sysGroupId + "' ";
@@ -191,12 +192,12 @@ public class SQL {
 	public DataEntity getStageLoginData(String sysUserId, String sysStageId) {
 		List<String> columns = mr.getStageLoginListTableColumns();
 
-		String where = "where ";
+		where = "where ";
 		if(sysUserId != null) {
 			where = where + " sys_user_id = '" + sysUserId + "' ";
 		}
 		if(sysUserId != null && sysStageId != null) {
-			where = where + " && ";
+			where = where + " and ";
 		}
 		if(sysStageId != null) {
 			where = where + " sys_stage_id = '" + sysStageId + "' ";
@@ -209,15 +210,14 @@ public class SQL {
 		List<String> columns = Stream.concat(mr.getGroupesTableColumns().stream(), mr.getGroupAuthorityTableColumns().stream()).collect(Collectors.toList());
 		columns = Stream.concat(columns.stream(), mr.getGroupeLoginListTableColumns().stream()).collect(Collectors.toList());
 
-		String joinTable = " left outer join group_login_list gll on g.sys_group_id = gll.sys_group_id left outer join group_authorities ga on  ga.authority_id = gll.group_authority";
-		String where = "";
+		joinTable = " left outer join group_login_list gll on g.sys_group_id = gll.sys_group_id left outer join group_authorities ga on  ga.authority_id = gll.group_authority";
 		if(offset != null) {
 			where = joinTable + " where " + column + " = '" + userData.getSys_user_id() + "' order by ga.authority_id desc limit " + limit + " offset " + offset * limit;
 		} else {
 			where = joinTable + " where " + column + " = '" + userData.getSys_user_id() + "'";
 		}
 		if(keyword != null) {
-			where = where.replace(column + " = '" + userData.getSys_user_id() + "'", "sys_user_id = '" + userData.getSys_user_id() + "' && " + column + " like '%" + keyword + "%'");
+			where = where.replace(column + " = '" + userData.getSys_user_id() + "'", "sys_user_id = '" + userData.getSys_user_id() + "' and " + column + " like '%" + keyword + "%'");
 		}
 		return mr.getDataList("groupes g", columns, where);
 	}
@@ -228,22 +228,20 @@ public class SQL {
 		columns = Stream.concat(columns.stream(), mr.getStageLoginListTableColumns().stream()).collect(Collectors.toList());
 		columns = Stream.concat(columns.stream(), mr.getGroupesTableColumns().stream()).collect(Collectors.toList());
 
-		String joinTable = " left outer join stage_login_list sll on s.sys_stage_id = sll.sys_stage_id left outer join stage_authorities sa on sa.authority_id = sll.stage_authority left outer join groupes g on s.sys_group_id = g.sys_group_id";
-		String where = "";
+		joinTable = " left outer join stage_login_list sll on s.sys_stage_id = sll.sys_stage_id left outer join stage_authorities sa on sa.authority_id = sll.stage_authority left outer join groupes g on s.sys_group_id = g.sys_group_id";
 		if(offset != null) {
 			where = joinTable + " where " + column + " = '" + userData.getSys_user_id() + "' order by sa.authority_id desc limit " + limit + " offset " + offset * limit;
 		} else {
 			where = joinTable + " where " + column + " = '" + userData.getSys_user_id() + "'";
 		}
 		if(keyword != null) {
-			where = where.replace(column + " = '" + userData.getSys_user_id() + "'", "sys_user_id = '" + userData.getSys_user_id() + "' && " + column + " like '%" + keyword + "%'");
+			where = where.replace(column + " = '" + userData.getSys_user_id() + "'", "sys_user_id = '" + userData.getSys_user_id() + "' and " + column + " like '%" + keyword + "%'");
 		}
 		return mr.getDataList("stages s", columns, where);
 	}
 
 	public ArrayList<DataEntity> getUserDataList(String column, String keyword, Integer limit, Integer offset){
 		List<String> columns = mr.getUsersTableColumns();
-		String where = "";
 		if(offset != null) {
 			where = " where " + column + " = '" + keyword + "' limit " + limit + " offset " + offset * limit;
 		} else {
@@ -257,9 +255,6 @@ public class SQL {
 
 	public ArrayList<DataEntity> getMemberList(String tableName, String sysId){
 		List<String> columns = null;
-		String joinTable = "";
-		String column = "";
-		String where = "";
 		switch (tableName) {
 		case "group_login_list gll": {
 			columns = Stream.concat(mr.getGroupesTableColumns().stream(), mr.getGroupeLoginListTableColumns().stream()).collect(Collectors.toList());
@@ -307,15 +302,107 @@ public class SQL {
 		where = " where sys_stage_id = '" + sysStageId + "' ";
 		return mr.getDataList("dates", columns, where);
 	}
-	
+
 	public ArrayList<DataEntity> getFormsetDataListGroupByColumn(String sysStageId, String sysFormId, String column){
-		List<String> columns = new ArrayList<String>(Arrays.asList(column));
-		where = " where sys_stage_id = '" + sysStageId + "'";
-		if(sysFormId != null) {
-			where = where + " && sys_form_id = '" + sysFormId + "'";
+		List<String> columns;
+		if(column.equals("sys_ticket_id")) {
+			joinTable = " left outer join tickets t on ft." + column + " = t." + column + "";
+			columns = new ArrayList<String>(Arrays.asList("ft."+column, "t.ticket_name", "t.ticket_price"));
+		} else {
+			joinTable = " left outer join dates d on ft." + column + " = d." + column + "";
+			columns = new ArrayList<String>(Arrays.asList("ft."+column, "d.st_date", "d.st_seat", "d.st_info"));
 		}
-		where = where + " group by " + column;
-		return mr.getDataListBySelectColumn("formset", columns, where);
+
+		where = " where ft.sys_stage_id = '" + sysStageId + "'";
+		if(sysFormId != null) {
+			where = where + " and ft.sys_form_id = '" + sysFormId + "'";
+		}
+
+		where = joinTable + where + " and ft." + column + " is not null group by " + column;
+		return mr.getDataListBySelectColumn("formset ft", columns, null, where);
+	}
+	
+	public ArrayList<DataEntity> getCastOrStaffDataList(String mode, String sysStageId, String sysUserId, String plusColumn, String plusValue){
+		List<String> columns = mr.getUsersTableColumns();
+		String tableName = "";
+		joinTable = " left outer join users u on <tableMiniName>.sys_user_id = u.sys_user_id ";
+		where = " where <tableMiniName>.sys_stage_id = '" + sysStageId + "' ";
+		String orderBy = " order by <tableMiniNameAndColumn>, <tableMiniName>.user_sort_num ";
+		
+		if(sysUserId != null) {
+			where = where + " and <tableMiniName>.sys_user_id = '" + sysUserId + "' ";
+		}
+		
+		if(plusColumn != null) {
+			where = where + " and " + plusColumn + " = '" + plusValue + "' ";
+		}
+		
+		if(mode.equals("cast")) {
+			tableName = "cast c";
+			columns = Stream.concat(columns.stream(), mr.getCastTableColumns().stream()).collect(Collectors.toList());
+			joinTable = joinTable.replace("<tableMiniName>", "c");
+			where = where.replace("<tableMiniName>", "c");
+			orderBy = orderBy.replace("<tableMiniNameAndColumn>", "c.cast_chara_name").replace("<tableMiniName>", "c");
+		}
+		
+		if(mode.equals("staff")) {
+			tableName = "staff s";
+			columns = Stream.concat(columns.stream(), mr.getStaffTableColumns().stream()).collect(Collectors.toList());
+			joinTable = joinTable.replace("<tableMiniName>", "s");
+			where = where.replace("<tableMiniName>", "s");
+			orderBy = orderBy.replace("<tableMiniNameAndColumn>", "s.staff_dep_name").replace("<tableMiniName>", "s");
+		}
+		where = joinTable + where + orderBy;
+		return mr.getDataList(tableName, columns, where);
+	}
+	
+	public ArrayList<DataEntity> getCastOrStaffDataListGroupByColumn(String mode, String sysStageId){
+		List<String> columns = null;
+		List<String> getColumns = null;
+		String tableName = "";
+		
+		joinTable = " left outer join users u on <tableMiniName>.sys_user_id = u.sys_user_id ";
+		where = " where <tableMiniName>.sys_stage_id = '" + sysStageId + "' ";
+		String groupBy = " group by <tableMiniNameAndColumn> ";
+		String orderBy = " order by min(<tableMiniNameAndColumn>) ";
+		
+		if(mode.equals("cast")) {
+			tableName = "cast c";
+			columns = new ArrayList<String>(Arrays.asList("c.cast_chara_name", "GROUP_CONCAT( IFNULL(u.user_stage_name, u.user_name) ORDER BY c.user_sort_num SEPARATOR ', ') AS user_names"));
+			getColumns = new ArrayList<String>(Arrays.asList("cast_chara_name", "user_names"));
+			joinTable = joinTable.replace("<tableMiniName>", "c");
+			where = where.replace("<tableMiniName>", "c");
+			groupBy = groupBy.replace("<tableMiniNameAndColumn>", "c.cast_chara_name");
+			orderBy = orderBy.replace("<tableMiniNameAndColumn>", "c.cast_sort_num");
+		}
+		if(mode.equals("staff")) {
+			tableName = "staff s";
+			columns = new ArrayList<String>(Arrays.asList("s.staff_dep_name", "GROUP_CONCAT( IFNULL(u.user_stage_name, u.user_name) ORDER BY s.user_sort_num SEPARATOR ', ') AS user_names"));
+			getColumns = new ArrayList<String>(Arrays.asList("staff_dep_name", "user_names"));
+			joinTable = joinTable.replace("<tableMiniName>", "s");
+			where = where.replace("<tableMiniName>", "s");
+			groupBy = groupBy.replace("<tableMiniNameAndColumn>", "s.staff_dep_name");
+			orderBy = orderBy.replace("<tableMiniNameAndColumn>", "s.staff_sort_num");
+		}
+		
+		where = joinTable + where + groupBy + orderBy;	
+		return mr.getDataListBySelectColumn(tableName, columns, getColumns, where );
+	}
+	
+	public ArrayList<DataEntity> getCastCharaNames(String sysStageId){
+		List<String> columns = new ArrayList<String>(Arrays.asList("cast_chara_name", "cast_sort_num"));
+		where = " where sys_stage_id = '" + sysStageId + "' ";
+		String groupBy = " group by cast_chara_name, cast_sort_num ";
+		String orderBy = " order by min(cast_sort_num) ";
+		return mr.getDataListBySelectColumn("cast", columns, null, where + groupBy + orderBy);
+	}
+	
+	public ArrayList<DataEntity> getStaffDepNames(String sysStageId){
+		List<String> columns = new ArrayList<String>(Arrays.asList("staff_dep_name", "staff_sort_num"));
+		where = " where sys_stage_id = '" + sysStageId + "' ";
+		String groupBy = " group by staff_dep_name, staff_sort_num ";
+		String orderBy = " order by min(cast_sort_num) ";
+		return mr.getDataListBySelectColumn("staff", columns, null, where + groupBy + orderBy);
 	}
 
 	public String getSysImageId(String column, String value, String contentType, String sysAnyId) {
@@ -337,7 +424,7 @@ public class SQL {
 				null,			//user_spe_name
 				0 + ""			//user_spe_name_ev
 				));
-		String where = " where sys_user_id = '" + sysUserId + "' && sys_group_id = '" + sysGroupId + "'";
+		where = " where sys_user_id = '" + sysUserId + "' and sys_group_id = '" + sysGroupId + "'";
 		if(mr.getData("group_login_list", columns, where) == null) {
 			mr.insertData("group_login_list", columns, values);
 		}
@@ -350,7 +437,7 @@ public class SQL {
 				sysUserId,		//sys_user_id
 				1 + ""			//stage_authority
 				));
-		String where = " where sys_user_id = '" + sysUserId + "' && sys_stage_id = '" + sysStageId + "'";
+		where = " where sys_user_id = '" + sysUserId + "' and sys_stage_id = '" + sysStageId + "'";
 		if(mr.getData("stage_login_list", columns, where) == null) {
 			mr.insertData("stage_login_list", columns, values);
 		}
@@ -414,7 +501,7 @@ public class SQL {
 			DataEntity userData = (DataEntity)session.getAttribute("userSession");
 			sysStageId = userData.getUser_def_stage();
 		}
-		List<String> columns = mr.getFormsTableColumns();
+		List<String> columns = mr.getFormsetTableColumns();
 		List<String> values = new ArrayList<String>(Arrays.asList(
 				sysStageId,		//sys_stage_id
 				sysFormId,		//sys_form_id
@@ -424,6 +511,32 @@ public class SQL {
 		mr.insertData("formset", columns, values);
 
 		return getFormData(sysFormId);
+	}
+	
+	public void addCast(String sysCastId, String sysStageId, String castCharaName, String sysUserId, Integer castSortNum, Integer userSortNum) {
+		List<String> columns = mr.getCastTableColumns();
+		List<String> values = new ArrayList<String>(Arrays.asList(
+				sysCastId,
+				sysStageId,			//sys_stage_id
+				castCharaName,		//cast_chara_name
+				sysUserId,			//sys_user_id
+				castSortNum+"",		//cast_sort_num
+				userSortNum+""		//user_sort_num
+				));
+		mr.insertData("cast ", columns, values);
+	}
+	
+	public void addStaff(String sysStaffId, String sysStageId, String staffDepName, String sysUserId, Integer staffSortNum, Integer userSortNum) {
+		List<String> columns = mr.getStaffTableColumns();
+		List<String> values = new ArrayList<String>(Arrays.asList(
+				sysStaffId,
+				sysStageId,			//sys_stage_id
+				staffDepName,		//cast_chara_name
+				sysUserId,			//sys_user_id
+				staffSortNum+"",	//cast_sort_num
+				userSortNum+""		//user_sort_num
+				));
+		mr.insertData("staff", columns, values);
 	}
 
 	public void addImage(String fileName, String fileType, byte[] bytes, String sysAnyId, String contentType) throws IOException {
@@ -436,7 +549,7 @@ public class SQL {
 			userData = getUserData("sys_user_id", sysUserId);
 		}
 
-		String where = " where sys_user_id = '" + userData.getSys_user_id() + "'";
+		where = " where sys_user_id = '" + userData.getSys_user_id() + "'";
 		mr.updateData("users", column, value, where);
 
 		return getUserData("sys_user_id", userData.getSys_user_id());
@@ -448,7 +561,7 @@ public class SQL {
 			sysStageId = userData.getUser_def_stage();
 		}
 
-		String where = " where sys_stage_id = '" + sysStageId + "'";
+		where = " where sys_stage_id = '" + sysStageId + "'";
 		mr.updateData("stages", column, value, where);
 
 		return getStageData("sys_stage_id", sysStageId);
@@ -460,10 +573,24 @@ public class SQL {
 			sysGroupId = userData.getUser_def_group();
 		}
 
-		String where = " where sys_group_id = '" + sysGroupId + "'";
+		where = " where sys_group_id = '" + sysGroupId + "'";
 		mr.updateData("groupes", column, value, where);
 
 		return getGroupData("sys_group_id", sysGroupId);
+	}
+	
+	public DataEntity updateDateData(String sysDateId, String column, String value) {
+		where = " where sys_date_id = '" + sysDateId + "'";
+		mr.updateData("dates", column, value, where);
+
+		return getDateData(sysDateId);
+	}
+	
+	public DataEntity updateTicketData(String sysTicketId, String column, String value) {
+		where = " where sys_ticket_id = '" + sysTicketId + "'";
+		mr.updateData("tickets", column, value, where);
+
+		return getTicketData(sysTicketId);
 	}
 
 	public DataEntity updateFormsetData(String column, String value, String sysStageId, String sysFormId, String sysTicketId, String sysDateId) {
@@ -472,19 +599,29 @@ public class SQL {
 			sysStageId = userData.getUser_def_stage();
 		}
 
-		String where = " where sys_stage_id = '" + sysStageId + "'";
+		where = " where sys_stage_id = '" + sysStageId + "'";
 		if(sysFormId != null) {
-			where = where + " && sys_form_id = '" + sysFormId + "'";
+			where = where + " and sys_form_id = '" + sysFormId + "'";
 		}
 		if(sysTicketId != null) {
-			where = where + " && sys_ticket_id = '" + sysTicketId + "'";
+			where = where + " and sys_ticket_id = '" + sysTicketId + "'";
 		}
 		if(sysDateId != null) {
-			where = where + " && sys_date_id = '" + sysDateId + "'";
+			where = where + " and sys_date_id = '" + sysDateId + "'";
 		}
 		mr.updateData("formset", column, value, where);
 
 		return getFormsetData(sysStageId, sysFormId, sysTicketId, sysDateId);
+	}
+	
+	public void updateCastOrStaffData(String tableName, String sysAnyId, String column, String value) {
+		if(tableName.equals("cast")) {
+			where = " where sys_cast_id = '" + sysAnyId + "'";
+		}
+		if(tableName.equals("staff")) {
+			where = " where sys_staff_id = '" + sysAnyId + "'";
+		}
+		mr.updateData(tableName, column, value, where);
 	}
 
 	public DataEntity updateUserDefGroup(String column, String id, boolean newGroup) {
@@ -529,7 +666,7 @@ public class SQL {
 			userData = getUserData("sys_user_id", sysUserId);
 		}
 
-		String where = " where sys_user_id = '" + userData.getSys_user_id() + "'";
+		where = " where sys_user_id = '" + userData.getSys_user_id() + "'";
 		mr.updateData(tableName, column, value, where);
 
 		return getLoginList(tableName);
@@ -548,7 +685,7 @@ public class SQL {
 			where = where + " sys_user_id = '" + sysUserId + "'";
 		}
 		if(sysUserId != null && sysAnyId != null) {
-			where = where + " && ";
+			where = where + " and ";
 		}
 		if(sysAnyId != null) {
 			if(tableName.equals("group_login_list")) {
@@ -564,11 +701,32 @@ public class SQL {
 	public void deleteFormsetData(String sysStageId, String sysFormId, String column) {
 		where = " where sys_stage_id = '" + sysStageId + "'";
 		if(sysFormId != null) {
-			where = where + " && sys_form_id = '" + sysFormId + "'";
+			where = where + " and sys_form_id = '" + sysFormId + "'";
 		}
 		if(column != null) {
-			where = where + " && " + column + " = null";
+			where = where + " and " + column + " is not null";
 		}
 		mr.deleteData("formset", where);
+	}
+
+	public void deleteDateOrTicket(String tableName, String sysAnyId) {
+		where = " where ";
+		if(tableName.equals("dates")) {
+			where = where + " sys_date_id = '" + sysAnyId + "'";
+		} else if(tableName.equals("tickets")) {
+			where = where + " sys_ticket_id = '" + sysAnyId + "'";
+		}
+		mr.deleteData(tableName, where);
+		mr.deleteData("formset", where);
+	}
+	
+	public void deleteCastOrStaffData(String tableName, String sysAnyId) {
+		where = " where ";
+		if(tableName.equals("cast")) {
+			where = where + " sys_cast_id = '" + sysAnyId + "'";
+		} else if(tableName.equals("staff")) {
+			where = where + " sys_staff_id = '" + sysAnyId + "'";
+		}
+		mr.deleteData(tableName, where);
 	}
 }

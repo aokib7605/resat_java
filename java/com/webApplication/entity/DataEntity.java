@@ -77,15 +77,21 @@ public class DataEntity {
     private String sys_any_id;
     private String content_type;
     
-    //cast_sys_stage_id
-//    private String sys_user_id;
+    //cast
+    private String sys_cast_id;
+//    private String sys_stage_id;
     private String cast_chara_name;
-    private Integer cast_sort_num;
-    
-    //staff_sys_stage_id
 //    private String sys_user_id;
+    private int cast_sort_num;
+    private int user_sort_num;
+    
+    //staff
+    private String sys_staff_id;
+//    private String sys_stage_id;
     private String staff_dep_name;
-    private Integer staff_sort_num;
+//    private String sys_user_id;
+    private int staff_sort_num;
+//    private int user_sort_num;
     
     //stage_login_list
 //    private String sys_stage_id;
@@ -116,7 +122,7 @@ public class DataEntity {
     //dates
     private String sys_date_id;
 //    private String sys_stage_id;
-    private Date st_date;
+    private LocalDateTime st_date;
     private int st_seat;
     private String st_info;
     
@@ -125,6 +131,9 @@ public class DataEntity {
 //    private String sys_form_id;
 //    private String sys_ticket_id;
 //    private String sys_date_id;
+    
+    //sqlで生成するカラム名
+    private String user_names;
 	
 	public void setEntity(String column, String value) {
 		try {

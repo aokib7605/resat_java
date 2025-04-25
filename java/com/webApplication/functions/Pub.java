@@ -75,4 +75,23 @@ public class Pub {
             throw new IllegalArgumentException("日付の形式が正しくありません: " + dateTimeStr, e);
         }
     }
+    
+    public static String[] splitStrToArrayStr(String input) {
+        if (input == null || input.isEmpty()) {
+            return new String[0];
+        }
+        return input.split(",");
+    }
+    
+    public static Integer[] splitStrToArrayInteger(String input) {
+        if (input == null || input.isEmpty()) {
+            return new Integer[0];
+        }
+        String[] parts = input.split(",");
+        Integer[] result = new Integer[parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            result[i] = Integer.parseInt(parts[i].trim());
+        }
+        return result;
+    }
 }

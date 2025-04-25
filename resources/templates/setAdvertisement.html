@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle}"></title>
+</head>
+
+<body>
+    <h1 th:text="${title}"></h1>
+    <h2 th:text="${title2}"></h2>
+
+    <!-- 各種メニュー -->
+    <h3 th:text="${menuList_ctegory_stage}"></h3>
+    <h4 th:text="${menuList_stage_title}"></h4>
+    <ul>
+        <th:block th:each="column : ${menuList_stage}">
+            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+        </th:block>
+    </ul>
+
+    <h4 th:text="${menuList_manage_title}"></h4>
+    <ul>
+        <th:block th:each="column : ${menuList_manage}">
+            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+        </th:block>
+    </ul>
+
+    <h4 th:text="${menuList_tools_title}"></h4>
+    <ul>
+        <th:block th:each="column : ${menuList_tools}">
+            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+        </th:block>
+    </ul>
+
+    <h3 th:text="${menuList_ctegory_group}"></h3>
+    <h4 th:text="${menuList_group_title}"></h4>
+    <ul>
+        <th:block th:each="column : ${menuList_group}">
+            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+        </th:block>
+    </ul>
+
+    <h3 th:text="${menuList_ctegory_user}"></h3>
+    <h4 th:text="${menuList_user_title}"></h4>
+    <ul>
+        <th:block th:each="column : ${menuList_user}">
+            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+        </th:block>
+    </ul>
+    <hr>
+
+    <!-- ページ内容 -->
+    <h3>キャスト一覧</h3>
+    <div>
+        <form action="/setAdvertisement" method="post">
+            <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+            <button type="submit" name="mode" value="addCast">新規追加</button>
+            <button type="submit" name="mode" value="changeCast">変更</button>
+        </form>
+    </div>
+
+    <div th:if="${mode == 'addCast'}">
+        <form action="/setAdvertisement" method="post">
+            <p>新規追加するユーザーを選択し、役名を入力してください</p>
+            <select name="sysUserId" required>
+                <th:block th:each="item : ${memberList}">
+                    <option th:value="${item.sys_user_id}" th:text="${item.user_name}"></option>
+                </th:block>
+            </select>
+            <input type="text" name="castCharaName" required>
+            <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+            <input type="hidden" name="nextMode" value="inputValue">
+            <button type="submit" name="mode" value="addCast">新規追加</button>
+        </form>
+    </div>
+
+    <div th:if="${mode == 'changeCast'}">
+        <form action="/setAdvertisement" method="post">
+            <p>変更内容を入力し、登録してください</p>
+            <table>
+                <tr>
+                    <td>キャスト名</td>
+                    <td>役名</td>
+                    <td>表示順</td>
+                    <td></td>
+                </tr>
+                <th:block th:each="item : ${memberList}">
+                    <input type="hidden" name="sysCastIds" th:value="${item.sys_cast_id}">
+                    <tr>
+                        <td th:text="${item.user_name}"></td>
+                        <td><input type="text" name="castCharaNames" th:value="${item.cast_chara_name}"></td>
+                        <td><input type="number" name="sortNums" th:value="${item.user_sort_num}"></td>
+                        <td><button type="submit" name="deleteId" th:value="${item.sys_cast_id}">削除</button></td>
+                    </tr>
+                </th:block>
+            </table>
+            <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+            <input type="hidden" name="mode" value="changeCast">
+            <button type="submit" name="nextMode" value="inputValue">変更</button>
+        </form>
+        <p>役名の表示順を変更する場合はこちら</p>
+        <form action="/setAdvertisement" method="post">
+            <table>
+                <tr>
+                    <th>役名</th>
+                    <th>表示順</th>
+                </tr>
+                <th:block th:each="item : ${castCharaNameList}">
+                    <input type="hidden" name="castCharaNames" th:value="${item.cast_chara_name}">
+                    <tr>
+                        <td th:text="${item.cast_chara_name}"></td>
+                        <td><input type="number" name="sortNums" th:value="${item.cast_sort_num}"></td>
+                    </tr>
+                </th:block>
+            </table>
+            <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+            <input type="hidden" name="nextMode" value="changeSort">
+            <button type="submit" name="mode" value="changeCast">変更</button>
+        </form>
+    </div>
+
+    <div>
+        <table>
+            <tr>
+                <th>役名</th>
+                <th>キャスト名</th>
+            </tr>
+            <th:block th:each="item : ${castList}">
+                <tr>
+                    <td th:text="${item.cast_chara_name}"></td>
+                    <td th:text="${item.user_names}"></td>
+                </tr>
+            </th:block>
+        </table>
+    </div>
+
+    <h3>スタッフ一覧</h3>
+    <div>
+        <form action="/setAdvertisement" method="post">
+            <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+            <button type="submit" name="mode" value="addStaff">新規追加</button>
+            <button type="submit" name="mode" value="changeStaff">変更</button>
+        </form>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <th>部署名</th>
+                <th>スタッフ名</th>
+            </tr>
+            <th:block th:each="item : ${staffList}">
+                <tr>
+                    <td th:text="${item.staff_dep_name}"></td>
+                    <td th:text="${item.user_names}"></td>
+                </tr>
+            </th:block>
+        </table>
+    </div>
+
+    <p>
+    <form action="/login" method="post">
+        <input type="hidden" name="mode" value="logout">
+        <input type="submit" value="ログアウト">
+    </form>
+    </p>
+
+</body>
+
+</html>

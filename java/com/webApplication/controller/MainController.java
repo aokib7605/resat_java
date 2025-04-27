@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.webApplication.entity.Env;
 import com.webApplication.service.ChangeGroupService;
 import com.webApplication.service.ChangeStageService;
+import com.webApplication.service.CheckFormListService;
 import com.webApplication.service.CheckStageListService;
 import com.webApplication.service.CreateGroupService;
 import com.webApplication.service.CreateStageService;
@@ -72,7 +74,7 @@ public class MainController {
 	}
 
 	private void setEnvData(Model model, String mode) {
-		model.addAttribute("title", "予約管理システム りざっと");
+		model.addAttribute("title", Env.ApplicationTitle);
 		setMenuList(model, mode);
 	}
 
@@ -99,6 +101,7 @@ public class MainController {
 	private final SetFormService sfs;
 	private final SetSeatService sss2;
 	private final SetAdvertisementService sas;
+	private final CheckFormListService cfls;
 
 	private String goAnyPage(Model model, String pageName) {
 		switch (pageName) {
@@ -458,7 +461,8 @@ public class MainController {
 	
 	@PostMapping("/setAdvertisement")
 	public String accessSetAdvertisement(Model model, String mode, String nextMode, String sysStageId, String sysUserId, String castCharaName, String[] castCharaNames,
-			String sysCastId, String[] sysCastIds, String deleteId, Integer[] sortNums) {
+			String sysCastId, String[] sysCastIds, String deleteId, Integer[] sortNums,
+			String sysStaffId, String[] sysStaffIds, String staffDepName, String[] staffDepNames, String stageOpenMinutes, String stageRuntime, String stageStory) {
 		try {
 			switch (mode) {
 			case "addCast": {
@@ -479,6 +483,45 @@ public class MainController {
 				sas.changeCast(model, mode, sysStageId, sysCastId, sysCastIds, castCharaNames, sortNums);
 				break;
 			}
+            case "addStaff": {
+                if(nextMode != null) {
+                    mode = nextMode;
+                }
+                sas.addStaff(model, mode, sysStageId, sysUserId, staffDepName);
+                break;
+            }
+            case "changeStaff": {
+                if(nextMode != null) {
+                    mode = nextMode;
+                }
+                if(deleteId != null) {
+                    mode = "deleteStaff";
+                    sysStaffId = deleteId;
+                }
+                sas.changeStaff(model, mode, sysStageId, sysStaffId, sysStaffIds, staffDepNames, sortNums);
+                break;
+            }
+            case "setStageOpenMinutes": {
+                if(nextMode != null) {
+                    mode = nextMode;
+                }
+                sas.setStageOpenMinutes(model, mode, stageOpenMinutes);
+                break;
+            }
+            case "setStageRuntime": {
+                if(nextMode != null) {
+                    mode = nextMode;
+                }
+                sas.setStageRuntime(model, mode, stageRuntime);
+                break;
+            }
+            case "setStageStory": {
+                if(nextMode != null) {
+                    mode = nextMode;
+                }
+                sas.setStageStory(model, mode, stageStory);
+                break;
+            }
 			default:
 				break;
 			}
@@ -546,6 +589,17 @@ public class MainController {
 			// TODO: handle exception
 		}
 		return goSetStageMember(model, offset, page);
+	}
+	
+	@GetMapping("checkFormList")
+	public String goCheckFormList(Model model) {
+		try {
+			setEnvData(model, "manager");
+			cfls.setPageInfo(model);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return goAnyPage(model, "checkFormList");
 	}
 
 	@GetMapping("/createStage")

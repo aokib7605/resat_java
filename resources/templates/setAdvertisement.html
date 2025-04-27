@@ -143,6 +143,67 @@
             <button type="submit" name="mode" value="changeStaff">変更</button>
         </form>
     </div>
+
+    <div th:if="${mode == 'addStaff'}">
+        <form action="/setAdvertisement" method="post">
+            <p>新規追加するユーザーを選択し、役名を入力してください</p>
+            <select name="sysUserId" required>
+                <th:block th:each="item : ${memberList}">
+                    <option th:value="${item.sys_user_id}" th:text="${item.user_name}"></option>
+                </th:block>
+            </select>
+            <input type="text" name="staffDepName" required>
+            <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+            <input type="hidden" name="nextMode" value="inputValue">
+            <button type="submit" name="mode" value="addStaff">新規追加</button>
+        </form>
+    </div>
+
+    <div th:if="${mode == 'changeStaff'}">
+        <form action="/setAdvertisement" method="post">
+            <p>変更内容を入力し、登録してください</p>
+            <table>
+                <tr>
+                    <td>スタッフ名</td>
+                    <td>部署名</td>
+                    <td>表示順</td>
+                    <td></td>
+                </tr>
+                <th:block th:each="item : ${memberList}">
+                    <input type="hidden" name="sysStaffIds" th:value="${item.sys_staff_id}">
+                    <tr>
+                        <td th:text="${item.user_name}"></td>
+                        <td><input type="text" name="staffDepNames" th:value="${item.staff_dep_name}"></td>
+                        <td><input type="number" name="sortNums" th:value="${item.user_sort_num}"></td>
+                        <td><button type="submit" name="deleteId" th:value="${item.sys_staff_id}">削除</button></td>
+                    </tr>
+                </th:block>
+            </table>
+            <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+            <input type="hidden" name="mode" value="changeStaff">
+            <button type="submit" name="nextMode" value="inputValue">変更</button>
+        </form>
+        <p>スタッフ名の表示順を変更する場合はこちら</p>
+        <form action="/setAdvertisement" method="post">
+            <table>
+                <tr>
+                    <th>スタッフ名</th>
+                    <th>表示順</th>
+                </tr>
+                <th:block th:each="item : ${staffDepNameList}">
+                    <input type="hidden" name="staffDepNames" th:value="${item.staff_dep_name}">
+                    <tr>
+                        <td th:text="${item.staff_dep_name}"></td>
+                        <td><input type="number" name="sortNums" th:value="${item.staff_sort_num}"></td>
+                    </tr>
+                </th:block>
+            </table>
+            <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+            <input type="hidden" name="nextMode" value="changeSort">
+            <button type="submit" name="mode" value="changeStaff">変更</button>
+        </form>
+    </div>
+
     <div>
         <table>
             <tr>
@@ -155,6 +216,71 @@
                     <td th:text="${item.user_names}"></td>
                 </tr>
             </th:block>
+        </table>
+    </div>
+
+    <!-- 宣伝情報 -->
+    <div>
+        <h3>宣伝情報</h3>
+        <table>
+            <tr>
+                <th>開場時間</th>
+                <td>
+                    <span th:text="${stageData.stage_open_minutes}"></span>分前<br>
+                    「開場は開演の<span th:text="${stageData.stage_open_minutes}"></span>分前です」
+                </td>
+                <td th:if="${mode != 'setStageOpenMinutes'}">
+                    <form action="/setAdvertisement" method="post">
+                        <button type="submit" name="mode" value="setStageOpenMinutes">設定</button>
+                    </form>
+                </td>
+                <td th:if="${mode == 'setStageOpenMinutes'}">
+                    <form action="/setAdvertisement" method="post">
+                        <input type="hidden" name="nextMode" th:value="inputValue">
+                        <input type="number" name="stageOpenMinutes" th:value="${stageData.stage_open_minutes}">分前<br>
+                        <button type="submit" name="mode" value="setStageOpenMinutes">決定</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <th>上演時間</th>
+                <td th:text="${stageData.stage_runtime + '分'}"></td>
+                <td th:if="${mode != 'setStageRuntime'}">
+                    <form action="/setAdvertisement" method="post">
+                        <button type="submit" name="mode" value="setStageRuntime">設定</button>
+                    </form>
+                </td>
+                <td th:if="${mode == 'setStageRuntime'}">
+                    <form action="/setAdvertisement" method="post">
+                        <input type="hidden" name="nextMode" th:value="inputValue">
+                        <input type="number" name="stageRuntime" th:value="${stageData.stage_runtime}">分<br>
+                        <button type="submit" name="mode" value="setStageRuntime">決定</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <th>あらすじ</th>
+                <td>
+                    <th:block th:if="${stageData.stage_story}">
+                        <th:block th:each="str, stat : ${stageData.stage_story.split('\r\n|\r|\n', -1)}">
+                            <th:block th:text="${str}" />
+                            <br th:if="${!stat.last}" />
+                        </th:block>
+                    </th:block>
+                </td>
+                <td th:if="${mode != 'setStageStory'}">
+                    <form action="/setAdvertisement" method="post">
+                        <button type="submit" name="mode" value="setStageStory">設定</button>
+                    </form>
+                </td>
+                <td th:if="${mode == 'setStageStory'}">
+                    <form action="/setAdvertisement" method="post">
+                        <input type="hidden" name="nextMode" th:value="inputValue">
+                        <textarea name="stageStory" th:text="${stageData.stage_story}"></textarea><br>
+                        <button type="submit" name="mode" value="setStageStory">決定</button>
+                    </form>
+                </td>
+            </tr>
         </table>
     </div>
 

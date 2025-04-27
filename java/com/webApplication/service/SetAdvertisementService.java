@@ -90,4 +90,129 @@ public class SetAdvertisementService {
 			break;
 		}
 	}
+	
+	public void addStaff(Model model, String mode, String sysStageId, String sysUserId, String staffDepName) {
+        switch (mode) {
+        case "addStaff": {
+            model.addAttribute("mode", "addStaff");
+            model.addAttribute("memberList", sql.getMemberList("stage_login_list sll", sysStageId));
+            break;
+        }
+        case "inputValue": {
+            if(sql.getCastOrStaffDataList("staff", sysStageId, sysUserId, "staff_dep_name", staffDepName).size() == 0) {
+                sql.addStaff(Pub.createUuid(), sysStageId, staffDepName, sysUserId, 1, 1);
+            } else {
+                model.addAttribute("mode", "addStaff");
+                model.addAttribute("memberList", sql.getMemberList("stage_login_list sll", sysStageId));
+                model.addAttribute("message", "その条件に一致する情報は既に登録されています");
+            }
+            break;
+        }
+        default:
+            break;
+        }
+    }
+
+    public void changeStaff(Model model, String mode, String sysStageId, String sysStaffId, String[] sysStaffIds, String[] staffDepNames, Integer[] SortNums) {
+        switch (mode) {
+        case "changeStaff": {
+            model.addAttribute("mode", "changeStaff");
+            model.addAttribute("memberList", sql.getCastOrStaffDataList("staff", sysStageId, null, null, null));
+            model.addAttribute("staffDepNameList", sql.getStaffDepNames(sysStageId));
+            break;
+        }
+        case "deleteStaff": {
+            sql.deleteCastOrStaffData("staff", sysStaffId);       
+            model.addAttribute("mode", "changeStaff");
+            model.addAttribute("memberList", sql.getCastOrStaffDataList("staff", sysStageId, null, null, null));
+            model.addAttribute("staffDepNameList", sql.getStaffDepNames(sysStageId));
+            break;
+        }
+        case "inputValue": {
+            if(sysStaffIds[0] != null) {
+                for(int i = 0; i < sysStaffIds.length; i++) {
+                    sql.updateCastOrStaffData("staff", sysStaffIds[i], "staff_dep_name", staffDepNames[i]);
+                    sql.updateCastOrStaffData("staff", sysStaffIds[i], "user_sort_num", SortNums[i]+"");
+                }
+            }
+//            model.addAttribute("mode", "changeStaff");
+            model.addAttribute("memberList", sql.getCastOrStaffDataList("staff", sysStageId, null, null, null));
+            model.addAttribute("staffDepNameList", sql.getStaffDepNames(sysStageId));
+            break;
+        }
+        case "changeSort": {
+            if(staffDepNames[0] != null) {
+                for(int i = 0; i < staffDepNames.length; i++) {
+                    mr.updateData("staff", "staff_sort_num", SortNums[i]+"", "where staff_dep_name = '" + staffDepNames[i] + "'");
+                }
+            }
+//            model.addAttribute("mode", "changeStaff");
+            model.addAttribute("memberList", sql.getCastOrStaffDataList("staff", sysStageId, null, null, null));
+            model.addAttribute("staffDepNameList", sql.getStaffDepNames(sysStageId));
+            break;
+        }
+        default:
+            break;
+        }
+    }
+    
+    public void setStageOpenMinutes(Model model, String mode, String value) {
+    	switch (mode) {
+		case "setStageOpenMinutes": {
+            model.addAttribute("mode", mode);
+            break;
+		}
+		case "inputValue": {
+			sql.updateAdvertisement(null, "stages", "stage_open_minutes", value);
+			DataEntity userData = (DataEntity)session.getAttribute("userSession");
+			userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+			DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
+			session.setAttribute("userSession", userData);
+			session.setAttribute("defStSession", stageData);
+			break;
+		}
+		default:
+			break;
+		}
+    }
+    
+    public void setStageRuntime(Model model, String mode, String value) {
+    	switch (mode) {
+		case "setStageRuntime": {
+            model.addAttribute("mode", mode);
+            break;
+		}
+		case "inputValue": {
+			sql.updateAdvertisement(null, "stages", "stage_runtime", value);
+			DataEntity userData = (DataEntity)session.getAttribute("userSession");
+			userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+			DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
+			session.setAttribute("userSession", userData);
+			session.setAttribute("defStSession", stageData);
+			break;
+		}
+		default:
+			break;
+		}
+    }
+    
+    public void setStageStory(Model model, String mode, String value) {
+    	switch (mode) {
+		case "setStageStory": {
+            model.addAttribute("mode", mode);
+            break;
+		}
+		case "inputValue": {
+			sql.updateAdvertisement(null, "stages", "stage_story", value);
+			DataEntity userData = (DataEntity)session.getAttribute("userSession");
+			userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+			DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
+			session.setAttribute("userSession", userData);
+			session.setAttribute("defStSession", stageData);
+			break;
+		}
+		default:
+			break;
+		}
+    }
 }

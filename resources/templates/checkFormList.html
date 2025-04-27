@@ -25,13 +25,13 @@
             <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
         </th:block>
     </ul>
-	
-	<h4 th:text="${menuList_tools_title}"></h4>
-	<ul>
-	    <th:block th:each="column : ${menuList_tools}">
-	        <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-	    </th:block>
-	</ul>
+
+    <h4 th:text="${menuList_tools_title}"></h4>
+    <ul>
+        <th:block th:each="column : ${menuList_tools}">
+            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+        </th:block>
+    </ul>
 
     <h3 th:text="${menuList_ctegory_group}"></h3>
     <h4 th:text="${menuList_group_title}"></h4>
@@ -49,6 +49,25 @@
         </th:block>
     </ul>
     <hr>
+
+    <!-- ページ内容 -->
+    <div>
+        <th:block th:each="formList : ${memberFormList}">
+            <h3 th:text="${formList[0].formName}"></h3>
+            <table>
+                <tr>
+                    <td>一般</td>
+                    <td></td>
+                </tr>
+                <th:block th:each="item : ${formList}">
+                    <tr>
+                        <td th:text="${item.userName}"></td>
+                        <td><a th:href="${item.formUrl}"><span th:text="${item.formUrl}"></span></a></td>
+                    </tr>
+                </th:block>
+            </table>
+        </th:block>
+    </div>
 
     <p>
     <form action="/login" method="post">

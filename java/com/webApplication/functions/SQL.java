@@ -401,7 +401,7 @@ public class SQL {
 		List<String> columns = new ArrayList<String>(Arrays.asList("staff_dep_name", "staff_sort_num"));
 		where = " where sys_stage_id = '" + sysStageId + "' ";
 		String groupBy = " group by staff_dep_name, staff_sort_num ";
-		String orderBy = " order by min(cast_sort_num) ";
+		String orderBy = " order by min(staff_sort_num) ";
 		return mr.getDataListBySelectColumn("staff", columns, null, where + groupBy + orderBy);
 	}
 
@@ -658,6 +658,16 @@ public class SQL {
 			return null;
 			//model.addAttribute("message", "公演登録時にエラーが発生しました");
 		}
+	}
+	
+	public void updateAdvertisement(String sysStageId, String tableName, String column, String value) {
+		DataEntity userData = (DataEntity)session.getAttribute("userSession");
+		if(sysStageId == null) {
+			sysStageId = userData.getUser_def_stage();
+		}
+		
+		where = " where sys_stage_id = '" + sysStageId + "' ";
+		mr.updateData(tableName, column, value, where);
 	}
 
 	public ArrayList<DataEntity> updateLoginList(String tableName, String column, String value, String sysUserId){

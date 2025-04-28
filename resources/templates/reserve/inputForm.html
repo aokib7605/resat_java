@@ -36,20 +36,13 @@
         </form>
 
         <form action="/reserve" method="post" th:if="${mode == 'inputTicket'}">
-            <p>チケットと枚数を入力してください</p>
+            <p>チケット枚数を入力してください</p>
             <table>
-                <th:block th:each="item, index : ${ticketFormList}">
+                <th:block th:each="item : ${ticketFormList}">
                     <tr>
-                        <td>
-                            <input type="checkbox" name="sysTicketIds" th:value="${item.sys_ticket_id}"
-                                th:checked="${sysTicketIds != null and sysTicketIds[index] != null}">
-                        </td>
                         <td th:text="${item.ticket_name + ' ' + item.ticket_price + ' 円'}"></td>
-                        <td>
-                            <input type="number" name="traAmounts"
-                                th:value="${traAmounts != null and traAmounts[index] != null} ? ${traAmounts[index]} : ''">
-                            枚
-
+                        <td thif="${traAmounts != null}">
+                            <input type="text" name="traAmounts">枚
                         </td>
                     </tr>
                 </th:block>
@@ -63,19 +56,20 @@
             <p><button type="submit" name="nextMode" value="back">戻る</button></p>
         </form>
 
+        <!--  
         <form action="/reserve" method="post" th:if="${mode == 'inputMemo'}">
             <p>何かコメントがあれば入力してください</p>
             <textarea name="traMemo" th:value="${traMemo}"></textarea>
             <input type="hidden" name="sysFormId" th:value="${sysFormId}">
             <input type="hidden" name="sysManagerId" th:value="${sysManagerId}">
             <input type="hidden" name="sysDateId" th:value="${sysDateId}">
-            <input type="hidden" name="sysTicketIds" th:value="${sysTicketIds}">
             <input type="hidden" name="traAmounts" th:value="${traAmounts}">
             <input type="hidden" name="mode" value="inputMemo">
             <button name="nextMode" value="inputValue">決定</button>
 
             <p><button type="submit" name="nextMode" value="back">戻る</button></p>
         </form>
+        -->
     </div>
 
 </body>

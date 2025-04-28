@@ -98,7 +98,7 @@ public class CustController {
 	
 	@PostMapping("/reserve")
 	public String accessInputForm(Model model, String mode, String nextMode, String sysFormId, String sysStageId, String sysDateId, 
-			String sysManagerId, String[] sysTicketIds, Integer[]traAmounts, String traMemo) {
+			String sysManagerId, Integer[] traAmounts, String traMemo) {
 		pageName = null;
 		try {
 			switch (mode) {
@@ -112,24 +112,22 @@ public class CustController {
 			case "inputTicket": {
 				if(nextMode != null) {
 					mode = nextMode;
-					System.out.println(sysTicketIds[0]);
-					System.out.println(traAmounts[0]);
-					System.out.println(sysTicketIds.length);
 				}
-				ifs.inputTicket(model, mode, sysDateId, sysTicketIds, traAmounts);
+				ifs.inputTicket(model, mode, sysDateId, traAmounts);
 				break;
 			}
-			case "inputMemo": {
-				if(nextMode != null) {
-					mode = nextMode;
-				}
-				ifs.inputMemo(model, mode, sysDateId, sysTicketIds, traAmounts, traMemo);
-				break;
-			}
+//			case "inputMemo": {
+//				if(nextMode != null) {
+//					mode = nextMode;
+//				}
+//				ifs.inputMemo(model, mode, sysDateId, traAmounts, traMemo);
+//				break;
+//			}
 			default:
 				break;
 			}
 		} catch (Exception e) {
+			System.out.println(e);
 			// TODO: handle exception
 		}
 		return goInputForm(model, pageName, sysFormId, sysManagerId);

@@ -121,4 +121,18 @@ public class Pub {
 			return null;
 		}
     }
+    
+    public static ArrayList<Integer> createIntArrayList(Integer[] intArr){
+    	try {
+    		ArrayList<Integer> intList = new ArrayList<Integer>();
+			for(int i = 0; i < intArr.length; i++) {
+				intList.add(intArr[i]);
+			}
+			System.out.println(intList);
+			return intList;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
+    }
 }

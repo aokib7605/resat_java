@@ -66,12 +66,11 @@ public class InputFormService {
 		}
 	}
 	
-	public void inputTicket(Model model, String mode, String sysDateId, String[] sysTicketIds, Integer[] traAmounts) {
+	public void inputTicket(Model model, String mode, String sysDateId, Integer[] traAmounts) {
 		switch (mode) {
 		case "inputTicket": {
 			model.addAttribute("sysDateId", sysDateId);
-			model.addAttribute("sysTicketIds", Pub.createStrArrayList(sysTicketIds));
-			model.addAttribute("traAmounts", Pub.createStrArrayList(traAmounts));
+			model.addAttribute("traAmounts", Pub.createIntArrayList(traAmounts));
 			model.addAttribute("mode", "inputTicket");
 			break;
 		}
@@ -82,8 +81,7 @@ public class InputFormService {
 		}
 		case "inputValue": {
 			model.addAttribute("sysDateId", sysDateId);
-			model.addAttribute("sysTicketIds", Pub.createStrArrayList(sysTicketIds));
-			model.addAttribute("traAmounts", Pub.createStrArrayList(traAmounts));
+			model.addAttribute("traAmounts", Pub.createIntArrayList(traAmounts));
 			model.addAttribute("mode", "inputMemo");
 			break;
 		}
@@ -92,7 +90,7 @@ public class InputFormService {
 		}
 	}
 	
-	public void inputMemo(Model model, String mode, String sysDateId, String[] sysTicketIds, Integer[] traAmounts, String traMemo) {
+	public void inputMemo(Model model, String mode, String sysDateId, Integer[] traAmounts, String traMemo) {
 		switch (mode) {
 		case "inputMemo": {
 			model.addAttribute("mode", "inputMemo");
@@ -100,16 +98,14 @@ public class InputFormService {
 		}
 		case "back": {
 			model.addAttribute("sysDateId", sysDateId);
-			model.addAttribute("sysTicketIds", Pub.createStrArrayList(sysTicketIds));
-			model.addAttribute("traAmounts", Pub.createStrArrayList(traAmounts));
+			model.addAttribute("traAmounts", Pub.createIntArrayList(traAmounts));
 			model.addAttribute("traMemo", traMemo);
 			model.addAttribute("mode", "inputTicket");
 			break;
 		}
 		case "inputValue": {
 			model.addAttribute("sysDateId", sysDateId);
-			model.addAttribute("sysTicketIds", Pub.createStrArrayList(sysTicketIds));
-			model.addAttribute("traAmounts", Pub.createStrArrayList(traAmounts));
+			model.addAttribute("traAmounts", Pub.createIntArrayList(traAmounts));
 			model.addAttribute("traMemo", traMemo);
 			model.addAttribute("mode", "inputMemo");
 			break;

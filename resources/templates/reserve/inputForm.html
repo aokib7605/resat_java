@@ -16,6 +16,68 @@
         </form>
     </div>
     <hr>
+
+    <h3 th:text="${stageData.stage_name}"></h3>
+    <div>
+        <form action="/reserve" method="post" th:if="${mode == 'inputDate'}">
+            <p>日時を選択してください</p>
+            <select name="sysDateId">
+                <th:block th:each="item : ${dateFormList}">
+                    <option th:value="${item.sys_date_id}"
+                        th:text="${#temporals.format(item.st_date, 'yyyy-MM-dd HH:mm')}"
+                        th:selected="${sysDateId == item.sys_date_id}">
+                    </option>
+                </th:block>
+            </select><br>
+            <input type="hidden" name="sysFormId" th:value="${sysFormId}">
+            <input type="hidden" name="sysManagerId" th:value="${sysManagerId}">
+            <input type="hidden" name="nextMode" value="inputValue">
+            <button name="mode" value="inputDate">決定</button>
+        </form>
+
+        <form action="/reserve" method="post" th:if="${mode == 'inputTicket'}">
+            <p>チケットと枚数を入力してください</p>
+            <table>
+                <th:block th:each="item, index : ${ticketFormList}">
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="sysTicketIds" th:value="${item.sys_ticket_id}"
+                                th:checked="${sysTicketIds != null and sysTicketIds[index] != null}">
+                        </td>
+                        <td th:text="${item.ticket_name + ' ' + item.ticket_price + ' 円'}"></td>
+                        <td>
+                            <input type="number" name="traAmounts"
+                                th:value="${traAmounts != null and traAmounts[index] != null} ? ${traAmounts[index]} : ''">
+                            枚
+
+                        </td>
+                    </tr>
+                </th:block>
+            </table>
+            <input type="hidden" name="sysFormId" th:value="${sysFormId}">
+            <input type="hidden" name="sysManagerId" th:value="${sysManagerId}">
+            <input type="hidden" name="sysDateId" th:value="${sysDateId}">
+            <input type="hidden" name="mode" value="inputTicket">
+            <button name="nextMode" value="inputValue">決定</button>
+
+            <p><button type="submit" name="nextMode" value="back">戻る</button></p>
+        </form>
+
+        <form action="/reserve" method="post" th:if="${mode == 'inputMemo'}">
+            <p>何かコメントがあれば入力してください</p>
+            <textarea name="traMemo" th:value="${traMemo}"></textarea>
+            <input type="hidden" name="sysFormId" th:value="${sysFormId}">
+            <input type="hidden" name="sysManagerId" th:value="${sysManagerId}">
+            <input type="hidden" name="sysDateId" th:value="${sysDateId}">
+            <input type="hidden" name="sysTicketIds" th:value="${sysTicketIds}">
+            <input type="hidden" name="traAmounts" th:value="${traAmounts}">
+            <input type="hidden" name="mode" value="inputMemo">
+            <button name="nextMode" value="inputValue">決定</button>
+
+            <p><button type="submit" name="nextMode" value="back">戻る</button></p>
+        </form>
+    </div>
+
 </body>
 
 </html>

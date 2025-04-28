@@ -56,7 +56,7 @@ public class CheckFormListService {
 		ArrayList<FormEntity> memberForm = new ArrayList<FormEntity>();
 		
 		FormEntity fe = new FormEntity();
-		String formUrl = fe.getFormUrl().replace("<STAGE_URL_TITLE>", stageUrlTitle).replace("<SYS_FORM_ID>", form.getSys_form_id()).replace("&ma=<SYS_USER_ID>", "");
+		String formUrl = fe.getFormUrl().replace("<STAGE_URL_TITLE>", stageUrlTitle).replace("<SYS_FORM_ID>", form.getSys_form_id()).replace("<SYS_USER_ID>", "");
 
 		fe.setFormUrl(formUrl);
 		fe.setUserName("一般");

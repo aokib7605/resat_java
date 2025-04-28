@@ -225,10 +225,14 @@
         <table>
             <tr>
                 <th>開場時間</th>
-                <td>
+                <td th:if="${stageData.stage_open_minutes != null}">
                     <span th:text="${stageData.stage_open_minutes}"></span>分前<br>
                     「開場は開演の<span th:text="${stageData.stage_open_minutes}"></span>分前です」
                 </td>
+                <td th:if="${stageData.stage_open_minutes == null}">
+                    開場時間未設定
+                </td>
+
                 <td th:if="${mode != 'setStageOpenMinutes'}">
                     <form action="/setAdvertisement" method="post">
                         <button type="submit" name="mode" value="setStageOpenMinutes">設定</button>
@@ -244,7 +248,9 @@
             </tr>
             <tr>
                 <th>上演時間</th>
-                <td th:text="${stageData.stage_runtime + '分'}"></td>
+                <td th:text="${stageData.stage_runtime + '分'}" th:if="${stageData.stage_runtime != null}"></td>
+                <td th:if="${stageData.stage_runtime == null}">上演時間未設定</td>
+
                 <td th:if="${mode != 'setStageRuntime'}">
                     <form action="/setAdvertisement" method="post">
                         <button type="submit" name="mode" value="setStageRuntime">設定</button>

@@ -18,11 +18,32 @@ public class EnvService {
 	private final HttpSession session;
 	
 	public void setMenuList(Model model, String mode) {
-		DataEntity userData = (DataEntity)session.getAttribute("userSession");
-		DataEntity stageData = (DataEntity)session.getAttribute("defStSession");
+		DataEntity userData = null;
+		DataEntity stageData = null;
 		
 		model.addAttribute("userData", userData);
 		model.addAttribute("stageData", stageData);
+		
+		switch (mode) {
+		case "manager": {
+			userData = (DataEntity)session.getAttribute("userSession");
+			stageData = (DataEntity)session.getAttribute("defStSession");
+			
+			model.addAttribute("userData", userData);
+			model.addAttribute("stageData", stageData);
+			break;
+		}
+		case "setFirstStage": {
+			userData = (DataEntity)session.getAttribute("userSession");
+			stageData = (DataEntity)session.getAttribute("defStSession");
+			
+			model.addAttribute("userData", userData);
+			model.addAttribute("stageData", stageData);
+			break;
+		}
+		default:
+			break;
+		}
 
 		switch (mode) {
 			case "manager":
@@ -95,8 +116,10 @@ public class EnvService {
 				model.addAttribute("menuList_user_title", userData.getUser_name());
 				break;
 
+			case "customer": {
+				break;
+			}
 			default:
-				// 他の mode に対する処理が必要であればここに追加
 				break;
 		}
 	}

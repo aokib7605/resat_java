@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -93,5 +94,31 @@ public class Pub {
             result[i] = Integer.parseInt(parts[i].trim());
         }
         return result;
+    }
+    
+    public static ArrayList<String> createStrArrayList(String[] strArr){
+    	try {
+    		ArrayList<String> strList = new ArrayList<String>();
+			for(int i = 0; i < strArr.length; i++) {
+				strList.add(strArr[i]);
+			}
+			return strList;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
+    }
+    
+    public static ArrayList<String> createStrArrayList(Integer[] intArr){
+    	try {
+    		ArrayList<String> strList = new ArrayList<String>();
+			for(int i = 0; i < intArr.length; i++) {
+				strList.add(intArr[i]+"");
+			}
+			return strList;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
     }
 }

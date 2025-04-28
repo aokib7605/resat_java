@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FormEntity {
 	
-	private String formUrl = Env.domainName + "/reserve/inputForm?form=<STAGE_URL_TITLE>&sys=<SYS_FORM_ID>&ma=<SYS_USER_ID>";
+	private String formUrl = Env.domainName + "/reserve?form=<STAGE_URL_TITLE>&sys=<SYS_FORM_ID>&ma=<SYS_USER_ID>";
 	private String sysUserId;
 	private String userName;
 	private String sysStageId;

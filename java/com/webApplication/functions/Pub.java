@@ -104,6 +104,7 @@ public class Pub {
 			}
 			return strList;
 		} catch (Exception e) {
+			System.out.println(e);
 			// TODO: handle exception
 			return null;
 		}
@@ -128,11 +129,38 @@ public class Pub {
 			for(int i = 0; i < intArr.length; i++) {
 				intList.add(intArr[i]);
 			}
-			System.out.println(intList);
 			return intList;
 		} catch (Exception e) {
 			// TODO: handle exception
 			return null;
 		}
+    }
+    
+    public static ArrayList<Integer> createIntArrayList(String[] strArr){
+    	try {
+    		ArrayList<Integer> intList = new ArrayList<Integer>();
+			for(int i = 0; i < strArr.length; i++) {
+				strArr[i] = strArr[i].replace("[", "").replace("]", "");
+				intList.add(Integer.parseInt(strArr[i]));
+			}
+			return intList;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
+    }
+    
+    public static ArrayList<Integer> nullIfAllZeroOrNull(ArrayList<Integer> inputList) {
+        if (inputList == null || inputList.isEmpty()) {
+            return null;
+        }
+
+        for (Integer value : inputList) {
+            if (value != null && value != 0) {
+                return inputList; // 一つでも 0/以外/null 以外があればそのまま返す
+            }
+        }
+
+        return null; // 全て 0 または null の場合
     }
 }

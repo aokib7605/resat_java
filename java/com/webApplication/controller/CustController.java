@@ -21,21 +21,21 @@ public class CustController {
 	private final EnvService es;
 	private String pageName = "";	//遷移先のページ名
 	
-//	private String checkSession(Model model, String pageName) {
-//		if(checkUserSession(model, pageName).equals("login")) {
-//			pageName = "login";
-//			accessLogin(model, "logout");
-//		}
-//		return pageName;
-//	}
+	private String checkSession(Model model, String pageName) {
+		if(checkCustSession(model, pageName).equals("login")) {
+			pageName = "login";
+			accessLogin(model, "logout");
+		}
+		return pageName;
+	}
 
-//	private String checkUserSession(Model model, String pageName) {
-//		if(session.getAttribute("custSession") == null) {
-//			return goLoginPage(model);
-//		} else {
-//			return pageName;
-//		}
-//	}
+	private String checkCustSession(Model model, String pageName) {
+		if(session.getAttribute("custSession") == null) {
+			return goLoginPage(model);
+		} else {
+			return pageName;
+		}
+	}
 
 	private void setEnvData(Model model, String mode) {
 		model.addAttribute("title", Env.ApplicationTitle);
@@ -55,8 +55,11 @@ public class CustController {
 		case "createUser": {
 			return pageName;
 		}
+		case "reserve/inputForm": {
+			return pageName;
+		}
 		default:
-			//pageName = checkSession(model, pageName);
+			pageName = checkSession(model, pageName);
 		}
 		return pageName;
 	}
@@ -98,7 +101,7 @@ public class CustController {
 	
 	@PostMapping("/reserve")
 	public String accessInputForm(Model model, String mode, String nextMode, String sysFormId, String sysStageId, String sysDateId, 
-			String sysManagerId, Integer[] traAmounts, String traMemo) {
+			String sysManagerId, String[] traAmounts, String traMemo) {
 		pageName = null;
 		try {
 			switch (mode) {
@@ -116,13 +119,20 @@ public class CustController {
 				ifs.inputTicket(model, mode, sysDateId, traAmounts);
 				break;
 			}
-//			case "inputMemo": {
-//				if(nextMode != null) {
-//					mode = nextMode;
-//				}
-//				ifs.inputMemo(model, mode, sysDateId, traAmounts, traMemo);
-//				break;
-//			}
+			case "inputMemo": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				ifs.inputMemo(model, mode, sysFormId, sysDateId, traAmounts, traMemo);
+				break;
+			}
+			case "confiResult": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				ifs.confiResult(model, mode, sysFormId, sysDateId, traAmounts, traMemo);
+				break;
+			}
 			default:
 				break;
 			}

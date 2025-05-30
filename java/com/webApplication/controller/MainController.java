@@ -15,6 +15,7 @@ import com.webApplication.entity.Env;
 import com.webApplication.service.ChangeGroupService;
 import com.webApplication.service.ChangeStageService;
 import com.webApplication.service.CheckFormListService;
+import com.webApplication.service.CheckReserveListService;
 import com.webApplication.service.CheckStageListService;
 import com.webApplication.service.CreateGroupService;
 import com.webApplication.service.CreateStageService;
@@ -102,6 +103,7 @@ public class MainController {
 	private final SetSeatService sss2;
 	private final SetAdvertisementService sas;
 	private final CheckFormListService cfls;
+	private final CheckReserveListService crls;
 
 	private String goAnyPage(Model model, String pageName) {
 		switch (pageName) {
@@ -589,6 +591,35 @@ public class MainController {
 			// TODO: handle exception
 		}
 		return goSetStageMember(model, offset, page);
+	}
+	
+	@GetMapping("checkReserveList")
+	public String goCheckReserveList(Model model) {
+		try {
+			setEnvData(model, "manager");
+			crls.setPageInfo(model);
+		} catch (Exception e) {
+			System.out.println(e);
+			// TODO: handle exception
+		}
+		return goAnyPage(model, "checkReserveList");
+	}
+	
+	@PostMapping("checkReserveList")
+	public String accessCheckReserveList(Model model, String mode, String sysTransactionId) {
+		try {
+			switch (mode) {
+			case "edit": {
+				crls.startEditMode(model, sysTransactionId);
+				break;
+			}
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return goCheckReserveList(model);
 	}
 	
 	@GetMapping("checkFormList")

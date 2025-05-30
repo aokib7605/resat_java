@@ -25,13 +25,13 @@
             <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
         </th:block>
     </ul>
-	
-	<h4 th:text="${menuList_tools_title}"></h4>
-	<ul>
-	    <th:block th:each="column : ${menuList_tools}">
-	        <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-	    </th:block>
-	</ul>
+
+    <h4 th:text="${menuList_tools_title}"></h4>
+    <ul>
+        <th:block th:each="column : ${menuList_tools}">
+            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+        </th:block>
+    </ul>
 
     <h3 th:text="${menuList_ctegory_group}"></h3>
     <h4 th:text="${menuList_group_title}"></h4>
@@ -48,7 +48,89 @@
             <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
         </th:block>
     </ul>
+    <!-- 各種メニュー ここまで -->
+
     <hr>
+    <p th:text="${sysTransactionId}"></p>
+    <p th:text="${edit}"></p>
+
+    <div>
+        <div th:if="${transactionList != null}">
+            <table>
+                <tr>
+                    <th>番号</th>
+                    <th>日時</th>
+                    <th>お名前</th>
+                    <th>フリガナ</th>
+                    <th>チケット</th>
+                    <th>金額</th>
+                    <th>人数</th>
+                    <th>お支払い</th>
+                    <th>備考</th>
+                    <th>団体側メモ</th>
+                    <th>編集</th>
+                </tr>
+                <th:block th:each="data, stat: ${transactionList}">
+                    <tr>
+                        <td th:text="${stat.count}"></td>
+                        <td th:text="${#temporals.format(data.st_date, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${data.user_name}"></td>
+                        <td th:text="${data.user_kana_name}"></td>
+                        <td th:text="${data.ticket_name}"></td>
+                        <td th:text="${data.ticket_price}"></td>
+                        <td th:text="${data.tra_amount}"></td>
+                        <td th:text="${data.ticket_price * data.tra_amount}"></td>
+                        <td th:text="${data.tra_memo}"></td>
+                        <td th:text="${data.tra_comment}"></td>
+                        <td>
+                            <form action="checkReserveList" method="post">
+                                <input type="hidden" name="sysTransactionId" th:value="${data.sys_tra_id}">
+                                <button type="submit" name="mode" value="edit">編集</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${sysTransactionId == data.sys_tra_id && edit == true}">
+                        <td></td>
+                        <td colspan="9">
+                            <form action="" method="post">
+                                <p>
+                                    日時<br>
+                                    <select name="" id="">
+                                        <option value=""></option>
+                                    </select>
+                                </p>
+                                <p>
+                                    チケット<br>
+                                    <select name="" id="">
+                                        <option value="">
+
+                                        </option>
+                                    </select>
+                                </p>
+                                <p>
+                                    枚数<br>
+                                    <input type="number">
+                                </p>
+                                <p>
+                                    団体側メモ<br>
+                                    <textarea name="" id=""></textarea>
+                                </p>
+                                <p>
+                                    <button type="submit">変更内容の確定</button>
+                                </p>
+
+                            </form>
+                        </td>
+                        <td>
+                            <form action="" method="post">
+                                <button type="submit">予約を削除</button>
+                            </form>
+                        </td>
+                    </tr>
+                </th:block>
+            </table>
+        </div>
+    </div>
 
     <p>
     <form action="/login" method="post">

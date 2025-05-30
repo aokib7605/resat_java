@@ -433,6 +433,20 @@ public class SQL {
 		return null;
 	}
 	
+	public ArrayList<DataEntity> getTransactionList(String sysStageId){
+		List<String> columns = Stream.concat(mr.getTransactionsTableColumns().stream(), mr.getDatesTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), mr.getTicketsTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), mr.getUsersTableColumns().stream()).collect(Collectors.toList());
+		joinTable = " left outer join dates d on tra.sys_date_id = d.sys_date_id ";
+		joinTable = joinTable + " left outer join tickets t on tra.sys_ticket_id = t.sys_ticket_id ";
+		joinTable = joinTable + " left outer join users m on tra.tra_manager_id = m.sys_user_id ";
+		joinTable = joinTable + " left outer join users u on tra.sys_user_id = u.sys_user_id ";
+		where = " where tra.sys_stage_id = '" + sysStageId + "' ";
+		String orderBy = " order by st_date";
+		where = joinTable + where + orderBy;
+		return mr.getDataList("transactions tra", columns, where);
+	}
+	
 	public ArrayList<DataEntity> getCustReserveList(String sysUserId){
 		List<String> columns = Stream.concat(mr.getTransactionsTableColumns().stream(), mr.getDatesTableColumns().stream()).collect(Collectors.toList());
 		columns = Stream.concat(columns.stream(), mr.getTicketsTableColumns().stream()).collect(Collectors.toList());

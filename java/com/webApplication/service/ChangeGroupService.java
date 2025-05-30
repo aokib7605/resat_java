@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.webApplication.entity.DataEntity;
+import com.webApplication.entity.Env;
 import com.webApplication.functions.SQL;
 
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class ChangeGroupService {
 	private final SQL sql;
 
 	public void setPageInfo(Model model, Integer offset, String page) {
-		model.addAttribute("title2", "団体一覧・参加");
+		model.addAttribute("title2", Env.groupListView);
 		setGroupList(model, offset, page);
 
 	}

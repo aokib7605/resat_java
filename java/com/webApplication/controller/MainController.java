@@ -606,12 +606,20 @@ public class MainController {
 	}
 	
 	@PostMapping("checkReserveList")
-	public String accessCheckReserveList(Model model, String mode, String sysTransactionId) {
+	public String accessCheckReserveList(Model model, String mode, String nextMode, String sysTransactionId, String sysDateId, String sysTicketId, Integer traAmount, String traComment) {
 		try {
 			switch (mode) {
 			case "edit": {
 				crls.startEditMode(model, sysTransactionId);
+				crls.setSelectList(model);
 				break;
+			}
+			case "update": {
+				crls.updateValue(model, sysTransactionId, sysDateId, sysTicketId, traAmount, traComment);
+			}
+			case "delete": {
+				mode = nextMode;
+				crls.deleteTransaction(model, sysTransactionId, mode);
 			}
 			default:
 				break;

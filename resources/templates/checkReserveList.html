@@ -51,10 +51,9 @@
     <!-- 各種メニュー ここまで -->
 
     <hr>
-    <p th:text="${sysTransactionId}"></p>
-    <p th:text="${edit}"></p>
 
     <div>
+        <p th:text="${message}" style="color: red;"></p>
         <div th:if="${transactionList != null}">
             <table>
                 <tr>
@@ -64,7 +63,7 @@
                     <th>フリガナ</th>
                     <th>チケット</th>
                     <th>金額</th>
-                    <th>人数</th>
+                    <th>枚数</th>
                     <th>お支払い</th>
                     <th>備考</th>
                     <th>団体側メモ</th>
@@ -95,36 +94,70 @@
                             <form action="" method="post">
                                 <p>
                                     日時<br>
-                                    <select name="" id="">
-                                        <option value=""></option>
+                                    <select name="sysDateId">
+                                        <th:block th:each="date: ${dateFormList}">
+                                            <th:block th:if="${data.sys_date_id == date.sys_date_id}">
+                                                <option th:value="${date.sys_date_id}" selected>
+                                                    <span th:text="${date.st_date}"></span>
+                                                </option>
+                                            </th:block>
+                                            <th:block th:if="${data.sys_date_id != date.sys_date_id}">
+                                                <option th:value="${date.sys_date_id}">
+                                                    <span th:text="${date.st_date}"></span>
+                                                </option>
+                                            </th:block>
+                                        </th:block>
                                     </select>
                                 </p>
                                 <p>
                                     チケット<br>
-                                    <select name="" id="">
-                                        <option value="">
-
-                                        </option>
+                                    <select name="sysTicketId">
+                                        <th:block th:each="ticket: ${ticketFormList}">
+                                            <th:block th:if="${data.sys_ticket_id == ticket.sys_ticket_id}">
+                                                <option th:value="${ticket.sys_ticket_id}" selected>
+                                                    <span
+                                                        th:text="${ticket.ticket_name + ' ' + ticket.ticket_price + '円'}"></span>
+                                                </option>
+                                            </th:block>
+                                            <th:block th:if="${data.sys_ticket_id != ticket.sys_ticket_id}">
+                                                <option th:value="${ticket.sys_ticket_id}">
+                                                    <span
+                                                        th:text="${ticket.ticket_name + ' ' + ticket.ticket_price + '円'}"></span>
+                                                </option>
+                                            </th:block>
+                                        </th:block>
                                     </select>
                                 </p>
                                 <p>
                                     枚数<br>
-                                    <input type="number">
+                                    <input type="number" name="traAmount" th:value="${data.tra_amount}">
                                 </p>
                                 <p>
                                     団体側メモ<br>
-                                    <textarea name="" id=""></textarea>
+                                    <textarea name="traComment" th:text="${data.tra_comment}"></textarea>
                                 </p>
                                 <p>
-                                    <button type="submit">変更内容の確定</button>
+                                    <input type="hidden" name="sysTransactionId" th:value="${data.sys_tra_id}">
+                                    <button type="submit" name="mode" value="update">変更内容の確定</button>
                                 </p>
 
                             </form>
                         </td>
                         <td>
-                            <form action="" method="post">
-                                <button type="submit">予約を削除</button>
-                            </form>
+                            <th:block th:if="${deleteMode != true}">
+                                <form action="checkReserveList" method="post">
+                                    <input type="hidden" name="sysTransactionId" th:value="${data.sys_tra_id}">
+                                    <input type="hidden" name="nextMode" value="first">
+                                    <button type="submit" name="mode" value="delete">予約を削除</button>
+                                </form>
+                            </th:block>
+                            <th:block th:if="${deleteMode == true}">
+                                <form action="checkReserveList" method="post">
+                                    <input type="hidden" name="sysTransactionId" th:value="${data.sys_tra_id}">
+                                    <input type="hidden" name="nextMode" value="second">
+                                    <button type="submit" name="mode" value="delete">削除実行</button>
+                                </form>
+                            </th:block>
                         </td>
                     </tr>
                 </th:block>

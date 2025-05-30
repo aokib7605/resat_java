@@ -50,5 +50,8 @@ public class Env {
 			+ "このアカウントを顧客として併用利用する場合、管理者画面のユーザー設定からモードを変更してください。";
 	public static String reserveAccountLoginMessage = "アカウントにログインして予約を完了してください";
 	public static String compReserveMessage = "予約登録が完了しました";
+	public static String changeTransactionCompMessage = "予約内容を変更しました";
+	public static String deleteTransactionCompMessage = "予約を削除しました";
+	public static String confiDeleteMessage = "本当に削除してもよろしいですか？";
 	public static String logoutCompMessage = "ログアウトしました";
 }

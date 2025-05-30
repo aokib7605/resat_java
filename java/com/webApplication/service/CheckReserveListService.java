@@ -36,12 +36,39 @@ public class CheckReserveListService {
 		model.addAttribute("sysTransactionId", sysTransactionId);
 	}
 	
-	public void finishEditMode(Model model, String sysTransactionId) {
+	public void finishEditMode(Model model) {
 		model.addAttribute("edit", false);
 	}
 	
 	public void setSelectList(Model model) {
-		model.addAttribute("dateFormList", sql.getFormsetDataListGroupByColumn(formData.getSys_stage_id(), sysFormId, "sys_date_id"));
-		model.addAttribute("ticketFormList", sql.getFormsetDataListGroupByColumn(formData.getSys_stage_id(), sysFormId, "sys_ticket_id"));
+		DataEntity stageData = (DataEntity)session.getAttribute("defStSession");
+		model.addAttribute("dateFormList", sql.getFormsetDataListGroupByColumn(stageData.getSys_stage_id(), null, "sys_date_id"));
+		model.addAttribute("ticketFormList", sql.getFormsetDataListGroupByColumn(stageData.getSys_stage_id(), null, "sys_ticket_id"));
+	}
+	
+	public void updateValue(Model model, String sysTransactionId, String sysDateId, String sysTicketId, Integer traAmount, String traComment) {
+		sql.updateTransaction(sysTransactionId, sysDateId, sysTicketId, traAmount, traComment);
+		model.addAttribute("message", Env.changeTransactionCompMessage);
+		finishEditMode(model);
+	}
+	
+	public void deleteTransaction(Model model, String sysTransactionId, String mode) {
+		switch (mode) {
+		case "first": {
+			startEditMode(model, sysTransactionId);
+			setSelectList(model);
+			model.addAttribute("deleteMode", true);
+			model.addAttribute("message", Env.confiDeleteMessage);
+			break;
+		}
+		case "second":{
+			sql.deleteTransaction(sysTransactionId);
+			finishEditMode(model);
+			model.addAttribute("deleteMode", false);
+			model.addAttribute("message", Env.deleteTransactionCompMessage);
+		}
+		default:
+			break;
+		}
 	}
 }

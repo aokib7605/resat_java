@@ -33,7 +33,7 @@ public class SetUserService {
 			break;
 		}
 		case "inputValue": {
-			if(sql.getUserData("user_id", userId) != null) {
+			if(sql.reGetUserData("user_id", userId) != null) {
 				model.addAttribute("mode", "setUserId");
 				model.addAttribute("message", "そのIDは既に使用されています");
 			} else {
@@ -56,7 +56,7 @@ public class SetUserService {
 			break;
 		}
 		case "inputValue": {
-			if(sql.getUserData("user_mail", userMail) != null) {
+			if(sql.reGetUserData("user_mail", userMail) != null) {
 				model.addAttribute("mode", "setMail");
 				model.addAttribute("message", "そのメールアドレスは既に使用されています");
 			} else {

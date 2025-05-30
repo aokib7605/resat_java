@@ -39,7 +39,7 @@ public class SetGroupService {
 			} else {
 				DataEntity userData = (DataEntity)session.getAttribute("userSession");
 				sql.updateGroupData("group_id", groupId, null);
-				userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+				userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
 				model.addAttribute("message", "団体IDを変更しました");
 				session.setAttribute("userSession", userData);
 				model.addAttribute("userData", userData);
@@ -74,7 +74,7 @@ public class SetGroupService {
                                 + "こちらのメールアドレスを" + groupData.getGroup_name() + "に設定しました"
                         );
                 model.addAttribute("message", "メールアドレスを変更しました");
-                userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+                userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
                 session.setAttribute("userSession", userData);
                 model.addAttribute("userData", userData);
                 model.addAttribute("mode", "setMail");
@@ -103,7 +103,7 @@ public class SetGroupService {
                 sql.updateGroupData("group_pass", groupPass, null);
                 model.addAttribute("message", "パスワードを変更しました");
                 
-                userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+                userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
                 session.setAttribute("userSession", userData);
                 model.addAttribute("userData", userData);
             }
@@ -126,7 +126,7 @@ public class SetGroupService {
             sql.updateGroupData("group_kana_name", groupKanaName, null);
             model.addAttribute("message", "団体名を変更しました");
             
-            userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+            userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
             session.setAttribute("userSession", userData);
             model.addAttribute("userData", userData);
             break;

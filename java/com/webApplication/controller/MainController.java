@@ -74,7 +74,7 @@ public class MainController {
 	}
 
 	private void setEnvData(Model model, String mode) {
-		model.addAttribute("title", Env.ApplicationTitle);
+		model.addAttribute("title", Env.applicationTitle);
 		setMenuList(model, mode);
 	}
 

@@ -360,4 +360,20 @@ public class MainRepository {
 	    ));
 	    return columns; 
 	}
+	
+	public List<String> getTransactionsTableColumns(){ 
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_tra_id",
+				"sys_user_id",
+				"sys_stage_id",
+				"sys_date_id",
+				"sys_ticket_id",
+				"tra_amount",
+				"tra_manager_id",
+				"tra_memo",
+				"tra_cre_date",
+				"tra_comment",
+				"tra_discount"));
+		return columns; 
+	}
 }

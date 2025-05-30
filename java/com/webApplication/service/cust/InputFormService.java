@@ -124,7 +124,7 @@ public class InputFormService {
 		}
 	}
 	
-	public void confiResult(Model model, String mode, String sysFormId, String sysDateId, String[] traAmounts, String traMemo) {
+	public void confiResult(Model model, String mode, String sysFormId, String sysDateId, String[] traAmounts, String traMemo, String sysManagerId) {
 		switch (mode) {
 		case "confiResult": {
 			model.addAttribute("sysDateId", sysDateId);
@@ -141,6 +141,35 @@ public class InputFormService {
 			break;
 		}
 		case "inputValue": {
+			// stageDataの取得
+			DataEntity formData = sql.getFormData(sysFormId);
+			DataEntity stageData = sql.getStageData("sys_stage_id", formData.getSys_stage_id());
+			
+			ArrayList<Integer> traAmountsArr = Pub.createIntArrayList(traAmounts);
+			
+			// チケット一覧を取得
+			ArrayList<DataEntity> ticketFormList = sql.getFormsetDataListGroupByColumn(formData.getSys_stage_id(), sysFormId, "sys_ticket_id");
+			
+			// ※チケット種別の数だけ仮受付データを作成（選択数が0の場合は作成しない）
+			ArrayList<DataEntity> tempReceptionList = new ArrayList<DataEntity>();
+			for(int i = 0; i < ticketFormList.size(); i++) {
+				if(traAmountsArr.get(i) != null) {
+					if(Integer.parseInt(traAmounts[i]) != 0) {
+						DataEntity tempReception = new DataEntity();
+						tempReception.setSys_stage_id(stageData.getSys_stage_id()); // sys_stage_id
+						tempReception.setSys_date_id(sysDateId); // sys_date_id
+						tempReception.setSys_ticket_id(ticketFormList.get(i).getSys_ticket_id()); // sys_ticket_id
+						tempReception.setTra_amount(Integer.parseInt(traAmounts[i])); // sys_tra_amount
+						tempReception.setTra_manager_id(sysManagerId); // tra_manager_id
+						tempReception.setTra_memo(traMemo); // tra_memo
+						
+						tempReceptionList.add(tempReception);
+					}
+				}
+			}
+			
+			// 仮受付データをセッションに保持
+			session.setAttribute("tempReceptionList", tempReceptionList);
 			setTotalPriceAndDate(model, sysFormId, Pub.createIntArrayList(traAmounts), sysDateId);
 			model.addAttribute("sysDateId", sysDateId);
 			model.addAttribute("traAmounts", Pub.createIntArrayList(traAmounts));
@@ -171,5 +200,42 @@ public class InputFormService {
 	
 	private LocalDateTime getDateValue(String sysDateId) {
 		return sql.getDateData(sysDateId).getSt_date();
+	}
+	
+	// ユーザーのログイン状態を確認するメソッド
+	private String checkCustSession() {
+		if(session.getAttribute("custSession") == null) {
+			return "login";
+		} else {
+			return "myPage";
+		}
+	}
+	
+	/*
+	 * 予約登録を実行するメソッド
+	 * noLogin ... true = ログインなしで登録, false = ログインユーザーで登録
+	 */
+	public String registTransaction(Model model, boolean noLogin) {
+		// ユーザーがログインしていないなら、登録処理を中断する
+		if(checkCustSession().equals("login") && noLogin == false) {
+			model.addAttribute("message", Env.reserveAccountLoginMessage);
+			return "login";
+		}
+		
+		// セッションから仮受付データを取得
+		@SuppressWarnings("unchecked")
+		ArrayList<DataEntity> tempReceptionList = (ArrayList<DataEntity>) session.getAttribute("tempReceptionList");
+		DataEntity custData = (DataEntity)session.getAttribute("custSession");
+		
+		// チケット予約登録実行
+		for(int i = 0; i < tempReceptionList.size(); i++) {
+			tempReceptionList.get(i).setSys_user_id(custData.getSys_user_id());
+			sql.addTransaction(tempReceptionList.get(i));
+		}
+		if(noLogin == true) {
+			return "noLoginPage";
+		} else {
+			return "myPage";
+		}
 	}
 }

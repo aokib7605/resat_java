@@ -41,7 +41,7 @@ public class SetStageService {
             	model.addAttribute("mode", "setStageId");
                 DataEntity userData = (DataEntity)session.getAttribute("userSession");
                 sql.updateStageData("stage_id", stageId, null);
-                userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+                userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
                 DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
                 model.addAttribute("message", "公演IDを変更しました");
                 session.setAttribute("userSession", userData);
@@ -70,7 +70,7 @@ public class SetStageService {
                 sql.updateStageData("stage_pass", stagePass, null);
                 model.addAttribute("message", "パスワードを変更しました");
                 
-                userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+                userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
                 DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
                 session.setAttribute("userSession", userData);
                 session.setAttribute("defStSession", stageData);
@@ -95,7 +95,7 @@ public class SetStageService {
             sql.updateStageData("stage_name", stageName, null);
             model.addAttribute("message", "公演名を変更しました");
             
-            userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+            userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
             DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
             session.setAttribute("userSession", userData);
             session.setAttribute("defStSession", stageData);
@@ -119,7 +119,7 @@ public class SetStageService {
             sql.updateStageData("stage_attract_customers", stageAttractCustomers + "", null);
             model.addAttribute("message", "集客目標を変更しました");
             
-            userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+            userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
             DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
             session.setAttribute("userSession", userData);
             session.setAttribute("defStSession", stageData);
@@ -165,7 +165,7 @@ public class SetStageService {
             model.addAttribute("message", "会場を変更しました");
             model.addAttribute("placeList", sql.getPlaceList(""));
             
-            userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+            userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
             DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
             session.setAttribute("userSession", userData);
             session.setAttribute("defStSession", stageData);
@@ -227,7 +227,7 @@ public class SetStageService {
             //sql.updateStageData("stage_attract_customers", stageAttractCustomers + "", null);
             model.addAttribute("message", "チラシ画像を変更しました");
             
-            userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+            userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
             session.setAttribute("userSession", userData);
             session.setAttribute("defStSession", stageData);
             model.addAttribute("userData", userData);

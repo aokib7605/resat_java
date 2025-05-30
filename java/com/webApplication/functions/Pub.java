@@ -127,7 +127,9 @@ public class Pub {
     	try {
     		ArrayList<Integer> intList = new ArrayList<Integer>();
 			for(int i = 0; i < intArr.length; i++) {
-				intList.add(intArr[i]);
+				String strArr = intArr[i] + "";
+				strArr = strArr.replace("[", "").replace("]", "");
+				intList.add(Integer.parseInt(strArr));
 			}
 			return intList;
 		} catch (Exception e) {

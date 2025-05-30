@@ -132,6 +132,19 @@ public class DataEntity {
 //    private String sys_ticket_id;
 //    private String sys_date_id;
     
+    // transactions
+    private String sys_tra_id;
+//    private String sys_user_id;
+//    private String sys_stage_id;
+//    private String sys_date_id;
+//    private String sys_ticket_id;
+    private int tra_amount;
+    private String tra_manager_id;
+    private String tra_memo;
+    private Date tra_cre_date;
+    private String tra_comment;
+    private int tra_discount;
+    
     //sqlで生成するカラム名
     private String user_names;
 	

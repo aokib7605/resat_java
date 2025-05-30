@@ -25,6 +25,7 @@ public class SQL {
 	String column = "";
 	String joinTable = "";
 	String where = "";
+	String orderBy = "";
 
 	public ArrayList<DataEntity> getAuthorityList(String tableName){
 		List<String> columns = null;
@@ -54,8 +55,23 @@ public class SQL {
 		where = " where stage_place_name like '%" + keyword + "%' group by stage_place_name, stage_place_address";
 		return mr.getDataListBySelectColumn("stages", columns, null, where);
 	}
-
+	
+	/**
+	 * 
+	 * @param where 句で検索するカラム名
+	 * @param カラムに対してのvalue
+	 * @return userData
+	 */
 	public DataEntity getUserData(String column, String anyValue) {
+		List<String> columns = Stream.concat(mr.getUsersTableColumns().stream(), mr.getGroupeLoginListTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), mr.getGroupesTableColumns().stream()).collect(Collectors.toList());
+		joinTable = " left outer join groupes on sys_group_id = user_def_group ";
+		where = " where <COLUMN> =  '" + anyValue + "'";
+		where = joinTable + where.replace("<COLUMN>", column);
+		return mr.getData("users u", columns, where);
+	}
+
+	public DataEntity reGetUserData(String column, String anyValue) {
 		DataEntity userData = (DataEntity)session.getAttribute("userSession");
 		where = "left outer join groupes on sys_group_id = user_def_group where sys_user_id =  '" + userData.getSys_user_id() + "'";
 		switch (column) {
@@ -307,10 +323,12 @@ public class SQL {
 		List<String> columns;
 		if(column.equals("sys_ticket_id")) {
 			joinTable = " left outer join tickets t on ft." + column + " = t." + column + "";
-			columns = new ArrayList<String>(Arrays.asList("ft."+column, "t.ticket_name", "t.ticket_price"));
+			orderBy = " order by t.ticket_price";
+			columns = new ArrayList<String>(Arrays.asList("ft."+ column, "t.ticket_name", "t.ticket_price"));
 		} else {
 			joinTable = " left outer join dates d on ft." + column + " = d." + column + "";
-			columns = new ArrayList<String>(Arrays.asList("ft."+column, "d.st_date", "d.st_seat", "d.st_info"));
+			orderBy = " order by d.st_date";
+			columns = new ArrayList<String>(Arrays.asList("ft."+ column, "d.st_date", "d.st_seat", "d.st_info"));
 		}
 
 		where = " where ft.sys_stage_id = '" + sysStageId + "'";
@@ -318,7 +336,7 @@ public class SQL {
 			where = where + " and ft.sys_form_id = '" + sysFormId + "'";
 		}
 
-		where = joinTable + where + " and ft." + column + " is not null group by " + column;
+		where = joinTable + where + " and ft." + column + " is not null group by " + column + orderBy;
 		return mr.getDataListBySelectColumn("formset ft", columns, null, where);
 	}
 	
@@ -413,6 +431,40 @@ public class SQL {
 			// TODO: handle exception
 		}
 		return null;
+	}
+	
+	public ArrayList<DataEntity> getCustReserveList(String sysUserId){
+		List<String> columns = Stream.concat(mr.getTransactionsTableColumns().stream(), mr.getDatesTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), mr.getTicketsTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), mr.getStagesTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), mr.getUsersTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), mr.getGroupesTableColumns().stream()).collect(Collectors.toList());
+		joinTable = " left outer join stages s on tra.sys_stage_id = s.sys_stage_id ";
+		joinTable = joinTable + " left outer join dates d on tra.sys_date_id = d.sys_date_id ";
+		joinTable = joinTable + " left outer join tickets t on tra.sys_ticket_id = t.sys_ticket_id ";
+		joinTable = joinTable + " left outer join users u on tra.tra_manager_id = u.sys_user_id ";
+		joinTable = joinTable + " left outer join groupes g on s.sys_group_id = g.sys_group_id ";
+		where = " where tra.sys_user_id = '" + sysUserId + "' and current_date() <= st_date";
+		String orderBy = " order by st_date ";
+		where = joinTable + where + orderBy;
+		return mr.getDataList("transactions tra", columns, where);
+	}
+	
+	public ArrayList<DataEntity> getCustPastReserveList(String sysUserId){
+		List<String> columns = Stream.concat(mr.getTransactionsTableColumns().stream(), mr.getDatesTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), mr.getTicketsTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), mr.getStagesTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), mr.getUsersTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), mr.getGroupesTableColumns().stream()).collect(Collectors.toList());
+		joinTable = " left outer join stages s on tra.sys_stage_id = s.sys_stage_id ";
+		joinTable = joinTable + " left outer join dates d on tra.sys_date_id = d.sys_date_id ";
+		joinTable = joinTable + " left outer join tickets t on tra.sys_ticket_id = t.sys_ticket_id ";
+		joinTable = joinTable + " left outer join users u on tra.tra_manager_id = u.sys_user_id ";
+		joinTable = joinTable + " left outer join groupes g on s.sys_group_id = g.sys_group_id ";
+		where = " where tra.sys_user_id = '" + sysUserId + "' and current_date() > st_date";
+		String orderBy = " order by st_date ";
+		where = joinTable + where + orderBy;
+		return mr.getDataList("transactions tra", columns, where);
 	}
 
 	public void addGroupLoginList(String sysGroupId, String sysUserId) {
@@ -538,6 +590,24 @@ public class SQL {
 				));
 		mr.insertData("staff", columns, values);
 	}
+	
+	public void addTransaction(DataEntity tempReceptionList) {
+		List<String> columns = mr.getTransactionsTableColumns();
+		List<String> values = new ArrayList<String>(Arrays.asList(
+				Pub.createUuid(), // sys_tra_id
+				tempReceptionList.getSys_user_id(), //sys_user_id
+				tempReceptionList.getSys_stage_id(), //sys_stage_id
+				tempReceptionList.getSys_date_id(), //sys_date_id
+				tempReceptionList.getSys_ticket_id(), //sys_ticket_id
+				tempReceptionList.getTra_amount()+"", //tra_amount
+				tempReceptionList.getTra_manager_id(), //tra_manager_id
+				tempReceptionList.getTra_memo(), //tra_memo
+				Pub.getCurrentDate()+"", //tra_cre_date
+				tempReceptionList.getTra_comment(), //tra_comment
+				tempReceptionList.getTra_discount()+"" //tra_discount
+				));
+		mr.insertData("transactions", columns, values);
+	}
 
 	public void addImage(String fileName, String fileType, byte[] bytes, String sysAnyId, String contentType) throws IOException {
 		mr.insertImage(Pub.createUuid(), fileName, fileType, bytes, sysAnyId, contentType);
@@ -546,13 +616,13 @@ public class SQL {
 	public DataEntity updateUserData(String column, String value, String sysUserId) {
 		DataEntity userData = (DataEntity)session.getAttribute("userSession");
 		if(sysUserId != null) {
-			userData = getUserData("sys_user_id", sysUserId);
+			userData = reGetUserData("sys_user_id", sysUserId);
 		}
 
 		where = " where sys_user_id = '" + userData.getSys_user_id() + "'";
 		mr.updateData("users", column, value, where);
 
-		return getUserData("sys_user_id", userData.getSys_user_id());
+		return reGetUserData("sys_user_id", userData.getSys_user_id());
 	}
 
 	public DataEntity updateStageData(String column, String value, String sysStageId) {
@@ -635,7 +705,7 @@ public class SQL {
 			if(newGroup == true) {
 				addGroupLoginList(groupData.getSys_group_id(), userData.getSys_user_id());
 			}
-			return getUserData("sys_user_id", null);
+			return reGetUserData("sys_user_id", null);
 		} else {
 			return null;
 			//model.addAttribute("message", "団体登録時にエラーが発生しました");
@@ -653,7 +723,7 @@ public class SQL {
 			if(newStage == true) {
 				addStageLoginList(stageData.getSys_stage_id(), userData.getSys_user_id());
 			}
-			return getUserData("sys_user_id", null);
+			return reGetUserData("sys_user_id", null);
 		} else {
 			return null;
 			//model.addAttribute("message", "公演登録時にエラーが発生しました");
@@ -673,7 +743,7 @@ public class SQL {
 	public ArrayList<DataEntity> updateLoginList(String tableName, String column, String value, String sysUserId){
 		DataEntity userData = (DataEntity)session.getAttribute("userSession");
 		if(sysUserId != null) {
-			userData = getUserData("sys_user_id", sysUserId);
+			userData = reGetUserData("sys_user_id", sysUserId);
 		}
 
 		where = " where sys_user_id = '" + userData.getSys_user_id() + "'";

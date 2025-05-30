@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}"></title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <h1 th:text="${title}"></h1>
+    <h2 th:text="${title2}"></h2>
+
+    <!-- 各種メニュー -->
+    <ul>
+        <th:block th:each="column : ${custMenuList}">
+            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+        </th:block>
+    </ul>
+    <!-- ここにタイムリーフ -->
+
+    <hr>
+
+    <div>
+        <p th:text="${message}" style="color: red;"></p>
+
+        <p>予約済の公演一覧です</p>
+        <div th:if="${reserveList != null}">
+            <table>
+                <th:block th:each="data : ${reserveList}">
+                    <tr>
+                        <th th:text="${data.group_name}"></th>
+                    </tr>
+                    <tr>
+                        <th th:text="${data.stage_name}"></th>
+                    </tr>
+                    <tr>
+                        <th>予約日</th>
+                        <td th:text="${data.st_date}"></td>
+                    </tr>
+                    <tr>
+                        <th>予約チケット</th>
+                        <td th:text="${data.ticket_name + ' ' + data.ticket_price + '円' + ' ' + data.tra_amount + '枚'}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>お支払い</th>
+                        <td th:text="${(data.ticket_price * data.tra_amount) + '円'}"></td>
+                    </tr>
+                    <tr>
+                        <th>詳細</th>
+                        <td>
+                            <form action="" method="post">
+                                <button type="submit">公演詳細</button>
+                            </form>
+                        </td>
+                    </tr>
+                </th:block>
+            </table>
+        </div>
+        <hr>
+        <div th:if="${pastReserveList != null}">
+            <form action="" method="post">
+                <span th:if="${showPast != true}"><button type="submit" name="mode" value="showPast">過去の予約公演一覧</button></span>
+                <span th:if="${showPast == true}"><button type="submit" name="mode" value="closePast">閉じる</button></span>
+            </form>
+            <div th:if="${showPast == true}">
+                            <table>
+                <th:block th:each="data : ${pastReserveList}">
+                    <tr>
+                        <th th:text="${data.group_name}"></th>
+                    </tr>
+                    <tr>
+                        <th th:text="${data.stage_name}"></th>
+                    </tr>
+                    <tr>
+                        <th>予約日</th>
+                        <td th:text="${data.st_date}"></td>
+                    </tr>
+                    <tr>
+                        <th>予約チケット</th>
+                        <td th:text="${data.ticket_name + ' ' + data.ticket_price + '円' + ' ' + data.tra_amount + '枚'}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>お支払い</th>
+                        <td th:text="${(data.ticket_price * data.tra_amount) + '円'}"></td>
+                    </tr>
+                    <tr>
+                        <th>詳細</th>
+                        <td>
+                            <form action="" method="post">
+                                <button type="submit">公演詳細</button>
+                            </form>
+                        </td>
+                    </tr>
+                </th:block>
+            </table>
+            </div>
+        </div>
+    </div>
+
+    <p>
+    <form action="/custLogin" method="post">
+        <input type="hidden" name="mode" value="logout">
+        <input type="submit" value="ログアウト">
+    </form>
+    </p>
+</body>
+
+</html>

@@ -38,7 +38,7 @@ public class SetFormService {
 			sql.addForm(Pub.createUuid(), sysStageId, formName, Pub.convertStrToDateTime(dateSt), Pub.convertStrToDateTime(dateEd));
 			model.addAttribute("formList", sql.getFormDataList(sysStageId));
 			
-            userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+            userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
             DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
             model.addAttribute("message", "フォームを新規作成しました");
             session.setAttribute("userSession", userData);
@@ -64,7 +64,7 @@ public class SetFormService {
 			sql.addDate(Pub.createUuid(), sysStageId, stDate, null, stInfo);
 			model.addAttribute("dateList", sql.getDateDataList(sysStageId));
 			
-            userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+            userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
             DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
             model.addAttribute("message", "公演日時を追加しました");
             session.setAttribute("userSession", userData);
@@ -90,7 +90,7 @@ public class SetFormService {
 			sql.addTicket(Pub.createUuid(), sysStageId, ticketName, ticketPrice);
 			model.addAttribute("ticketList", sql.getTicketDataList(sysStageId));
 			
-            userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+            userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
             DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
             model.addAttribute("message", "チケットを新規作成しました");
             session.setAttribute("userSession", userData);
@@ -124,7 +124,7 @@ public class SetFormService {
             model.addAttribute("dateFormList", sql.getFormsetDataListGroupByColumn(sysStageId, sysFormId, "sys_date_id"));
             model.addAttribute("dateList", sql.getDateDataList(sysStageId));
             
-            userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+            userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
             DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
             model.addAttribute("message", "公演日時を設定しました");
             session.setAttribute("userSession", userData);
@@ -158,7 +158,7 @@ public class SetFormService {
 			model.addAttribute("ticketFormList", sql.getFormsetDataListGroupByColumn(sysStageId, sysFormId, "sys_ticket_id"));
 			model.addAttribute("ticketList", sql.getTicketDataList(sysStageId));
 			
-            userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+            userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
             DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
             model.addAttribute("message", "チケットを設定しました");
             session.setAttribute("userSession", userData);

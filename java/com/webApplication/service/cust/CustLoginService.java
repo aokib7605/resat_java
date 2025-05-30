@@ -1,4 +1,4 @@
-package com.webApplication.service;
+package com.webApplication.service.cust;
 
 import java.util.List;
 
@@ -17,31 +17,35 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class LoginService {
+public class CustLoginService {
 	private final MainRepository mr;
 	private final HttpSession session;
 	private final SQL sql;
 	
 	public void setPageInfo(Model model) {
-		model.addAttribute("title2", Env.systemLoginView);
+		model.addAttribute("title2", Env.custLoginView);
 	}
 	
 	public String checkLoginData(Model model, String pageName, String userId, String userPass) {
 		DataEntity userData = sql.getUserData("user_id", userId);
 		if(userData == null) {
 			pageName = "login";
-			model.addAttribute("message", "そのユーザーIDは存在しません");
+			model.addAttribute("message", Env.userAccountNotExist);
 			return pageName;
 		}
 		if(!userData.getUser_pass().equals(userPass)) {
 			pageName = "login";
-			model.addAttribute("message", "パスワードが間違っています");
+			model.addAttribute("message", Env.passwordIsFalse);
 			return pageName;
 		}
-		pageName = "index";
-		session.setAttribute("userSession", userData);
+		if(userData.getSys_user_mode().equals("sysUser")) {
+			pageName = "login";
+			model.addAttribute("message", Env.sysUserLoginToCustPage);
+			return pageName;
+		}
+		pageName = "myPage";
+		session.setAttribute("custSession", userData);
 		updateLastLogin(userData.getSys_user_id(), userData.getSys_group_id());
-		setDefaultStage(userData);
 		return pageName;
 	}
 	

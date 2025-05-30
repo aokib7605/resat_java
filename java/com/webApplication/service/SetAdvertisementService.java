@@ -165,7 +165,7 @@ public class SetAdvertisementService {
 		case "inputValue": {
 			sql.updateAdvertisement(null, "stages", "stage_open_minutes", value);
 			DataEntity userData = (DataEntity)session.getAttribute("userSession");
-			userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+			userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
 			DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
 			session.setAttribute("userSession", userData);
 			session.setAttribute("defStSession", stageData);
@@ -185,7 +185,7 @@ public class SetAdvertisementService {
 		case "inputValue": {
 			sql.updateAdvertisement(null, "stages", "stage_runtime", value);
 			DataEntity userData = (DataEntity)session.getAttribute("userSession");
-			userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+			userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
 			DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
 			session.setAttribute("userSession", userData);
 			session.setAttribute("defStSession", stageData);
@@ -205,7 +205,7 @@ public class SetAdvertisementService {
 		case "inputValue": {
 			sql.updateAdvertisement(null, "stages", "stage_story", value);
 			DataEntity userData = (DataEntity)session.getAttribute("userSession");
-			userData = sql.getUserData("sys_user_id", userData.getSys_user_id());
+			userData = sql.reGetUserData("sys_user_id", userData.getSys_user_id());
 			DataEntity stageData = sql.getStageData("sys_stage_id", userData.getUser_def_stage());
 			session.setAttribute("userSession", userData);
 			session.setAttribute("defStSession", stageData);

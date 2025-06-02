@@ -147,6 +147,14 @@ public class DataEntity {
     
     //sqlで生成するカラム名
     private String user_names;
+    private String cust_id;
+    private String cust_name;
+    private String cust_kana_name;
+    private String manager_id;
+    private String manager_name;
+    private String manager_kana_name;
+    private String amount_by_date;
+    private String amount_by_ticket;
 	
 	public void setEntity(String column, String value) {
 		try {

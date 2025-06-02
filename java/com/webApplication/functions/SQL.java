@@ -430,9 +430,26 @@ public class SQL {
 	}
 
 	public ArrayList<DataEntity> getTransactionList(String sysStageId){
+		List<String> getColumns = new ArrayList<String>(Arrays.asList(
+				"*", 
+				"u.sys_user_id as 'cust_id'",
+				"u.user_name as 'cust_name'",
+				"u.user_kana_name as 'cust_kana_name'",
+				"m.sys_user_id as 'manager_id'",
+				"m.user_name as 'manager_name'",
+				"m.user_kana_name as 'manager_kana_name'"));
+		List<String> entityColumns = new ArrayList<String>(Arrays.asList(
+				"cust_id",
+				"cust_name",
+				"cust_kana_name",
+				"manager_id",
+				"manager_name",
+				"manager_kana_name"
+				));
 		columns = Stream.concat(mr.getTransactionsTableColumns().stream(), mr.getDatesTableColumns().stream()).collect(Collectors.toList());
 		columns = Stream.concat(columns.stream(), mr.getTicketsTableColumns().stream()).collect(Collectors.toList());
 		columns = Stream.concat(columns.stream(), mr.getUsersTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), entityColumns.stream()).collect(Collectors.toList());
 		joinTable = " left outer join dates d on tra.sys_date_id = d.sys_date_id ";
 		joinTable = joinTable + " left outer join tickets t on tra.sys_ticket_id = t.sys_ticket_id ";
 		joinTable = joinTable + " left outer join users m on tra.tra_manager_id = m.sys_user_id ";
@@ -440,7 +457,52 @@ public class SQL {
 		where = " where tra.sys_stage_id = '" + sysStageId + "' ";
 		String orderBy = " order by st_date";
 		where = joinTable + where + orderBy;
-		return mr.getDataList("transactions tra", columns, where);
+		return mr.getDataList("transactions tra", columns, getColumns, where);
+	}
+	
+	public ArrayList<DataEntity> getCountTransactionByDates(String sysStageId){
+		if(sysStageId == null) {
+			DataEntity stageData = (DataEntity)session.getAttribute("defStSession");
+			sysStageId = stageData.getSys_stage_id();
+		}
+		List<String> getColumns = new ArrayList<String>(Arrays.asList(
+				"tra.sys_date_id as 'sys_date_id'",
+				"d.st_date as 'st_date'",
+				"sum(tra.tra_amount) as 'amount_by_date'",
+				"d.st_seat as 'st_seat'"));
+		List<String> entityColumns = new ArrayList<String>(Arrays.asList(
+				"sys_date_id",
+				"st_date",
+				"amount_by_date",
+				"st_seat"
+				));
+		columns = Stream.concat(columns.stream(), entityColumns.stream()).collect(Collectors.toList());
+		joinTable = " left outer join dates d on tra.sys_date_id = d.sys_date_id ";
+		where = " where tra.sys_stage_id = '" + sysStageId + "' ";
+		String groupBy = " group by tra.sys_date_id, d.st_date, d.st_seat ";
+		where = joinTable + where + groupBy;
+		return mr.getDataList("transactions tra", columns, getColumns, where);
+	}
+	
+	public ArrayList<DataEntity> getCountTicketTransactionByDates(String sysStageId, String sysDateId){
+		if(sysStageId == null) {
+			DataEntity stageData = (DataEntity)session.getAttribute("defStSession");
+			sysStageId = stageData.getSys_stage_id();
+		}
+		List<String> getColumns = new ArrayList<String>(Arrays.asList(
+				"t.ticket_name as 'ticket_name'",
+				"sum(tra_amount) as 'amount_by_ticket'"
+				));
+		List<String> entityColumns = new ArrayList<String>(Arrays.asList(
+				"ticket_name",
+				"amount_by_ticket"
+				));
+		columns = Stream.concat(columns.stream(), entityColumns.stream()).collect(Collectors.toList());
+		joinTable = " left outer join tickets t on tra.sys_ticket_id = t.sys_ticket_id ";
+		where = " where tra.sys_stage_id = '" + sysStageId + "' and tra.sys_date_id = '" + sysDateId + "' ";
+		String groupBy = " group by t.ticket_name ";
+		where = joinTable + where + groupBy;
+		return mr.getDataList("transactions tra", columns, getColumns, where);
 	}
 
 	public ArrayList<DataEntity> getCustReserveList(String sysUserId){

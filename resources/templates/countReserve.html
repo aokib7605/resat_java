@@ -25,13 +25,13 @@
             <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
         </th:block>
     </ul>
-	
-	<h4 th:text="${menuList_tools_title}"></h4>
-	<ul>
-	    <th:block th:each="column : ${menuList_tools}">
-	        <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-	    </th:block>
-	</ul>
+
+    <h4 th:text="${menuList_tools_title}"></h4>
+    <ul>
+        <th:block th:each="column : ${menuList_tools}">
+            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+        </th:block>
+    </ul>
 
     <h3 th:text="${menuList_ctegory_group}"></h3>
     <h4 th:text="${menuList_group_title}"></h4>
@@ -48,7 +48,28 @@
             <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
         </th:block>
     </ul>
+    <!-- 各種メニュー ここまで -->
+
     <hr>
+
+    <div>
+        <div th:if="${dateTicketList != null}">
+            <table>
+                <tr>
+                    <th>日時</th>
+                    <th>総座席数</th>
+                    <!-- <th:block th:each="column: ${dateTicketList[0]}">
+                        <th th:text="${column.ticket_name}"></th>
+                    </th:block> -->
+                    <th>予約合計</th>
+                    <th>残席数</th>
+                </tr>
+                <!-- <th:block th:each="data: ${dateTicketList}">
+                    <td th:text="${data.st_date}"></td>
+                </th:block> -->
+            </table>
+        </div>
+    </div>
 
     <p>
     <form action="/login" method="post">

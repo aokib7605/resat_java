@@ -61,6 +61,7 @@ public class MainRepository {
 					// String 型処理
 					try {
 						data.setEntity(column, (String) dbObj.get(column));
+						System.out.println(column);
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
@@ -89,6 +90,23 @@ public class MainRepository {
 			sql = "select " + "*" + " from " + table + " " + where;
 			System.out.println(sql);
 			List<Map<String, Object>> dbObjList = tmp.queryForList(sql);
+			ArrayList<DataEntity> resultList = new ArrayList<DataEntity>();
+			for(Map<String, Object> dbObj : dbObjList) {
+				resultList.add(setData(dbObj, columns));
+			}
+			return resultList;
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
+	}
+	
+	public ArrayList<DataEntity> getDataList(String table, List<String> columns, List<String> getColumns, String where){
+		try {
+			sql = "select " + Pub.convertListToStr(getColumns) + " from " + table + " " + where;
+			System.out.println(sql);
+			List<Map<String, Object>> dbObjList = tmp.queryForList(sql);
+			
 			ArrayList<DataEntity> resultList = new ArrayList<DataEntity>();
 			for(Map<String, Object> dbObj : dbObjList) {
 				resultList.add(setData(dbObj, columns));

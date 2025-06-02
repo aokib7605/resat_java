@@ -65,6 +65,7 @@
                     <th>金額</th>
                     <th>枚数</th>
                     <th>お支払い</th>
+                    <th>扱い</th>
                     <th>備考</th>
                     <th>団体側メモ</th>
                     <th>編集</th>
@@ -73,12 +74,13 @@
                     <tr>
                         <td th:text="${stat.count}"></td>
                         <td th:text="${#temporals.format(data.st_date, 'yyyy-MM-dd HH:mm')}"></td>
-                        <td th:text="${data.user_name}"></td>
-                        <td th:text="${data.user_kana_name}"></td>
+                        <td th:text="${data.cust_name}"></td>
+                        <td th:text="${data.cust_kana_name}"></td>
                         <td th:text="${data.ticket_name}"></td>
                         <td th:text="${data.ticket_price}"></td>
                         <td th:text="${data.tra_amount}"></td>
                         <td th:text="${data.ticket_price * data.tra_amount}"></td>
+                        <td th:text="${data.manager_name}"></td>
                         <td th:text="${data.tra_memo}"></td>
                         <td th:text="${data.tra_comment}"></td>
                         <td>

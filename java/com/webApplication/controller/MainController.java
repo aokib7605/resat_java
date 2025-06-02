@@ -17,6 +17,7 @@ import com.webApplication.service.ChangeStageService;
 import com.webApplication.service.CheckFormListService;
 import com.webApplication.service.CheckReserveListService;
 import com.webApplication.service.CheckStageListService;
+import com.webApplication.service.CountReserveService;
 import com.webApplication.service.CreateGroupService;
 import com.webApplication.service.CreateStageService;
 import com.webApplication.service.CreateUserService;
@@ -103,6 +104,7 @@ public class MainController {
 	private final SetSeatService sss2;
 	private final SetAdvertisementService sas;
 	private final CheckFormListService cfls;
+	private final CountReserveService crs;
 	private final CheckReserveListService crls;
 
 	private String goAnyPage(Model model, String pageName) {
@@ -628,6 +630,17 @@ public class MainController {
 			// TODO: handle exception
 		}
 		return goCheckReserveList(model);
+	}
+	
+	@GetMapping("countReserve")
+	public String goCountReserve(Model model) {
+		try {
+			setEnvData(model, "manager");
+			crs.setPageInfo(model);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return goAnyPage(model, "countReserve");
 	}
 	
 	@GetMapping("checkFormList")

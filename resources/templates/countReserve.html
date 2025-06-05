@@ -58,15 +58,80 @@
                 <tr>
                     <th>日時</th>
                     <th>総座席数</th>
-                    <!-- <th:block th:each="column: ${dateTicketList[0]}">
+                    <th:block th:each="column: ${allTicketList}">
                         <th th:text="${column.ticket_name}"></th>
-                    </th:block> -->
+                    </th:block>
                     <th>予約合計</th>
                     <th>残席数</th>
                 </tr>
-                <!-- <th:block th:each="data: ${dateTicketList}">
-                    <td th:text="${data.st_date}"></td>
-                </th:block> -->
+                <th:block th:each="dateTicket, stat: ${dateTicketList}">
+                    <tr>
+                        <td th:text="${dateList[stat.index].st_date}"></td>
+                        <td th:text="${dateList[stat.index].st_seat}"></td>
+                        <th:block th:each="data: ${dateTicket}">
+                            <th:block th:if="${data != null}">
+                                <td th:text="${data.amount_by_date}"></td>
+                            </th:block>
+                            <th:block th:if="${data == null}">
+                                <td>0</td>
+                            </th:block>
+                        </th:block>
+                        <!-- <td th:text="${dateTicket[0].amount_by_date}"></td>
+                        <td th:text="${dateTicket[0].st_seat - dateTicket[0].amount_by_date}"></td> -->
+                    </tr>
+                </th:block>
+                <tr>
+                    <td>総計</td>
+                    <td>90</td>
+                    <td>4</td>
+                    <td>4</td>
+                    <td>8</td>
+                    <td>82</td>
+                </tr>
+            </table>
+        </div>
+        <div th:if="${managerTicketList != null}">
+            <table>
+                <tr>
+                    <th>担当者</th>
+                    <th:block th:each="column: ${allTicketList}">
+                        <th th:text="${column.ticket_name} + '（' + ${column.ticket_price} + '円）'"></th>
+                    </th:block>
+                    <th>予約合計</th>
+                </tr>
+                <th:block th:each="managerTicket, stat: ${managerTicketList}">
+                    <tr>
+                        <td th:text="${managerList[stat.index].user_name}"></td>
+                        <th:block th:each="data: ${managerTicket}">
+                            <th:block th:if="${data != null}">
+                                <td th:text="${data.amount_by_manager}"></td>
+                            </th:block>
+                            <th:block th:if="${data == null}">
+                                <td>0</td>
+                            </th:block>
+                        </th:block>
+                        <!-- <td th:text="${managerTicket[0].total_amount_by_manager}"></td> -->
+                    </tr>
+                </th:block>
+                <tr>
+                    <td>団体</td>
+                    <th:block th:each="data: ${groupTicket}">
+                        <th:block th:if="${data != null}">
+                            <td th:text="${data.amount_by_group}"></td>
+                        </th:block>
+                        <th:block th:if="${data == null}">
+                            <td>0</td>
+                        </th:block>
+                    </th:block>
+                    <!-- <td th:text="${groupTicket[0].total_amount_by_group}"></td> -->
+                </tr>
+                <tr>
+                    <td>総計</td>
+                    <th:block th:each="column: ${allTicketList}">
+                        <td th:text="${column.amount_by_ticket} + '（' + ${column.total_price_by_ticket} + '円）'"></td>
+                    </th:block>
+                    <td th:text="${allTicketList[0].total_amount} + '（' + ${allTicketList[0].total_price} + '円）'"></td>
+                </tr>
             </table>
         </div>
     </div>

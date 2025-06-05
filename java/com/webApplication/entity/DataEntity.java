@@ -153,8 +153,16 @@ public class DataEntity {
     private String manager_id;
     private String manager_name;
     private String manager_kana_name;
-    private String amount_by_date;
-    private String amount_by_ticket;
+    private Integer amount_by_date;
+    private Integer total_amount_by_date;
+    private Integer amount_by_ticket;
+    private Integer amount_by_manager;
+    private Integer total_amount_by_manager;
+    private Integer amount_by_group;
+    private Integer total_amount_by_group;
+    private Integer total_price_by_ticket;
+    private Integer total_amount;
+    private Integer total_price;
 	
 	public void setEntity(String column, String value) {
 		try {
@@ -168,7 +176,8 @@ public class DataEntity {
             // セッターメソッドを取得して実行
             Method method = this.getClass().getMethod(methodName, fieldType);
             method.invoke(this, convertedValue);
-		} catch (Exception e) { 
+		} catch (Exception e) {
+			System.out.println(column + " : " + value);
 			System.out.println("execute error");
 		}
 	}

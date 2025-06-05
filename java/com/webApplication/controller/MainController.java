@@ -638,7 +638,7 @@ public class MainController {
 			setEnvData(model, "manager");
 			crs.setPageInfo(model);
 		} catch (Exception e) {
-			// TODO: handle exception
+//			System.out.println(e);
 		}
 		return goAnyPage(model, "countReserve");
 	}

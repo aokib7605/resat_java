@@ -1,5 +1,6 @@
 package com.webApplication.repository;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -30,8 +31,10 @@ public class MainRepository {
 		DataEntity data = new DataEntity();
 		try {
 			for (String column : columns) {
+//				String type = column.getClass().getSimpleName();
+//				System.out.println(column + "の変数の型は" + type + "（" + dbObj.get(column) + "）");
 				if (column.contains(".")) {
-				    column = column.substring(column.indexOf(".") + 1);
+					column = column.substring(column.indexOf(".") + 1);
 				}
 				if (dbObj.get(column) != null) {
 					// Integer 型処理
@@ -39,15 +42,23 @@ public class MainRepository {
 						String record = (Integer) dbObj.get(column) + "";
 						data.setEntity(column, record);
 					} catch (Exception e) {
-						// TODO: handle exception
+//						System.out.println(e);
 					}
-					
+
+					// BigDecimal 型処理
+					try {
+						String record = ((BigDecimal) dbObj.get(column)).toPlainString();
+						data.setEntity(column, record);
+					} catch (Exception e) {
+//						System.out.println(e);
+					}
+
 					// Date 型処理（java.sql.Date）
 					try {
 						String record = new SimpleDateFormat("yyyy-MM-dd").format((Date) dbObj.get(column));
 						data.setEntity(column, record);
 					} catch (Exception e) {
-						// TODO: handle exception
+//						System.out.println(e);
 					}
 
 					// LocalDateTime 型処理（java.time.LocalDateTime）
@@ -55,15 +66,14 @@ public class MainRepository {
 						String record = ((LocalDateTime) dbObj.get(column)).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 						data.setEntity(column, record);
 					} catch (Exception e) {
-						// TODO: handle exception
+//						System.out.println(e);
 					}
 
 					// String 型処理
 					try {
 						data.setEntity(column, (String) dbObj.get(column));
-						System.out.println(column);
 					} catch (Exception e) {
-						// TODO: handle exception
+//						System.out.println(e);
 					}
 				}
 			}
@@ -76,6 +86,18 @@ public class MainRepository {
 	public DataEntity getData(String table, List<String> columns, String where) {
 		try {
 			sql = "select " + "*" + " from " + table + " " + where;
+			System.out.println(sql);
+			Map<String, Object> dbObj = tmp.queryForMap(sql);
+			return setData(dbObj, columns);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
+	}
+	
+	public DataEntity getData(String table, List<String> columns, List<String> getColumns, String where) {
+		try {
+			sql = "select " + Pub.convertListToStr(getColumns) + " from " + table + " " + where;
 			System.out.println(sql);
 			Map<String, Object> dbObj = tmp.queryForMap(sql);
 			return setData(dbObj, columns);

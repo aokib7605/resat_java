@@ -4,30 +4,65 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${title}"></title>
+    <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
     <link rel="stylesheet" href="./css/style.css">
+    <script type="module" src="./js/main.js"></script>
 </head>
 
 <body>
-    <div class="center_container">
-        <h1 th:text="${title}"></h1>
-        <h2 th:text="${title2}"></h2>
+    <div name="startDiv">
+        <div class="managerLoginContainer">
 
-        <form action="/index" method="post">
-            <input type="hidden" name="mode" value="login">
-            <p>
-                ユーザーID<br>
-                <input type="text" name="userId">
-            </p>
-            <p>
-                パスワード<br>
-                <input type="text" name="userPass">
-            </p>
-            <p> <input type="submit" value="ログイン"></p>
-            <p th:text="${message}" style="color: red;"></p>
-        </form>
-        <p>
-            アカウント新規作成は<a href="/createUser?mode=start">こちら</a>
-        </p>
+            <div class="leftSide">
+                <img src="./img/0101/application_logo.png" class="topLogo">
+                <div class="innerBox">
+                    <h1>管理者画面にログイン</h1>
+                </div>
+                <p class="offered">
+                    開発・提供<br>
+                    劇団抜きにくい釘
+                </p>
+            </div>
+
+            <div class="rightSide">
+                <div class="center_container" name="center_container">
+                    <!-- モバイル画面のみh1表示 -->
+                    <!-- <h1 th:text="${title}"></h1> -->
+                    <!-- <h2 th:text="${title2}"></h2> -->
+
+                    <form action="/index" method="post">
+                        <p class="inputBox selectBox">
+                            ログイン方法<br>
+                        <span class="sel" name="sel">
+                            <select name="loginMethod">
+                                <option value="id" name="selVal">ユーザーID</option>
+                                <option value="mail" name="selVal">メールアドレス</option>
+                            </select>
+                        </span>
+                        </p>
+
+                        <p class="inputVal" name="inputVal">
+                            <!-- ユーザーID<br>
+                            <input type="text" name="userId">
+                            メールアドレス<br>
+                            <input type="text" name="userMail"> -->
+                        </p>
+
+                        <p class="inputBox">
+                            パスワード<br>
+                            <input type="text" name="userPass">
+                        </p>
+
+                        <p class="submitBox"><button type="submit" name="mode" value="login" class="loginBtn"><span
+                                    class="loginText">ログイン</span></button></p>
+                        <p th:text="${message}" style="color: red;" class="message"></p>
+                    </form>
+                    <p class="message">
+                        アカウント新規作成は<a href="/createUser?mode=start">こちら</a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 

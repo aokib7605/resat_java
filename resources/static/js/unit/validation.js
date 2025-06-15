@@ -39,7 +39,7 @@ function validateNewCustomerForm(event) {
 
   if (!passPattern.test(customerPass)) {
     messageElement.textContent =
-    "パスワードは大文字を含んだ8〜20文字の半角英数字で入力してください。";
+      "パスワードは大文字を含んだ8〜20文字の半角英数字で入力してください。";
     event.preventDefault();
     return false;
   }
@@ -54,7 +54,7 @@ function validateUpdateCPass(event) {
 
   if (!passPattern.test(customerPass)) {
     messageElement.textContent =
-    "パスワードは大文字を含んだ8〜20文字の半角英数字で入力してください。";
+      "パスワードは大文字を含んだ8〜20文字の半角英数字で入力してください。";
     event.preventDefault();
     return false;
   }

@@ -1,3 +1,37 @@
-.center_container{
-    text-align: center;
+@import './style/0101_managerLogin.css';
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.pc h1 {
+    font-size: 2.2vw;
+}
+
+.pc p {
+    font-size: 1.2vw;
+}
+
+.pc input {
+    width: 30vw;
+    height: 3vh;
+}
+
+.pc select {
+    height: 5vh;
+    /* 標準のスタイルを無効にする */
+    border: none;
+    appearance: none;
+    outline: none;
+    background: transparent;
+}
+
+.pc button {
+    width: 12vw;
+    height: 5vh;
+    border: none;
+    background: white;
 }

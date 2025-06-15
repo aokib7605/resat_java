@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${pageTitle}"></title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script type="module" src="./js/main.js"></script>
 </head>
 
 <body>
@@ -25,13 +27,13 @@
             <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
         </th:block>
     </ul>
-	
-	<h4 th:text="${menuList_tools_title}"></h4>
-	<ul>
-	    <th:block th:each="column : ${menuList_tools}">
-	        <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-	    </th:block>
-	</ul>
+
+    <h4 th:text="${menuList_tools_title}"></h4>
+    <ul>
+        <th:block th:each="column : ${menuList_tools}">
+            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+        </th:block>
+    </ul>
 
     <h3 th:text="${menuList_ctegory_group}"></h3>
     <h4 th:text="${menuList_group_title}"></h4>

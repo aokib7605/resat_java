@@ -27,7 +27,7 @@ public class Env {
 	/**
 	 *  管理者画面
 	 */
-	public static String systemLoginView = "システムログイン画面";
+	public static String systemLoginView = "管理者ログイン画面";
 	public static String reserveListView = "予約一覧";
 	public static String countReserveView = "予約枚数集計";
 	public static String groupListView = "団体一覧・参加";

@@ -1,14 +1,12 @@
+@import './style/0000_cmnMenu.css';
 @import './style/0101_managerLogin.css';
+@import './style/0201_managerTop.css';
 
 html,
 body {
     margin: 0;
     padding: 0;
     height: 100%;
-}
-
-.pc h1 {
-    font-size: 2.2vw;
 }
 
 .pc p {
@@ -29,9 +27,6 @@ body {
     background: transparent;
 }
 
-.pc button {
-    width: 12vw;
-    height: 5vh;
-    border: none;
-    background: white;
+.hidden {
+  display: none;  /* 完全に非表示、スペースも消える */
 }

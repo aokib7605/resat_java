@@ -45,6 +45,7 @@ public class Env {
 	 *  各種メッセージ一覧
 	 */
 	public static String userAccountNotExist = "そのユーザーIDは存在しません";
+	public static String userMailNotExist = "そのメールアドレスは存在しません";
 	public static String passwordIsFalse = "パスワードが間違っています";
 	public static String sysUserLoginToCustPage = 
 			"管理者アカウントでログインしようとしています。<br>"

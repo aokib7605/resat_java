@@ -11,4 +11,6 @@ import './element/00_common.js';
 import './unit/validation.js';
 
 // view
+import './view/0000_cmnMenu.js';
 import './view/0101_managerLogin.js';
+import './view/0201_managerTop.js';

@@ -27,8 +27,8 @@
             <div class="rightSide">
                 <div class="center_container" name="center_container">
                     <!-- モバイル画面のみh1表示 -->
-                    <!-- <h1 th:text="${title}"></h1> -->
-                    <!-- <h2 th:text="${title2}"></h2> -->
+                    <h1 th:text="${title}" name="h1" class="hidden"></h1>
+                    <h2 th:text="${title2}" name="h2" class="hidden"></h2>
 
                     <form action="/index" method="post">
                         <p class="inputBox selectBox">
@@ -42,10 +42,10 @@
                         </p>
 
                         <p class="inputVal" name="inputVal">
-                            <!-- ユーザーID<br>
-                            <input type="text" name="userId">
+                            ユーザーID<br>
+                            <input type="text" name="userId" required>
                             メールアドレス<br>
-                            <input type="text" name="userMail"> -->
+                            <input type="email" name="userMail" required>
                         </p>
 
                         <p class="inputBox">

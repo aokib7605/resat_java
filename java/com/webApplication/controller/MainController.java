@@ -153,10 +153,10 @@ public class MainController {
 	}
 
 	@PostMapping("/index")
-	public String accessRoot(Model model, String mode, String userId, String userPass) {
+	public String accessRoot(Model model, String mode, String loginMethod, String userMail, String userId, String userPass) {
 		try {
 			if(mode.equals("login")) {
-				pageName = ls.checkLoginData(model, mode, userId, userPass);
+				pageName = ls.checkLoginData(model, mode,loginMethod, userMail, userId, userPass);
 				if(pageName.equals("login")) {
 					return goLoginPage(model);
 				} else {

@@ -26,16 +26,34 @@ public class LoginService {
 		model.addAttribute("title2", Env.systemLoginView);
 	}
 	
-	public String checkLoginData(Model model, String pageName, String userId, String userPass) {
-		DataEntity userData = sql.getUserData("user_id", userId);
+	public String checkLoginData(Model model, String pageName, String loginMethod, String userMail, String userId, String userPass) {
+		// ユーザー情報
+		DataEntity userData = null;
+		
+		if(loginMethod.equals("id")) {
+			// user_id ベースでユーザー検索
+			userData = sql.getUserData("user_id", userId);
+		} else if(loginMethod.equals("mail")) {
+			// user_mail ベースでユーザー検索
+			userData = sql.getUserData("user_mail", userMail);
+		}
+		
 		if(userData == null) {
 			pageName = "login";
-			model.addAttribute("message", "そのユーザーIDは存在しません");
+			if(loginMethod.equals("id")) {
+				// 入力されたuser_idが存在しない場合
+				model.addAttribute("message", Env.userAccountNotExist);
+			} else if(loginMethod.equals("mail")) {
+				// 入力されたuser_mailが存在しない場合
+				model.addAttribute("message", Env.userMailNotExist);
+			}
 			return pageName;
 		}
+		
+		// 入力されたuser_passがDB情報と一致しない場合
 		if(!userData.getUser_pass().equals(userPass)) {
 			pageName = "login";
-			model.addAttribute("message", "パスワードが間違っています");
+			model.addAttribute("message", Env.passwordIsFalse);
 			return pageName;
 		}
 		pageName = "index";

@@ -1,23 +1,18 @@
 $(function () {
-    $(function () {
-        if (window.matchMedia(commonElement.responsiveWidth).matches) {
-            $(managerLoginElement.centerContainer).append("\
-                <h1 th:text='${title}'></h1>\
-                ")
-        } else {
-            // PC時の処理
-        };
-    });
+    $(window).on('load resize', handleResponsiveView);
 
-    $(window).resize(function () {
+    function handleResponsiveView() {
         if (window.matchMedia(commonElement.responsiveWidth).matches) {
-            $(managerLoginElement.centerContainer).append("\
-                <h1 th:text='${title}'></h1>\
-                ")
+            // モバイル時の処理
+            // PC時の処理（h1, h2削除）
+            $(managerLoginElement.h1).removeClass('hidden');
+            $(managerLoginElement.h2).removeClass('hidden');
         } else {
-            // PC時の処理
-        };
-    });
+            // PC時の処理（h1, h2削除）
+            $(managerLoginElement.h1).addClass("hidden");
+            $(managerLoginElement.h2).addClass("hidden");
+        }
+    }
 
     $(document).ready(function () {
         // 初期表示時に切り替え（必要に応じて）
@@ -34,12 +29,12 @@ $(function () {
             if (method === 'id') {
                 $inputVal.html(`
                 ユーザーID<br>
-                <input type="text" name="userId">
+                <input type="text" name="userId" required>
             `);
             } else if (method === 'mail') {
                 $inputVal.html(`
                 メールアドレス<br>
-                <input type="text" name="userMail">
+                <input type="email" name="userMail" required>
             `);
             } else {
                 $inputVal.empty(); // どちらでもない場合は空に

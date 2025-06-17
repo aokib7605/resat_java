@@ -5,7 +5,7 @@
 
 .pc .leftMenu {
     width: 20vw;
-    flex: 1;
+    flex: 1.2;
     background-color: #ffab87;
 }
 
@@ -92,4 +92,5 @@
     display: flex;
     justify-content: center;
     /* align-items: center; */
+    margin-top: 5vh;
 }

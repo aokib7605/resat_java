@@ -14,3 +14,4 @@ import './unit/validation.js';
 import './view/0000_cmnMenu.js';
 import './view/0101_managerLogin.js';
 import './view/0201_managerTop.js';
+import './view/0202_setStage.js';

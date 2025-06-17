@@ -1,6 +1,7 @@
 window.commonElement = {};
 window.managerLoginElement = {};
 window.managerMenuElement = {};
+window.setStageElement = {};
 
 // レスポンシブ対応にて使用するdiv
 commonElement.startDiv = "div[name='startDiv']";
@@ -27,3 +28,7 @@ managerLoginElement.loginMethod = "select[name='loginMethod']";
 managerLoginElement.inputVal = "p[name='inputVal']";
 
 // 0201_managerTop
+
+// 0202_setStage
+setStageElement.stagePlaceName = "select[name='stagePlaceName']";
+setStageElement.newStagePlaceName = "form[name='newStagePlaceName']";

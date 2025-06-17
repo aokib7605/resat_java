@@ -1,6 +1,7 @@
 @import './style/0000_cmnMenu.css';
 @import './style/0101_managerLogin.css';
 @import './style/0201_managerTop.css';
+@import './style/0202_setStage.css';
 
 html,
 body {
@@ -10,6 +11,11 @@ body {
 }
 
 .pc p {
+    font-size: 1.2vw;
+}
+
+.pc td,
+th, ul, li, a {
     font-size: 1.2vw;
 }
 
@@ -28,5 +34,13 @@ body {
 }
 
 .hidden {
-  display: none;  /* 完全に非表示、スペースも消える */
+    display: none;
+    /* 完全に非表示、スペースも消える */
+}
+
+.disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    pointer-events: none;
 }

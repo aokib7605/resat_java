@@ -1,0 +1,143 @@
+.rightView .setStage {
+    align-items: center;
+}
+
+.pc .setStageTable {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-top: 5vh;
+}
+
+.setStageTable tr {
+    height: 7vh;
+}
+
+table tr:nth-child(odd) {
+    background-color: #eee
+}
+
+.setStageTable td,
+th {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.setStageForm input {
+    margin-bottom: 2vh;
+}
+
+.setStageForm input {
+    font-size: 1em;
+    padding: 15px 10px 10px;
+    font-family: 'Source Sans Pro', arial, sans-serif;
+    border: 1px solid #cecece;
+    background: #f8f8f8;
+    color: #000000;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+}
+
+.btn .btnText {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: auto;
+    max-width: 250px;
+    padding: 10px 25px;
+    color: #333;
+    font-family: "Noto Sans Japanese";
+    text-decoration: none;
+    line-height: 1.8;
+    transition: 0.3s ease-in-out;
+    font-weight: 500;
+    background: #eee;
+    border-radius: 9999px;
+    border-bottom: 2px solid #999;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+}
+
+.btn .disableBtnText {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: auto;
+    max-width: 250px;
+    padding: 10px 25px;
+    color: #9b0000;
+    font-family: "Noto Sans Japanese";
+    text-decoration: none;
+    line-height: 1.8;
+    transition: 0.3s ease-in-out;
+    font-weight: 500;
+    background: #959595;
+    border-radius: 9999px;
+    border-bottom: 2px solid #999;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+}
+
+.btn .btnText:hover {
+    color: #fff;
+    background: #999;
+    border-bottom: 2px solid #fff;
+    transform: translateY(3px);
+}
+
+.setStageForm button {
+    margin-left: 12em;
+}
+
+.setStageForm button {
+    width: 12vw;
+    height: 90%;
+    border: none;
+    background: none;
+}
+
+.setStageForm .selectStage {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+
+.setStageForm .selectStage::after {
+    position: absolute;
+    right: 15px;
+    width: 10px;
+    height: 7px;
+    background-color: #535353;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    content: '';
+    pointer-events: none;
+}
+
+.setStageForm .selectStage select {
+    appearance: none;
+    min-width: 230px;
+    height: 2.8em;
+    padding: .4em calc(.8em + 30px) .4em .8em;
+    border: none;
+    border-bottom: 2px solid #d0d0d0;
+    background-color: #fff;
+    color: #333333;
+    font-size: 1em;
+    cursor: pointer;
+    margin-bottom: 2vh;
+}
+
+.setStageForm .selectStage select:focus {
+    outline: none;
+}
+
+.setStageForm p {
+    font-size: small;
+    color: #999;
+}

@@ -33,12 +33,12 @@
                     <form action="/index" method="post">
                         <p class="inputBox selectBox">
                             ログイン方法<br>
-                        <span class="sel" name="sel">
-                            <select name="loginMethod">
-                                <option value="id" name="selVal">ユーザーID</option>
-                                <option value="mail" name="selVal">メールアドレス</option>
-                            </select>
-                        </span>
+                            <span class="sel" name="sel">
+                                <select name="loginMethod">
+                                    <option value="id" name="selVal">ユーザーID</option>
+                                    <option value="mail" name="selVal">メールアドレス</option>
+                                </select>
+                            </span>
                         </p>
 
                         <p class="inputVal" name="inputVal">
@@ -53,8 +53,11 @@
                             <input type="text" name="userPass">
                         </p>
 
-                        <p class="submitBox"><button type="submit" name="mode" value="login" class="loginBtn"><span
-                                    class="loginText">ログイン</span></button></p>
+                        <p class="submitBox">
+                            <button type="submit" name="mode" value="login" class="loginBtn">
+                                <span class="loginText">ログイン</span>
+                            </button>
+                        </p>
                         <p th:text="${message}" style="color: red;" class="message"></p>
                     </form>
                     <p class="message">

@@ -113,7 +113,7 @@
 
                 <!-- ページ内容 -->
                 <h3>フォーム一覧</h3>
-                
+
                 <!-- 新規フォーム追加 -->
                 <div>
                     <div th:if="${mode != 'createForm'}">
@@ -250,7 +250,8 @@
                     </table>
                 </div>
 
-                <h3>公演日時の追加</h3>
+
+                <h3>公演日時一覧</h3>
                 <div>
                     <div th:if="${mode != 'createDate'}">
                         <form action="/setForm" method="post">
@@ -274,7 +275,6 @@
                         <button type="submit" name="mode" value="createDate">確定</button>
                     </form>
                 </div>
-                <h3>公演日時一覧</h3>
                 <div>
                     <table>
                         <tr>
@@ -297,7 +297,8 @@
                     </table>
                 </div>
 
-                <h3>新規チケットの追加</h3>
+
+                <h3>チケット一覧</h3>
                 <div>
                     <div th:if="${mode != 'createTicket'}">
                         <form action="/setForm" method="post">
@@ -321,8 +322,6 @@
                         <button type="submit" name="mode" value="createTicket">確定</button>
                     </form>
                 </div>
-
-                <h3>チケット一覧</h3>
                 <div>
                     <table>
                         <tr>

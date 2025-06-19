@@ -197,7 +197,7 @@
                     </tr>
                     <tr>
                         <th>集客目標</th>
-                        <td th:text="${stageData.stage_attract_customers}"></td>
+                        <td th:text="${stageData.stage_attract_customers + ' 人'}"></td>
                         <td th:if="${mode != 'setAttractCustomers'}">
                             <form action="/setStage" method="post" class="setStageForm">
                                 <button type="submit" name="mode" value="setAttractCustomers" class="btn">

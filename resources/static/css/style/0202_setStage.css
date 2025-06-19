@@ -42,6 +42,11 @@ th {
     background-clip: padding-box;
 }
 
+.btn {
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+}
+
 .btn .btnText {
     position: relative;
     display: flex;

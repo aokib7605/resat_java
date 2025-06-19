@@ -84,7 +84,7 @@
     background: rgb(212, 178, 178);
 }
 
-.leftMenu button {
+.leftMenu .logoutBtn {
     margin-left: 2em;
     width: 9vw;
     height: 4vh;

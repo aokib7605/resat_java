@@ -236,6 +236,9 @@ public class MainController {
 		try {
 			setEnvData(model, "setFirstStage");
 			is.setPageInfo(model);
+			if(model.getAttribute("page") == null) {
+				model.addAttribute("page", "setFirstStage");
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -245,9 +248,12 @@ public class MainController {
 	@PostMapping("setFirstStage")
 	public String accessSetFirstStage(Model model, String mode) {
 		try {
+			setEnvData(model, "setFirstStage");
+			
 			switch (mode) {
 			case "changeStage": {
-				System.out.println(mode + "が選択されましたA");
+				chss.setPageInfo(model, null, null);
+				model.addAttribute("page", "changeStage");
 				break;
 			}
 			case "changeGroup": {

@@ -95,7 +95,7 @@
 
                 <p>
                 <form action="/login" method="post">
-                    <button type="submit" name="mode" value="logout">ログアウト</button>
+                    <button type="submit" name="mode" value="logout" class="logoutBtn">ログアウト</button>
                 </form>
                 </p>
 
@@ -115,85 +115,86 @@
                 <!-- ページ内容 -->
                 <div>
                     <div th:if="${mode == 'inputGroupId'}">
-        <p>任意の団体IDを入力してください</p>
-        <form action="/createGroup" method="post">
-            <input type="text" name="groupId" th:value="${groupId}"><br>
-            <button type="submit" name="mode" value="inputGroupId">確認</button>
-        </form>
-        <p th:text="${message}"></p>
-    </div>
+                        <p>任意の団体IDを入力してください</p>
+                        <form action="/createGroup" method="post">
+                            <input type="text" name="groupId" th:value="${groupId}"><br>
+                            <button type="submit" name="mode" value="inputGroupId">確認</button>
+                        </form>
+                        <p th:text="${message}"></p>
+                    </div>
 
-    <div th:if="${mode == 'inputGroupData'}">
-        <p>団体情報を入力してください</p>
-        <form action="/createGroup" method="post">
-            <input type="hidden" name="groupId" th:value="${groupId}">
-            <p>
-                団体名<br>
-                <input type="text" name="groupName" required th:value="${groupName}">
-            </p>
-            <p>
-                団体名（フリガナ）<br>
-                <input type="text" name="groupKanaName" required th:value="${groupKanaName}">
-            </p>
-            <p>
-                パスワード<br>
-                <input type="password" name="groupPass" required>
-            </p>
-            <p>
-                パスワード再入力<br>
-                <input type="password" name="rePass" required>
-            </p>
-            <p>
-                メールアドレス<br>
-                <input type="email" name="groupMail" th:value="${groupMail}">
-            </p>
-            <button type="submit" name="mode" value="inputGroupData">確認</button>
-        </form>
-        <form action="/createGroup" method="post">
-            <input type="hidden" name="back" value="back">
-            <input type="hidden" name="groupId" th:value="${groupId}">
-            <button type="submit" name="mode" value="inputGroupData">戻る</button>
-        </form>
-        <p th:text="${message}"></p>
-    </div>
+                    <div th:if="${mode == 'inputGroupData'}">
+                        <p>団体情報を入力してください</p>
+                        <form action="/createGroup" method="post">
+                            <input type="hidden" name="groupId" th:value="${groupId}">
+                            <p>
+                                団体名<br>
+                                <input type="text" name="groupName" required th:value="${groupName}">
+                            </p>
+                            <p>
+                                団体名（フリガナ）<br>
+                                <input type="text" name="groupKanaName" required th:value="${groupKanaName}">
+                            </p>
+                            <p>
+                                パスワード<br>
+                                <input type="password" name="groupPass" required>
+                            </p>
+                            <p>
+                                パスワード再入力<br>
+                                <input type="password" name="rePass" required>
+                            </p>
+                            <p>
+                                メールアドレス<br>
+                                <input type="email" name="groupMail" th:value="${groupMail}">
+                            </p>
+                            <button type="submit" name="mode" value="inputGroupData">確認</button>
+                        </form>
+                        <form action="/createGroup" method="post">
+                            <input type="hidden" name="back" value="back">
+                            <input type="hidden" name="groupId" th:value="${groupId}">
+                            <button type="submit" name="mode" value="inputGroupData">戻る</button>
+                        </form>
+                        <p th:text="${message}"></p>
+                    </div>
 
-    <div th:if="${mode == 'confiResult'}">
-        <p>
-            下記の内容で団体を登録します。<br>
-            よろしければ「確定」を、修正する場合は「戻る」を押してください。
-        </p>
-        <table>
-            <tr>
-                <th>団体ID</th>
-                <td th:text="${groupId}"></td>
-            </tr>
-            <tr>
-                <th>団体名</th>
-                <td th:text="${groupName}"></td>
-            </tr>
-            <tr>
-                <th>団体名（フリガナ）</th>
-                <td th:text="${groupKanaName}"></td>
-            </tr>
-            <tr>
-                <th>パスワード</th>
-                <td th:text="${groupPass}"></td>
-            </tr>
-            <tr>
-                <th>メールアドレス</th>
-                <td th:text="${groupMail}"></td>
-            </tr>
-        </table>
-        <form action="/createGroup" method="post">
-            <input type="hidden" name="mode" value="confiResult">
-            <input type="hidden" name="groupId" th:value="${groupId}">
-            <input type="hidden" name="groupName" th:value="${groupName}">
-            <input type="hidden" name="groupKanaName" th:value="${groupKanaName}">
-            <input type="hidden" name="groupPass" th:value="${groupPass}">
-            <input type="hidden" name="groupMail" th:value="${groupMail}">
-            <p><button type="submit">確定</button>　<button type="submit" name="back" value="back">戻る</button></p>
-        </form>
-    </div>
+                    <div th:if="${mode == 'confiResult'}">
+                        <p>
+                            下記の内容で団体を登録します。<br>
+                            よろしければ「確定」を、修正する場合は「戻る」を押してください。
+                        </p>
+                        <table>
+                            <tr>
+                                <th>団体ID</th>
+                                <td th:text="${groupId}"></td>
+                            </tr>
+                            <tr>
+                                <th>団体名</th>
+                                <td th:text="${groupName}"></td>
+                            </tr>
+                            <tr>
+                                <th>団体名（フリガナ）</th>
+                                <td th:text="${groupKanaName}"></td>
+                            </tr>
+                            <tr>
+                                <th>パスワード</th>
+                                <td th:text="${groupPass}"></td>
+                            </tr>
+                            <tr>
+                                <th>メールアドレス</th>
+                                <td th:text="${groupMail}"></td>
+                            </tr>
+                        </table>
+                        <form action="/createGroup" method="post">
+                            <input type="hidden" name="mode" value="confiResult">
+                            <input type="hidden" name="groupId" th:value="${groupId}">
+                            <input type="hidden" name="groupName" th:value="${groupName}">
+                            <input type="hidden" name="groupKanaName" th:value="${groupKanaName}">
+                            <input type="hidden" name="groupPass" th:value="${groupPass}">
+                            <input type="hidden" name="groupMail" th:value="${groupMail}">
+                            <p><button type="submit">確定</button>　<button type="submit" name="back"
+                                    value="back">戻る</button></p>
+                        </form>
+                    </div>
                 </div>
 
             </div>

@@ -8,3 +8,14 @@
     border: none;
     background: none;
 }
+
+.notBtn {
+    border: none;
+    background: none;
+}
+
+.leftMenu button {
+    margin-left: 0em;
+    padding: auto;
+    margin: auto;
+}

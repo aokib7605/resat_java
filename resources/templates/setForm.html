@@ -3,290 +3,353 @@
 
 <head>
     <meta charset="UTF-8">
-    <title th:text="${pageTitle}"></title>
+    <title th:text="${title}"></title>
+    <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
-    <h1 th:text="${title}"></h1>
-    <h2 th:text="${title2}"></h2>
+    <div class="managerMenu" name="managerMenu">
+        <div class="leftMenu">
+            <div class="menuLogo">
+                <img src="./img/0101/application_logo.png" class="topLogo">
+            </div>
+            <div class="menuContent">
+                <!-- <h1 th:text="${title}"></h1> -->
+                <h2 th:text="${title2}"></h2>
 
-    <!-- 各種メニュー -->
-    <h3 th:text="${menuList_ctegory_stage}"></h3>
-    <h4 th:text="${menuList_stage_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_stage}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
+                <hr>
 
-    <h4 th:text="${menuList_manage_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_manage}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
+                <!-- 各種メニュー -->
+                <!-- 公演メニュー -->
+                <h3 th:text="${menuList_ctegory_stage}"></h3>
+                <a href="javascript:void(0)" class="stage" name="stage">
+                    <h4 th:text="${menuList_stage_title}"></h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_stage}">
+                        <li class="hidden" name="stageMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
 
-    <h4 th:text="${menuList_tools_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_tools}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
+                <!-- 票券管理メニュー -->
+                <a href="javascript:void(0)" class="manage" name="manage">
+                    <h4 th:text="${menuList_manage_title}">
+                    </h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_manage}">
+                        <li class="hidden" name="manageMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
 
-    <h3 th:text="${menuList_ctegory_group}"></h3>
-    <h4 th:text="${menuList_group_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_group}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
+                <!-- 便利機能メニュー -->
+                <a href="javascript:void(0)" class="tool" name="tool">
+                    <h4 th:text="${menuList_tools_title}"></h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_tools}">
+                        <li class="hidden" name="toolMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
 
-    <h3 th:text="${menuList_ctegory_user}"></h3>
-    <h4 th:text="${menuList_user_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_user}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
-    <hr>
+                <th:block th:if="${menuList_stage_title != null}">
+                    <hr>
+                </th:block>
 
-    <!-- ページ内容 -->
-    <h3>新規フォームの追加</h3>
-    <div>
-        <div th:if="${mode != 'createForm'}">
-            <form action="/setForm" method="post">
-                <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
-                <button type="submit" name="mode" value="createForm">新規追加</button>
-            </form>
+                <!-- 団体メニュー -->
+                <h3 th:text="${menuList_ctegory_group}"></h3>
+                <a href="javascript:void(0)" class="group" name="group">
+                    <h4 th:text="${menuList_group_title}"></h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_group}">
+                        <li class="hidden" name="groupMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
+
+                <th:block th:if="${menuList_group_title != null}">
+                    <hr>
+                </th:block>
+
+                <!-- ユーザーメニュー -->
+                <h3 th:text="${menuList_ctegory_user}"></h3>
+                <a href="javascript:void(0)" class="user" name="user">
+                    <h4 th:text="${menuList_user_title}"></h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_user}">
+                        <li class="hidden" name="userMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
+
+                <th:block th:if="${menuList_user_title != null}">
+                    <hr>
+                </th:block>
+
+                <p>
+                <form action="/login" method="post">
+                    <button type="submit" name="mode" value="logout">ログアウト</button>
+                </form>
+                </p>
+
+            </div>
         </div>
-        <div th:if="${mode == 'createForm'}">
-            <form action="/setForm" method="post">
-                <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
-                <input type="hidden" name="nextMode" value="inputValue">
-                <p>
-                    フォーム名<br>
-                    <input type="text" name="formName" required>
-                </p>
-                <p>
-                    予約開始<br>
-                    <input type="datetime-local" name="dateSt" required>
-                </p>
-                <p>
-                    予約終了<br>
-                    <input type="datetime-local" name="dateEd" required>
-                </p>
-                <button type="submit" name="mode" value="createForm">確定</button>
-            </form>
-        </div>
-    </div>
 
-    <h3>フォーム一覧</h3>
-    <div>
-        <table>
-            <tr>
-                <th>フォーム名</th>
-                <th>予約開始</th>
-                <th>予約終了</th>
-                <th>公演日時割り当て</th>
-                <th>チケット割り当て</th>
-            </tr>
-            <th:block th:each="item : ${formList}">
-                <tr>
-                    <td th:text="${item.form_name}"></td>
-                    <td th:text="${#temporals.format(item.date_st, 'yyyy-MM-dd HH:mm')}"></td>
-                    <td th:text="${#temporals.format(item.date_ed, 'yyyy-MM-dd HH:mm')}"></td>
-                    <td th:if="${mode != 'setDateToForm' || sysFormId != item.sys_form_id}">
+        <div class="rightView">
+            <div>
+
+                <!-- 右側画面タイトル -->
+                <h1 th:text="${title}"></h1>
+                <h2 th:text="${title2}"></h2>
+
+                <!-- 区切り線 -->
+                <hr>
+
+                <!-- ページ内容 -->
+                <h3>フォーム一覧</h3>
+                
+                <!-- 新規フォーム追加 -->
+                <div>
+                    <div th:if="${mode != 'createForm'}">
                         <form action="/setForm" method="post">
                             <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
-                            <input type="hidden" name="sysFormId" th:value="${item.sys_form_id}">
-                            <button type="submit" name="mode" value="setDateToForm">設定</button>
+                            <button type="submit" name="mode" value="createForm">新規追加</button>
                         </form>
-                    </td>
-
-                    <td th:if="${mode == 'setDateToForm' && sysFormId == item.sys_form_id}">
+                    </div>
+                    <div th:if="${mode == 'createForm'}">
                         <form action="/setForm" method="post">
                             <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
-                            <input type="hidden" name="sysFormId" th:value="${item.sys_form_id}">
                             <input type="hidden" name="nextMode" value="inputValue">
-                            <table>
-                                <tr>
-                                    <td>現在の設定</td>
-                                    <td>新しく設定</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <th:block th:each="opt : ${dateFormList}">
-                                            <span
-                                                th:text="${#temporals.format(opt.st_date, 'yyyy-MM-dd HH:mm') + ' ' + opt.st_info}"></span><br>
-                                        </th:block>
-                                    </td>
-                                    <td>
-                                        <th:block th:each="opt : ${dateList}">
-                                            <input type="checkbox" name="selectArrays" th:value="${opt.sys_date_id}">
-                                            <span
-                                                th:text="${#temporals.format(opt.st_date, 'yyyy-MM-dd HH:mm') + ' ' + opt.st_info}"></span><br>
-                                        </th:block>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <button type="submit" name="mode" value="setDateToForm">確定</button>
-                                    </td>
-                                </tr>
-                            </table>
+                            <p>
+                                フォーム名<br>
+                                <input type="text" name="formName" required>
+                            </p>
+                            <p>
+                                予約開始<br>
+                                <input type="datetime-local" name="dateSt" required>
+                            </p>
+                            <p>
+                                予約終了<br>
+                                <input type="datetime-local" name="dateEd" required>
+                            </p>
+                            <button type="submit" name="mode" value="createForm">確定</button>
                         </form>
-                    </td>
+                    </div>
+                </div>
 
-                    <td th:if="${mode != 'setTicketToForm' || sysFormId != item.sys_form_id}">
+                <div>
+                    <table>
+                        <tr>
+                            <th>フォーム名</th>
+                            <th>予約開始</th>
+                            <th>予約終了</th>
+                            <th>公演日時割り当て</th>
+                            <th>チケット割り当て</th>
+                        </tr>
+                        <th:block th:each="item : ${formList}">
+                            <tr>
+                                <td th:text="${item.form_name}"></td>
+                                <td th:text="${#temporals.format(item.date_st, 'yyyy-MM-dd HH:mm')}"></td>
+                                <td th:text="${#temporals.format(item.date_ed, 'yyyy-MM-dd HH:mm')}"></td>
+                                <td th:if="${mode != 'setDateToForm' || sysFormId != item.sys_form_id}">
+                                    <form action="/setForm" method="post">
+                                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                                        <input type="hidden" name="sysFormId" th:value="${item.sys_form_id}">
+                                        <button type="submit" name="mode" value="setDateToForm">設定</button>
+                                    </form>
+                                </td>
+
+                                <td th:if="${mode == 'setDateToForm' && sysFormId == item.sys_form_id}">
+                                    <form action="/setForm" method="post">
+                                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                                        <input type="hidden" name="sysFormId" th:value="${item.sys_form_id}">
+                                        <input type="hidden" name="nextMode" value="inputValue">
+                                        <table>
+                                            <tr>
+                                                <td>現在の設定</td>
+                                                <td>新しく設定</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <th:block th:each="opt : ${dateFormList}">
+                                                        <span
+                                                            th:text="${#temporals.format(opt.st_date, 'yyyy-MM-dd HH:mm') + ' ' + opt.st_info}"></span><br>
+                                                    </th:block>
+                                                </td>
+                                                <td>
+                                                    <th:block th:each="opt : ${dateList}">
+                                                        <input type="checkbox" name="selectArrays"
+                                                            th:value="${opt.sys_date_id}">
+                                                        <span
+                                                            th:text="${#temporals.format(opt.st_date, 'yyyy-MM-dd HH:mm') + ' ' + opt.st_info}"></span><br>
+                                                    </th:block>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <button type="submit" name="mode" value="setDateToForm">確定</button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </form>
+                                </td>
+
+                                <td th:if="${mode != 'setTicketToForm' || sysFormId != item.sys_form_id}">
+                                    <form action="/setForm" method="post">
+                                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                                        <input type="hidden" name="sysFormId" th:value="${item.sys_form_id}">
+                                        <button type="submit" name="mode" value="setTicketToForm">設定</button>
+                                    </form>
+                                </td>
+
+                                <td th:if="${mode == 'setTicketToForm' && sysFormId == item.sys_form_id}">
+                                    <form action="/setForm" method="post">
+                                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                                        <input type="hidden" name="sysFormId" th:value="${item.sys_form_id}">
+                                        <input type="hidden" name="nextMode" value="inputValue">
+                                        <table>
+                                            <tr>
+                                                <td>現在の設定</td>
+                                                <td>新しく設定</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <th:block th:each="opt : ${ticketFormList}">
+                                                        <span
+                                                            th:text="${opt.ticket_name + ' (' + opt.ticket_price + ' 円)'}"></span><br>
+                                                    </th:block>
+                                                </td>
+                                                <td>
+                                                    <th:block th:each="opt : ${ticketList}">
+                                                        <input type="checkbox" name="selectArrays"
+                                                            th:value="${opt.sys_ticket_id}">
+                                                        <span
+                                                            th:text="${opt.ticket_name + ' (' + opt.ticket_price + ' 円)'}"></span><br>
+                                                    </th:block>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <button type="submit" name="mode"
+                                                        value="setTicketToForm">確定</button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </form>
+                                </td>
+                            </tr>
+                        </th:block>
+                    </table>
+                </div>
+
+                <h3>公演日時の追加</h3>
+                <div>
+                    <div th:if="${mode != 'createDate'}">
                         <form action="/setForm" method="post">
                             <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
-                            <input type="hidden" name="sysFormId" th:value="${item.sys_form_id}">
-                            <button type="submit" name="mode" value="setTicketToForm">設定</button>
+                            <button type="submit" name="mode" value="createDate">新規追加</button>
                         </form>
-                    </td>
+                    </div>
+                </div>
+                <div th:if="${mode == 'createDate'}">
+                    <form action="/setForm" method="post">
+                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                        <input type="hidden" name="nextMode" value="inputValue">
+                        <p>
+                            公演日時<br>
+                            <input type="datetime-local" name="stDate" required>
+                        </p>
+                        <p>
+                            備考<br>
+                            <input type="text" name="stInfo">
+                        </p>
+                        <button type="submit" name="mode" value="createDate">確定</button>
+                    </form>
+                </div>
+                <h3>公演日時一覧</h3>
+                <div>
+                    <table>
+                        <tr>
+                            <th>公演日時</th>
+                            <th>備考</th>
+                            <th></th>
+                        </tr>
+                        <th:block th:each="item : ${dateList}">
+                            <tr>
+                                <td th:text="${#temporals.format(item.st_date, 'yyyy-MM-dd HH:mm')}"></td>
+                                <td th:text="${item.st_info}"></td>
+                                <td>
+                                    <form action="" method="post">
+                                        <input type="hidden" name="sysDateId" th:value="${item.sys_date_id}">
+                                        <button type="submit" name="mode" value="deleteDate">削除</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </th:block>
+                    </table>
+                </div>
 
-                    <td th:if="${mode == 'setTicketToForm' && sysFormId == item.sys_form_id}">
+                <h3>新規チケットの追加</h3>
+                <div>
+                    <div th:if="${mode != 'createTicket'}">
                         <form action="/setForm" method="post">
                             <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
-                            <input type="hidden" name="sysFormId" th:value="${item.sys_form_id}">
-                            <input type="hidden" name="nextMode" value="inputValue">
-                            <table>
-                                <tr>
-                                    <td>現在の設定</td>
-                                    <td>新しく設定</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <th:block th:each="opt : ${ticketFormList}">
-                                            <span
-                                                th:text="${opt.ticket_name + ' (' + opt.ticket_price + ' 円)'}"></span><br>
-                                        </th:block>
-                                    </td>
-                                    <td>
-                                        <th:block th:each="opt : ${ticketList}">
-                                            <input type="checkbox" name="selectArrays" th:value="${opt.sys_ticket_id}">
-                                            <span
-                                                th:text="${opt.ticket_name + ' (' + opt.ticket_price + ' 円)'}"></span><br>
-                                        </th:block>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <button type="submit" name="mode" value="setTicketToForm">確定</button>
-                                    </td>
-                                </tr>
-                            </table>
+                            <button type="submit" name="mode" value="createTicket">新規追加</button>
                         </form>
-                    </td>
-                </tr>
-            </th:block>
-        </table>
-    </div>
+                    </div>
+                </div>
+                <div th:if="${mode == 'createTicket'}">
+                    <form action="/setForm" method="post">
+                        <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
+                        <input type="hidden" name="nextMode" value="inputValue">
+                        <p>
+                            チケット名<br>
+                            <input type="text" name="ticketName" required>
+                        </p>
+                        <p>
+                            料金<br>
+                            <input type="number" name="ticketPrice" required>
+                        </p>
+                        <button type="submit" name="mode" value="createTicket">確定</button>
+                    </form>
+                </div>
 
-    <h3>公演日時の追加</h3>
-    <div>
-        <div th:if="${mode != 'createDate'}">
-            <form action="/setForm" method="post">
-                <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
-                <button type="submit" name="mode" value="createDate">新規追加</button>
-            </form>
+                <h3>チケット一覧</h3>
+                <div>
+                    <table>
+                        <tr>
+                            <th>チケット名</th>
+                            <th>料金</th>
+                            <th></th>
+                        </tr>
+                        <th:block th:each="item : ${ticketList}">
+                            <tr>
+                                <td th:text="${item.ticket_name}"></td>
+                                <td th:text="${item.ticket_price}"></td>
+                                <td>
+                                    <form action="" method="post">
+                                        <input type="hidden" name="sysTicketId" th:value="${item.sys_ticket_id}">
+                                        <button type="submit" name="mode" value="deleteTicket">削除</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </th:block>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
-    <div th:if="${mode == 'createDate'}">
-        <form action="/setForm" method="post">
-            <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
-            <input type="hidden" name="nextMode" value="inputValue">
-            <p>
-                公演日時<br>
-                <input type="datetime-local" name="stDate" required>
-            </p>
-            <p>
-                備考<br>
-                <input type="text" name="stInfo">
-            </p>
-            <button type="submit" name="mode" value="createDate">確定</button>
-        </form>
-    </div>
-    <h3>公演日時一覧</h3>
-    <div>
-        <table>
-            <tr>
-                <th>公演日時</th>
-                <th>備考</th>
-                <th></th>
-            </tr>
-            <th:block th:each="item : ${dateList}">
-                <tr>
-                    <td th:text="${#temporals.format(item.st_date, 'yyyy-MM-dd HH:mm')}"></td>
-                    <td th:text="${item.st_info}"></td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" name="sysDateId" th:value="${item.sys_date_id}">
-                            <button type="submit" name="mode" value="deleteDate">削除</button>
-                        </form>
-                    </td>
-                </tr>
-            </th:block>
-        </table>
-    </div>
 
-    <h3>新規チケットの追加</h3>
-    <div>
-        <div th:if="${mode != 'createTicket'}">
-            <form action="/setForm" method="post">
-                <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
-                <button type="submit" name="mode" value="createTicket">新規追加</button>
-            </form>
-        </div>
-    </div>
-    <div th:if="${mode == 'createTicket'}">
-        <form action="/setForm" method="post">
-            <input type="hidden" name="sysStageId" th:value="${stageData.sys_stage_id}">
-            <input type="hidden" name="nextMode" value="inputValue">
-            <p>
-                チケット名<br>
-                <input type="text" name="ticketName" required>
-            </p>
-            <p>
-                料金<br>
-                <input type="number" name="ticketPrice" required>
-            </p>
-            <button type="submit" name="mode" value="createTicket">確定</button>
-        </form>
-    </div>
-
-    <h3>チケット一覧</h3>
-    <div>
-        <table>
-            <tr>
-                <th>チケット名</th>
-                <th>料金</th>
-                <th></th>
-            </tr>
-            <th:block th:each="item : ${ticketList}">
-                <tr>
-                    <td th:text="${item.ticket_name}"></td>
-                    <td th:text="${item.ticket_price}"></td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" name="sysTicketId" th:value="${item.sys_ticket_id}">
-                            <button type="submit" name="mode" value="deleteTicket">削除</button>
-                        </form>
-                    </td>
-                </tr>
-            </th:block>
-        </table>
-    </div>
-
-    <p>
-    <form action="/login" method="post">
-        <input type="hidden" name="mode" value="logout">
-        <input type="submit" value="ログアウト">
-    </form>
-    </p>
-
+    <script type="module" src="./js/main.js"></script>
 </body>
 
 </html>

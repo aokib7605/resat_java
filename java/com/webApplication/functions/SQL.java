@@ -320,6 +320,8 @@ public class SQL {
 	public ArrayList<DataEntity> getDateDataList(String sysStageId){
 		columns = mr.getDatesTableColumns();
 		where = " where sys_stage_id = '" + sysStageId + "' ";
+		orderBy = " order by st_date ";
+		where += orderBy;
 		return mr.getDataList("dates", columns, where);
 	}
 

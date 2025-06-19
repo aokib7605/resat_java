@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.webApplication.entity.DataEntity;
+import com.webApplication.entity.Env;
 import com.webApplication.functions.Pub;
 import com.webApplication.repository.MainRepository;
 
@@ -28,7 +29,7 @@ public class CreateUserService {
 	private final JavaMailSender mailSender;
 
 	public void setPageInfo(Model model) {
-		model.addAttribute("title2", "新規ユーザー作成");
+		model.addAttribute("title2", Env.createManageUserView);
 	}
 
 	public String start(Model model) {
@@ -48,7 +49,7 @@ public class CreateUserService {
 			sendMail(userMail, mailBase64);
 			return true;
 		} else {
-			model.addAttribute("message", "そのメールアドレスは既に使用されています");
+			model.addAttribute("message", Env.mailAddressIsUsed);
 			model.addAttribute("mode", "start");
 			return false;
 		}
@@ -85,14 +86,14 @@ public class CreateUserService {
 		 */
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setTo(userMail);
-		message.setFrom("nukikugi@gmail.com");
-		message.setSubject("りざっとアカウント新規登録手続き");
+		message.setFrom(Env.sendFromMail);
+		message.setSubject(Env.custApplicationTitle + "アカウント新規登録手続き");
 		message.setText(
-				"りざっと開発団体 劇団抜きにくい釘です。\n"
+				Env.custApplicationTitle + "開発団体 劇団抜きにくい釘です。\n"
 						+ "まだアカウント登録は完了しておりません。下記URLから以降の登録処理を進めてください。\n"
-						+ "http://localhost:8080/createUser?mode=confiData&data=" + mailBase64
+						+ Env.domainName + "/createUser?mode=confiData&data=" + mailBase64
 				);
-		System.out.println("http://localhost:8080/createUser?mode=confiData&data=" + mailBase64);
+		System.out.println(Env.domainName + "/createUser?mode=confiData&data=" + mailBase64);
 
 		// メール送信を実施する。
 		mailSender.send(message);
@@ -231,7 +232,7 @@ public class CreateUserService {
 				data.getUser_def_group()		//user_def_group
 				));
 		mr.insertData("users", columns, values);
-		
+
 		String where = "left outer join groupes on sys_group_id = user_def_group where user_id =  '" + data.getUser_id() + "'";
 		columns = Stream.concat(mr.getUsersTableColumns().stream(), mr.getGroupeLoginListTableColumns().stream()).collect(Collectors.toList());
 		columns = Stream.concat(columns.stream(), mr.getGroupesTableColumns().stream()).collect(Collectors.toList());

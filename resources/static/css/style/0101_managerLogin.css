@@ -1,6 +1,7 @@
 .pc .managerLoginContainer {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
+    height: auto;
 }
 
 .pc .leftSide {
@@ -51,7 +52,8 @@
     color: #999;
 }
 
-.center_container .inputBox, .center_container .inputVal {
+.center_container .inputBox,
+.center_container .inputVal {
     text-align: left;
     padding-top: 5vh;
     color: #999;

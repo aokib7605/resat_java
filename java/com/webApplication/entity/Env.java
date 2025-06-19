@@ -7,6 +7,7 @@ public class Env {
 	
 	//ドメイン名
 	public static String domainName = "http://localhost:8080";
+	public static String sendFromMail = "nukikugi@gmail.com";
 	
 	/*
 	 * 各ページのメニュータイトル
@@ -28,6 +29,7 @@ public class Env {
 	 *  管理者画面
 	 */
 	public static String systemLoginView = "管理者ログイン画面";
+	public static String createManageUserView = "新規ユーザー作成";
 	public static String reserveListView = "予約一覧";
 	public static String countReserveView = "予約枚数集計";
 	public static String groupListView = "団体一覧・参加";
@@ -44,8 +46,10 @@ public class Env {
 	/**
 	 *  各種メッセージ一覧
 	 */
+	// エラーメッセージ
 	public static String userAccountNotExist = "そのユーザーIDは存在しません";
 	public static String userMailNotExist = "そのメールアドレスは存在しません";
+	public static String mailAddressIsUsed = "そのメールアドレスは既に使用されています";
 	public static String passwordIsFalse = "パスワードが間違っています";
 	public static String sysUserLoginToCustPage = 
 			"管理者アカウントでログインしようとしています。<br>"

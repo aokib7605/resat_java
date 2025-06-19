@@ -106,20 +106,21 @@ public class EnvService {
 				if (userData.getSys_group_id() != null) {
 					model.addAttribute("menuList_ctegory_group", "団体メニュー");
 					ArrayList<MenuEntity> menuList_group2 = new ArrayList<>();
-					menuList_group2.add(getMenuObject("公演の新規作成", "createStage?mode=inputSysGroupId"));
-					menuList_group2.add(getMenuObject("団体公演一覧", "checkStageList?offset=&page="));
+					menuList_group2.add(getMenuObject("公演の新規作成", "createStage"));
+					menuList_group2.add(getMenuObject("団体公演一覧", "checkStageList"));
 					model.addAttribute("menuList_group", menuList_group2);
 					model.addAttribute("menuList_group_title", userData.getGroup_name());
 				}
 
 				model.addAttribute("menuList_ctegory_user", "個人メニュー");
 				ArrayList<MenuEntity> menuList_user2 = new ArrayList<>();
-				menuList_user2.add(getMenuObject("公演一覧・参加", "/changeStage?offset=&page="));
-				menuList_user2.add(getMenuObject("団体一覧・参加", "/changeGroup?offset=&page="));
-				menuList_user2.add(getMenuObject("ユーザー基本情報", "/setUser"));
-				menuList_user2.add(getMenuObject("団体の新規作成", "/createGroup?mode=inputGroupId"));
+				menuList_user2.add(getMenuObject("公演一覧・参加", "changeStage"));
+				menuList_user2.add(getMenuObject("団体一覧・参加", "changeGroup"));
+				menuList_user2.add(getMenuObject("ユーザー基本情報", "setUser"));
+				menuList_user2.add(getMenuObject("団体の新規作成", "createGroup"));
 				model.addAttribute("menuList_user", menuList_user2);
 				model.addAttribute("menuList_user_title", userData.getUser_name());
+				session.setAttribute("setFirstStage", "setFirstStage");
 				break;
 
 			case "customer": {

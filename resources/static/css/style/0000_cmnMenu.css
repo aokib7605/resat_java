@@ -1,6 +1,7 @@
 .managerMenu {
     display: flex;
-    height: 100vw;
+    min-height: 100vh;
+    height: auto;
 }
 
 .pc .leftMenu {
@@ -52,32 +53,35 @@
 }
 
 .menuUl li {
-  position: relative;
-  padding: 0.5em 1em 0.5em 2.3em;
-  margin-bottom:5px;
-  border-bottom: 1px solid rgb(62, 1, 1);
+    position: relative;
+    padding: 0.5em 1em 0.5em 2.3em;
+    margin-bottom: 5px;
+    border-bottom: 1px solid rgb(62, 1, 1);
 }
+
 .menuUl li:after,
-.menuUl li:before{
-  position: absolute;
-  content:'';
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .menuUl li:before {
-  left: 0;
-  width: 17px;
-  height: 17px;
-  background: rgb(62, 1, 1);
+    position: absolute;
+    content: '';
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.menuUl li:before {
+    left: 0;
+    width: 17px;
+    height: 17px;
+    background: rgb(62, 1, 1);
+}
+
 .menuUl li:after {
-  top: 1em;
-  left: 0.5em;
-  width: 14px;
-  height: 14px;
-  background: rgb(212, 178, 178);
+    top: 1em;
+    left: 0.5em;
+    width: 14px;
+    height: 14px;
+    background: rgb(212, 178, 178);
 }
 
 .leftMenu button {

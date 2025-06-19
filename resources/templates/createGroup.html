@@ -3,55 +3,118 @@
 
 <head>
     <meta charset="UTF-8">
-    <title th:text="${pageTitle}"></title>
+    <title th:text="${title}"></title>
+    <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
-    <h1 th:text="${title}"></h1>
-    <h2 th:text="${title2}"></h2>
+    <div class="managerMenu" name="managerMenu">
 
-    <!-- 各種メニュー -->
-    <h3 th:text="${menuList_ctegory_stage}"></h3>
-    <h4 th:text="${menuList_stage_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_stage}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
+        <div class="leftMenu">
+            <div class="menuLogo">
+                <img src="./img/0101/application_logo.png" class="topLogo">
+            </div>
+            <div class="menuContent">
+                <!-- <h1 th:text="${title}"></h1> -->
+                <h2 th:text="${title2}"></h2>
 
-    <h4 th:text="${menuList_manage_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_manage}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
+                <hr>
 
-    <h4 th:text="${menuList_tools_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_tools}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
+                <!-- 各種メニュー -->
+                <!-- 公演メニュー -->
+                <h3 th:text="${menuList_ctegory_stage}"></h3>
+                <a href="javascript:void(0)" class="stage" name="stage">
+                    <h4 th:text="${menuList_stage_title}"></h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_stage}">
+                        <li class="hidden" name="stageMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
 
-    <h3 th:text="${menuList_ctegory_group}"></h3>
-    <h4 th:text="${menuList_group_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_group}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
+                <!-- 票券管理メニュー -->
+                <a href="javascript:void(0)" class="manage" name="manage">
+                    <h4 th:text="${menuList_manage_title}">
+                    </h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_manage}">
+                        <li class="hidden" name="manageMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
 
-    <h3 th:text="${menuList_ctegory_user}"></h3>
-    <h4 th:text="${menuList_user_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_user}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
-    <hr>
+                <!-- 便利機能メニュー -->
+                <a href="javascript:void(0)" class="tool" name="tool">
+                    <h4 th:text="${menuList_tools_title}"></h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_tools}">
+                        <li class="hidden" name="toolMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
 
-    <!-- ページ内容 -->
-    <div th:if="${mode == 'inputGroupId'}">
+                <th:block th:if="${menuList_stage_title != null}">
+                    <hr>
+                </th:block>
+
+                <!-- 団体メニュー -->
+                <h3 th:text="${menuList_ctegory_group}"></h3>
+                <a href="javascript:void(0)" class="group" name="group">
+                    <h4 th:text="${menuList_group_title}"></h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_group}">
+                        <li class="hidden" name="groupMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
+
+                <th:block th:if="${menuList_group_title != null}">
+                    <hr>
+                </th:block>
+
+                <!-- ユーザーメニュー -->
+                <h3 th:text="${menuList_ctegory_user}"></h3>
+                <a href="javascript:void(0)" class="user" name="user">
+                    <h4 th:text="${menuList_user_title}"></h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_user}">
+                        <li class="hidden" name="userMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
+
+                <th:block th:if="${menuList_user_title != null}">
+                    <hr>
+                </th:block>
+
+                <p>
+                <form action="/login" method="post">
+                    <button type="submit" name="mode" value="logout">ログアウト</button>
+                </form>
+                </p>
+
+            </div>
+        </div>
+
+        <div class="rightView">
+            <div>
+
+                <!-- 右側画面タイトル -->
+                <h1 th:text="${title}"></h1>
+                <h2 th:text="${title2}"></h2>
+
+                <!-- 区切り線 -->
+                <hr>
+
+                <!-- ページ内容 -->
+                <div>
+                    <div th:if="${mode == 'inputGroupId'}">
         <p>任意の団体IDを入力してください</p>
         <form action="/createGroup" method="post">
             <input type="text" name="groupId" th:value="${groupId}"><br>
@@ -131,14 +194,15 @@
             <p><button type="submit">確定</button>　<button type="submit" name="back" value="back">戻る</button></p>
         </form>
     </div>
+                </div>
 
-    <p>
-    <form action="/login" method="post">
-        <input type="hidden" name="mode" value="logout">
-        <input type="submit" value="ログアウト">
-    </form>
-    </p>
+            </div>
 
+        </div>
+
+    </div>
+
+    <script type="module" src="./js/main.js"></script>
 </body>
 
 </html>

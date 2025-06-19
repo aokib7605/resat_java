@@ -2,6 +2,25 @@
 @import './style/0101_managerLogin.css';
 @import './style/0201_managerTop.css';
 @import './style/0202_setStage.css';
+@import './style/0203_setForm.css';
+@import './style/0204_setSeat.css';
+@import './style/0205_setAdvertisement.css';
+@import './style/0206_setStageMember.css';
+@import './style/0301_checkReserveList.css';
+@import './style/0302_countReserve.css';
+@import './style/0303_checkFormList.css';
+@import './style/0401_sendMail.css';
+@import './style/0402_exportExcel.css';
+@import './style/0501_createStage.css';
+@import './style/0502_checkStageList.css';
+@import './style/0503_setGroup.css';
+@import './style/0504_setGroupMember.css';
+@import './style/0601_changeStage.css';
+@import './style/0602_changeGroup.css';
+@import './style/0603_setUser.css';
+@import './style/0604_createGroup.css';
+@import './style/0701_createUser.css';
+@import './style/0702_setFirstStage.css';
 
 html,
 body {
@@ -10,7 +29,7 @@ body {
     height: 100%;
 }
 
-.pc p {
+.pc p, span {
     font-size: 1.2vw;
 }
 

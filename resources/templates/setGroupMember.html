@@ -3,169 +3,238 @@
 
 <head>
     <meta charset="UTF-8">
-    <title th:text="${pageTitle}"></title>
+    <title th:text="${title}"></title>
+    <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
-    <h1 th:text="${title}"></h1>
-    <h2 th:text="${title2}"></h2>
+    <div class="managerMenu" name="managerMenu">
 
-    <!-- 各種メニュー -->
-    <h3 th:text="${menuList_ctegory_stage}"></h3>
-    <h4 th:text="${menuList_stage_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_stage}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
+        <div class="leftMenu">
+            <div class="menuLogo">
+                <img src="./img/0101/application_logo.png" class="topLogo">
+            </div>
+            <div class="menuContent">
+                <!-- <h1 th:text="${title}"></h1> -->
+                <h2 th:text="${title2}"></h2>
 
-    <h4 th:text="${menuList_manage_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_manage}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
+                <hr>
 
-    <h4 th:text="${menuList_tools_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_tools}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
+                <!-- 各種メニュー -->
+                <!-- 公演メニュー -->
+                <h3 th:text="${menuList_ctegory_stage}"></h3>
+                <a href="javascript:void(0)" class="stage" name="stage">
+                    <h4 th:text="${menuList_stage_title}"></h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_stage}">
+                        <li class="hidden" name="stageMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
 
-    <h3 th:text="${menuList_ctegory_group}"></h3>
-    <h4 th:text="${menuList_group_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_group}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
+                <!-- 票券管理メニュー -->
+                <a href="javascript:void(0)" class="manage" name="manage">
+                    <h4 th:text="${menuList_manage_title}">
+                    </h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_manage}">
+                        <li class="hidden" name="manageMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
 
-    <h3 th:text="${menuList_ctegory_user}"></h3>
-    <h4 th:text="${menuList_user_title}"></h4>
-    <ul>
-        <th:block th:each="column : ${menuList_user}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
-    <hr>
+                <!-- 便利機能メニュー -->
+                <a href="javascript:void(0)" class="tool" name="tool">
+                    <h4 th:text="${menuList_tools_title}"></h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_tools}">
+                        <li class="hidden" name="toolMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
 
-    <!-- ページ内容 -->
-    <h3>ユーザーを検索して招待</h3>
-    <form action="/setGroupMember" method="post">
-        <input type="hidden" name="searchOffset" th:value="${searchOffset}">
-        <input type="hidden" name="page" value="">
-        <p>
-            検索方法
-            <select name="mode" required>
-                <option value="" disabled selected>検索方法を選択してください</option>
-                <option value="idSearch">ユーザーID</option>
-                <option value="nameSearch">ユーザー名</option>
-                <option value="mailSearch">メールアドレス</option>
-            </select>
-        </p>
-        <p>
-            <input type="text" name="keyword" th:value="${keyword}">
-            <input type="submit" value="検索">
-        </p>
-    </form>
-    <p th:text="${message}" style="color: red;"></p>
+                <th:block th:if="${menuList_stage_title != null}">
+                    <hr>
+                </th:block>
 
-    <div th:if="${!#lists.isEmpty(searchUserList)}">
-        <table>
-            <tr>
-                <th>ユーザーID</th>
-                <th>ユーザー名</th>
-                <th></th>
-            </tr>
-            <th:block th:each="item : ${searchUserList}">
-                <tr>
+                <!-- 団体メニュー -->
+                <h3 th:text="${menuList_ctegory_group}"></h3>
+                <a href="javascript:void(0)" class="group" name="group">
+                    <h4 th:text="${menuList_group_title}"></h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_group}">
+                        <li class="hidden" name="groupMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
+
+                <th:block th:if="${menuList_group_title != null}">
+                    <hr>
+                </th:block>
+
+                <!-- ユーザーメニュー -->
+                <h3 th:text="${menuList_ctegory_user}"></h3>
+                <a href="javascript:void(0)" class="user" name="user">
+                    <h4 th:text="${menuList_user_title}"></h4>
+                </a>
+                <ul class="menuUl">
+                    <th:block th:each="column : ${menuList_user}">
+                        <li class="hidden" name="userMenu"><a th:href="${column.page_url}"><span
+                                    th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
+
+                <th:block th:if="${menuList_user_title != null}">
+                    <hr>
+                </th:block>
+
+                <p>
+                <form action="/login" method="post">
+                    <button type="submit" name="mode" value="logout">ログアウト</button>
+                </form>
+                </p>
+
+            </div>
+        </div>
+
+        <div class="rightView">
+            <div>
+
+                <!-- 右側画面タイトル -->
+                <h1 th:text="${title}"></h1>
+                <h2 th:text="${title2}"></h2>
+
+                <!-- 区切り線 -->
+                <hr>
+
+                <!-- ページ内容 -->
+                <div>
+                    <h3>ユーザーを検索して招待</h3>
                     <form action="/setGroupMember" method="post">
-                        <input type="hidden" name="mode" th:value="${mode}">
-                        <input type="hidden" name="keyword" th:value="${keyword}">
                         <input type="hidden" name="searchOffset" th:value="${searchOffset}">
-                        <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
-                        <td th:text="${item.user_id}"></td>
-                        <td th:text="${item.user_name}"></td>
-                        <td><button name="loginMode" value="invite">招待</button></td>
+                        <input type="hidden" name="page" value="">
+                        <p>
+                            検索方法
+                            <select name="mode" required>
+                                <option value="" disabled selected>検索方法を選択してください</option>
+                                <option value="idSearch">ユーザーID</option>
+                                <option value="nameSearch">ユーザー名</option>
+                                <option value="mailSearch">メールアドレス</option>
+                            </select>
+                        </p>
+                        <p>
+                            <input type="text" name="keyword" th:value="${keyword}">
+                            <input type="submit" value="検索">
+                        </p>
                     </form>
-                </tr>
-            </th:block>
-        </table>
-        <form action="/setGroupMember" method="post">
-            <input type="hidden" name="mode" th:value="${mode}">
-            <input type="hidden" name="keyword" th:value="${keyword}">
-            <input type="hidden" name="searchOffset" th:value="${searchOffset}">
-            <p>
-                <button type="submit" name="page" value="searchPrev" th:if="${searchPrev != null}">前へ</button>
-                <button type="submit" name="page" value="searchNext" th:if="${searchNext != null}">次へ</button>
-            </p>
-        </form>
-    </div>
+                    <p th:text="${message}" style="color: red;"></p>
 
-    <h3>団体のメンバー一覧</h3>
-    <div>
-        <table>
-            <tr>
-                <th>ユーザーID</th>
-                <th>ユーザー名</th>
-                <th>権限</th>
-                <th></th>
-            </tr>
-            <th:block th:each="item : ${memberList}">
-                <tr>
-                    <td th:text="${item.user_id}"></td>
-                    <td th:text="${item.user_name}"></td>
-                    <td th:text="${item.authority_name}"></td>
-                    <td th:if="${item.sys_user_id == userData.sys_user_id && item.sys_user_id != sysUserId}">
-                        <span style="color: red;">編集不可</span>
-                    </td>
-                    <td th:if="${item.sys_user_id != userData.sys_user_id && item.sys_user_id != sysUserId}">
+                    <div th:if="${!#lists.isEmpty(searchUserList)}">
+                        <table>
+                            <tr>
+                                <th>ユーザーID</th>
+                                <th>ユーザー名</th>
+                                <th></th>
+                            </tr>
+                            <th:block th:each="item : ${searchUserList}">
+                                <tr>
+                                    <form action="/setGroupMember" method="post">
+                                        <input type="hidden" name="mode" th:value="${mode}">
+                                        <input type="hidden" name="keyword" th:value="${keyword}">
+                                        <input type="hidden" name="searchOffset" th:value="${searchOffset}">
+                                        <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
+                                        <td th:text="${item.user_id}"></td>
+                                        <td th:text="${item.user_name}"></td>
+                                        <td><button name="loginMode" value="invite">招待</button></td>
+                                    </form>
+                                </tr>
+                            </th:block>
+                        </table>
                         <form action="/setGroupMember" method="post">
-                            <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
-                            <button name="mode" value="select">編集</button>
-                        </form>
-                    </td>
-                    <td th:if="${item.sys_user_id == sysUserId && mode == 'select'}">
-                        <form action="/setGroupMember" method="post">
-                            <input type="hidden" name="mode" value="select">
-                            <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
+                            <input type="hidden" name="mode" th:value="${mode}">
+                            <input type="hidden" name="keyword" th:value="${keyword}">
+                            <input type="hidden" name="searchOffset" th:value="${searchOffset}">
                             <p>
-                                権限変更 <span th:text="${item.authority_name}"></span> ⇒ 
-                                <select name="groupAuthority">
-                                    <th:block th:each="opt : ${authorityList}">
-                                        <option th:value="${opt.authority_id}" th:text="${opt.authority_name}"></option>
-                                    </th:block>
-                                </select> 
-                                <button type="submit" name="nextMode" value="inputValue">決定</button>
-                            </p>
-                            <p>
-                                団体から退会 ⇒ 
-                                <button type="submit" name="nextMode" value="logout">退会</button>
+                                <button type="submit" name="page" value="searchPrev"
+                                    th:if="${searchPrev != null}">前へ</button>
+                                <button type="submit" name="page" value="searchNext"
+                                    th:if="${searchNext != null}">次へ</button>
                             </p>
                         </form>
-                    </td>
-                </tr>
-            </th:block>
-        </table>
-        <form action="/setGroupMember" method="post">
-            <input type="hidden" name="mode" value="stageList">
-            <input type="hidden" name="listOffset" th:value="${listOffset}">
-            <p>
-                <button type="submit" name="page" value="prev" th:if="${prev != null}">前へ</button>
-                <button type="submit" name="page" value="next" th:if="${next != null}">次へ</button>
-            </p>
-        </form>
-        <p th:text="${listMessage}"></p>
+                    </div>
+
+                    <h3>団体のメンバー一覧</h3>
+                    <div>
+                        <table>
+                            <tr>
+                                <th>ユーザーID</th>
+                                <th>ユーザー名</th>
+                                <th>権限</th>
+                                <th></th>
+                            </tr>
+                            <th:block th:each="item : ${memberList}">
+                                <tr>
+                                    <td th:text="${item.user_id}"></td>
+                                    <td th:text="${item.user_name}"></td>
+                                    <td th:text="${item.authority_name}"></td>
+                                    <td
+                                        th:if="${item.sys_user_id == userData.sys_user_id && item.sys_user_id != sysUserId}">
+                                        <span style="color: red;">編集不可</span>
+                                    </td>
+                                    <td
+                                        th:if="${item.sys_user_id != userData.sys_user_id && item.sys_user_id != sysUserId}">
+                                        <form action="/setGroupMember" method="post">
+                                            <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
+                                            <button name="mode" value="select">編集</button>
+                                        </form>
+                                    </td>
+                                    <td th:if="${item.sys_user_id == sysUserId && mode == 'select'}">
+                                        <form action="/setGroupMember" method="post">
+                                            <input type="hidden" name="mode" value="select">
+                                            <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
+                                            <p>
+                                                権限変更 <span th:text="${item.authority_name}"></span> ⇒
+                                                <select name="groupAuthority">
+                                                    <th:block th:each="opt : ${authorityList}">
+                                                        <option th:value="${opt.authority_id}"
+                                                            th:text="${opt.authority_name}"></option>
+                                                    </th:block>
+                                                </select>
+                                                <button type="submit" name="nextMode" value="inputValue">決定</button>
+                                            </p>
+                                            <p>
+                                                団体から退会 ⇒
+                                                <button type="submit" name="nextMode" value="logout">退会</button>
+                                            </p>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </th:block>
+                        </table>
+                        <form action="/setGroupMember" method="post">
+                            <input type="hidden" name="mode" value="stageList">
+                            <input type="hidden" name="listOffset" th:value="${listOffset}">
+                            <p>
+                                <button type="submit" name="page" value="prev" th:if="${prev != null}">前へ</button>
+                                <button type="submit" name="page" value="next" th:if="${next != null}">次へ</button>
+                            </p>
+                        </form>
+                        <p th:text="${listMessage}"></p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <p>
-    <form action="/login" method="post">
-        <input type="hidden" name="mode" value="logout">
-        <input type="submit" value="ログアウト">
-    </form>
-    </p>
-
+    <script type="module" src="./js/main.js"></script>
 </body>
 
 </html>

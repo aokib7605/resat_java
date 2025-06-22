@@ -30,6 +30,7 @@ public class Env {
 	 */
 	public static String systemLoginView = "管理者ログイン画面";
 	public static String createManageUserView = "新規ユーザー作成";
+	public static String enterStageAndListView = "公演一覧・参加";
 	public static String reserveListView = "予約一覧";
 	public static String countReserveView = "予約枚数集計";
 	public static String groupListView = "団体一覧・参加";
@@ -51,6 +52,8 @@ public class Env {
 	public static String userMailNotExist = "そのメールアドレスは存在しません";
 	public static String mailAddressIsUsed = "そのメールアドレスは既に使用されています";
 	public static String passwordIsFalse = "パスワードが間違っています";
+	public static String stageNotExist = "検索条件に一致する公演は見つかりませんでした";
+	public static String enterStageMessage = "公演に参加しました";
 	public static String sysUserLoginToCustPage = 
 			"管理者アカウントでログインしようとしています。<br>"
 			+ "このアカウントを顧客として併用利用する場合、管理者画面のユーザー設定からモードを変更してください。";
@@ -58,6 +61,8 @@ public class Env {
 	public static String compReserveMessage = "予約登録が完了しました";
 	public static String changeTransactionCompMessage = "予約内容を変更しました";
 	public static String deleteTransactionCompMessage = "予約を削除しました";
+	public static String enterStageNotExistMessage = "現在、公演に参加していません";
+	public static String enterGroupNotExistMessage = "検索条件に一致する団体は見つかりませんでした";
 	public static String confiDeleteMessage = "本当に削除してもよろしいですか？";
 	public static String logoutCompMessage = "ログアウトしました";
 }

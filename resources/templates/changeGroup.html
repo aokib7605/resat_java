@@ -218,7 +218,7 @@
                             </tr>
                             <th:block th:each="item : ${groupList}">
                                 <form action="/changeGroup" method="post">
-                                    <tr>
+                                    <tr th:if="${item.group_authority != null}">
                                         <input type="hidden" name="sysGroupId" th:value="${item.sys_group_id}">
                                         <td th:text="${item.group_id}"></td>
                                         <td th:text="${item.group_name}"></td>

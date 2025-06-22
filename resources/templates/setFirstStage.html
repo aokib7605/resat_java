@@ -30,9 +30,9 @@
                 </a>
                 <ul class="menuUl">
                     <th:block th:each="column : ${menuList_group}">
-                        <form action="setFirstStage" method="post">
+                        <form action="/setFirstStage" method="post">
                             <li class="hidden" name="groupMenu">
-                                <button type="submit" name="mode" th:value="${column.page_url}" class="notBtn">
+                                <button type="submit" name="setPage" th:value="${column.page_url}" class="notBtn">
                                     <span class="notBtnText" th:text="${column.page_name}"></span>
                                 </button>
                             </li>
@@ -51,9 +51,9 @@
                 </a>
                 <ul class="menuUl">
                     <th:block th:each="column : ${menuList_user}">
-                        <form action="setFirstStage" method="post">
+                        <form action="/setFirstStage" method="post">
                             <li class="hidden" name="userMenu">
-                                <button type="submit" name="mode" th:value="${column.page_url}" class="notBtn">
+                                <button type="submit" name="setPage" th:value="${column.page_url}" class="notBtn">
                                     <span class="notBtnText" th:text="${column.page_name}"></span>
                                 </button>
                             </li>
@@ -85,7 +85,8 @@
                 <hr>
 
                 <!-- ページ内容 -->
-                <div class="setFirstStage" th:if="${page == 'setFirstStage'}">
+                <!-- ベース画面 -->
+                <div class="setFirstStage" th:if="${setPage == 'setFirstStage'}">
                     <p>
                         管理する公演が選択されていません。<br>
                         「公演に参加する」か「公演を新規作成」してください。
@@ -95,9 +96,9 @@
                         「団体に参加」している必要があります。
                     </p>
                     <th:block th:each="column : ${menuList_group}">
-                        <form action="setFirstStage" method="post">
+                        <form action="/setFirstStage" method="post">
                             <p class="submitBox">
-                                <button type="submit" name="mode" th:value="${column.page_url}" class="btn">
+                                <button type="submit" name="setPage" th:value="${column.page_url}" class="btn">
                                     <span class="btnText" th:text="${column.page_name}"></span>
                                 </button>
                             </p>
@@ -105,15 +106,317 @@
                     </th:block>
 
                     <th:block th:each="column : ${menuList_user}">
-                        <form action="setFirstStage" method="post">
+                        <form action="/setFirstStage" method="post">
                             <p class="submitBox">
                             <p th:value="${column.page_url}"></p>
-                            <button type="submit" name="mode" th:value="${column.page_url}" class="btn">
+                            <button type="submit" name="setPage" th:value="${column.page_url}" class="btn">
                                 <span class="btnText" th:text="${column.page_name}"></span>
                             </button>
                             </p>
                         </form>
                     </th:block>
+                </div>
+
+                <!-- ページ内容 -->
+                <!-- 公演に参加・一覧画面 -->
+                <div th:if="${setPage == 'changeStage'}">
+                    <div>
+                        <h3>公演検索</h3>
+                        <form action="/setFirstStage" method="post">
+                            <input type="hidden" name="searchOffset" th:value="${searchOffset}">
+                            <input type="hidden" name="setPage" value="changeStage">
+                            <p>
+                                検索方法
+                                <select name="mode" required>
+                                    <option value="" disabled selected>検索方法を選択してください</option>
+                                    <option value="idSearch">公演ID</option>
+                                    <option value="nameSearch">公演名</option>
+                                </select>
+                            </p>
+                            <p>
+                                <input type="text" name="keyword" th:value="${keyword}">
+                                <input type="submit" value="検索">
+                            </p>
+                        </form>
+                        <p th:text="${message}" style="color: red;"></p>
+                    </div>
+
+                    <div th:if="${mode != 'login' and !#lists.isEmpty(searchStageList)}">
+                        <table>
+                            <tr>
+                                <th>団体名</th>
+                                <th>公演ID</th>
+                                <th>公演名</th>
+                                <th>参加状況</th>
+                                <th></th>
+                            </tr>
+                            <th:block th:each="item : ${searchStageList}">
+                                <tr>
+                                    <form action="/setFirstStage" method="post">
+                                        <input type="hidden" name="setPage" value="changeStage">
+                                        <input type="hidden" name="test" value="test">
+                                        <input type="hidden" name="keyword" th:value="${keyword}">
+                                        <input type="hidden" name="searchOffset" th:value="${searchOffset}">
+                                        <input type="hidden" name="sysStageId" th:value="${item.sys_stage_id}">
+                                        <td th:text="${item.group_name}"></td>
+                                        <td th:text="${item.stage_id}"></td>
+                                        <td th:text="${item.stage_name}"></td>
+                                        <td th:if="${item.stage_authority != null and item.stage_authority > 0}"
+                                            th:text="${item.authority_name}"></td>
+                                        <td th:if="${item.stage_authority == null or item.stage_authority == 0}"></td>
+                                        <td>
+                                            <!-- item.stage_authority が null または 0 の場合：ログインボタン -->
+                                            <button name="mode" value="login"
+                                                th:if="${item.stage_authority == null or item.stage_authority == 0}">
+                                                ログイン
+                                            </button>
+
+                                            <!-- item.stage_authority が 1以上 かつ userData.user_def_stage と一致する場合：選択中（赤文字） -->
+                                            <span
+                                                th:if="${item.stage_authority != null and item.stage_authority > 0 and userData.user_def_stage == item.sys_stage_id}"
+                                                style="color: red;">
+                                                選択中
+                                            </span>
+
+                                            <!-- item.stage_authority が 1以上 かつ user_def_stage と違う場合：選択ボタン -->
+                                            <button name="mode" value="select"
+                                                th:if="${item.stage_authority != null and item.stage_authority > 0 and userData.user_def_stage != item.sys_stage_id}">
+                                                選択
+                                            </button>
+                                        </td>
+                                    </form>
+                                </tr>
+                            </th:block>
+                        </table>
+                        <form action="/setFirstStage" method="post">
+                            <input type="hidden" name="setPage" value="changeStage">
+                            <input type="hidden" name="mode" th:value="${mode}">
+                            <input type="hidden" name="keyword" th:value="${keyword}">
+                            <input type="hidden" name="searchOffset" th:value="${searchOffset}">
+                            <p>
+                                <button type="submit" name="page" value="searchPrev"
+                                    th:if="${searchPrev != null}">前へ</button>
+                                <button type="submit" name="page" value="searchNext"
+                                    th:if="${searchNext != null}">次へ</button>
+                            </p>
+                        </form>
+                    </div>
+
+                    <div th:if="${mode == 'login' && loginMode == 'start'}">
+                        <p
+                            th:text="${loginStageData.stage_name + '（' + loginStageData.stage_id + '）へのログインパスワードを入力してください'}">
+                        </p>
+
+                        <form action="/setFirstStage" method="post">
+                            <input type="hidden" name="setPage" value="changeStage">
+                            <input type="hidden" name="mode" value="login">
+                            <input type="hidden" name="sysStageId" th:value="${loginStageData.sys_stage_id}">
+                            <p>
+                                <input type="text" name="stagePass" th:value="${stagePass}">
+                            </p>
+                            <p>
+                                <button type="submit" name="loginMode" value="inputPass">ログイン</button>
+                            </p>
+                        </form>
+                        <p th:text="${loginMessage}" style="color: red;"></p>
+                    </div>
+
+                    <h3>参加中の公演</h3>
+                    <div>
+                        <table>
+                            <tr>
+                                <th>団体名</th>
+                                <th>公演ID</th>
+                                <th>公演名</th>
+                                <th>参加状況</th>
+                                <th></th>
+                            </tr>
+                            <th:block th:each="item : ${stageList}">
+                                <form action="/setFirstStage" method="post">
+                                    <tr th:if="${item.stage_authority != null}">
+                                        <input type="hidden" name="setPage" value="changeStage">
+                                        <input type="hidden" name="sysStageId" th:value="${item.sys_stage_id}">
+                                        <td th:text="${item.group_name}"></td>
+                                        <td th:text="${item.stage_id}"></td>
+                                        <td th:text="${item.stage_name}"></td>
+                                        <td th:text="${item.authority_name}"></td>
+                                        <td>
+                                            <!-- item.stage_authority が 1以上 かつ userData.user_def_stage と一致する場合：選択中（赤文字） -->
+                                            <span
+                                                th:if="${item.stage_authority != null and item.stage_authority > 0 and userData.user_def_stage == item.sys_stage_id}"
+                                                style="color: red;">
+                                                選択中
+                                            </span>
+
+                                            <!-- item.stage_authority が 1以上 かつ user_def_stage と違う場合：選択ボタン -->
+                                            <button name="mode" value="select"
+                                                th:if="${item.stage_authority != null and item.stage_authority > 0 and userData.user_def_stage != item.sys_stage_id}">
+                                                選択
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </form>
+                            </th:block>
+                        </table>
+                        <form action="/setFirstStage" method="post">
+                            <input type="hidden" name="setPage" value="changeStage">
+                            <input type="hidden" name="mode" value="stageList">
+                            <input type="hidden" name="listOffset" th:value="${listOffset}">
+                            <p>
+                                <button type="submit" name="page" value="prev" th:if="${prev != null}">前へ</button>
+                                <button type="submit" name="page" value="next" th:if="${next != null}">次へ</button>
+                            </p>
+                        </form>
+                        <p th:text="${listMessage}"></p>
+                    </div>
+                </div>
+
+                <!-- ページ内容 -->
+                <!-- グループに参加 -->
+                <div th:if="${setPage == 'changeGroup'}">
+                    <div>
+                        <h3>団体検索</h3>
+                        <form action="/setFirstStage" method="post">
+                            <input type="hidden" name="setPage" value="changeGroup">
+                            <input type="hidden" name="searchOffset" th:value="${searchOffset}">
+                            <input type="hidden" name="page" value="">
+                            <p>
+                                検索方法
+                                <select name="mode" required>
+                                    <option value="" disabled selected>検索方法を選択してください</option>
+                                    <option value="idSearch">団体ID</option>
+                                    <option value="nameSearch">団体名</option>
+                                </select>
+                            </p>
+                            <p>
+                                <input type="text" name="keyword" th:value="${keyword}">
+                                <input type="submit" value="検索">
+                            </p>
+                        </form>
+                        <p th:text="${message}" style="color: red;"></p>
+                    </div>
+
+                    <div th:if="${mode != 'login' and !#lists.isEmpty(searchGroupList)}">
+                        <table>
+                            <tr>
+                                <th>団体ID</th>
+                                <th>団体名</th>
+                                <th>参加状況</th>
+                                <th></th>
+                            </tr>
+                            <th:block th:each="item : ${searchGroupList}">
+                                <tr>
+                                    <form action="/setFirstStage" method="post">
+                                        <input type="hidden" name="setPage" value="changeGroup">
+                                        <input type="hidden" name="keyword" th:value="${keyword}">
+                                        <input type="hidden" name="searchOffset" th:value="${searchOffset}">
+                                        <input type="hidden" name="sysGroupId" th:value="${item.sys_group_id}">
+                                        <td th:text="${item.group_id}"></td>
+                                        <td th:text="${item.group_name}"></td>
+                                        <td th:if="${item.group_authority != null and item.group_authority > 0}"
+                                            th:text="${item.authority_name}"></td>
+                                        <td th:if="${item.group_authority == null or item.group_authority == 0}"></td>
+                                        <td>
+                                            <!-- item.group_authority が null または 0 の場合：ログインボタン -->
+                                            <button name="mode" value="login"
+                                                th:if="${item.group_authority == null or item.group_authority == 0}">
+                                                ログイン
+                                            </button>
+
+                                            <!-- item.group_authority が 1以上 かつ userData.user_def_group と一致する場合：選択中（赤文字） -->
+                                            <span
+                                                th:if="${item.group_authority != null and item.group_authority > 0 and userData.user_def_group == item.sys_group_id}"
+                                                style="color: red;">
+                                                選択中
+                                            </span>
+
+                                            <!-- item.group_authority が 1以上 かつ user_def_group と違う場合：選択ボタン -->
+                                            <button name="mode" value="select"
+                                                th:if="${item.group_authority != null and item.group_authority > 0 and userData.user_def_group != item.sys_group_id}">
+                                                選択
+                                            </button>
+                                        </td>
+                                    </form>
+                                </tr>
+                            </th:block>
+                        </table>
+                        <form action="/setFirstStage" method="post">
+                            <input type="hidden" name="setPage" value="changeGroup">
+                            <input type="hidden" name="mode" th:value="${mode}">
+                            <input type="hidden" name="keyword" th:value="${keyword}">
+                            <input type="hidden" name="searchOffset" th:value="${searchOffset}">
+                            <p>
+                                <button type="submit" name="page" value="searchPrev"
+                                    th:if="${searchPrev != null}">前へ</button>
+                                <button type="submit" name="page" value="searchNext"
+                                    th:if="${searchNext != null}">次へ</button>
+                            </p>
+                        </form>
+                    </div>
+
+                    <div th:if="${mode == 'login' && loginMode == 'start'}">
+                        <p th:text="${groupData.group_name + '（' + groupData.group_id + '）へのログインパスワードを入力してください'}"></p>
+
+                        <form action="/setFirstStage" method="post">
+                            <input type="hidden" name="setPage" value="changeGroup">
+                            <input type="hidden" name="mode" value="login">
+                            <input type="hidden" name="sysGroupId" th:value="${groupData.sys_group_id}">
+                            <p>
+                                <input type="text" name="groupPass" th:value="${groupPass}">
+                            </p>
+                            <p>
+                                <button type="submit" name="loginMode" value="inputPass">ログイン</button>
+                            </p>
+                        </form>
+                        <p th:text="${loginMessage}" style="color: red;"></p>
+                    </div>
+
+                    <h3>参加中の団体</h3>
+                    <div>
+                        <table>
+                            <tr>
+                                <th>団体ID</th>
+                                <th>団体名</th>
+                                <th>参加状況</th>
+                                <th></th>
+                            </tr>
+                            <th:block th:each="item : ${groupList}">
+                                <form action="/setFirstStage" method="post">
+                                    <tr th:if="${item.group_authority != null}">
+                                        <input type="hidden" name="setPage" value="changeGroup">
+                                        <input type="hidden" name="sysGroupId" th:value="${item.sys_group_id}">
+                                        <td th:text="${item.group_id}"></td>
+                                        <td th:text="${item.group_name}"></td>
+                                        <td th:text="${item.authority_name}"></td>
+                                        <td>
+                                            <!-- item.group_authority が 1以上 かつ userData.user_def_group と一致する場合：選択中（赤文字） -->
+                                            <span
+                                                th:if="${item.group_authority != null and item.group_authority > 0 and userData.user_def_group == item.sys_group_id}"
+                                                style="color: red;">
+                                                選択中
+                                            </span>
+
+                                            <!-- item.group_authority が 1以上 かつ user_def_group と違う場合：選択ボタン -->
+                                            <button name="mode" value="select"
+                                                th:if="${item.group_authority != null and item.group_authority > 0 and userData.user_def_group != item.sys_group_id}">
+                                                選択
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </form>
+                            </th:block>
+                        </table>
+                        <form action="/setFirstStage" method="post">
+                            <input type="hidden" name="setPage" value="changeGroup">
+                            <input type="hidden" name="mode" value="stageList">
+                            <input type="hidden" name="listOffset" th:value="${listOffset}">
+                            <p>
+                                <button type="submit" name="page" value="prev" th:if="${prev != null}">前へ</button>
+                                <button type="submit" name="page" value="next" th:if="${next != null}">次へ</button>
+                            </p>
+                        </form>
+                        <p th:text="${listMessage}"></p>
+                    </div>
                 </div>
 
             </div>

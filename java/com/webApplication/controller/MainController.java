@@ -236,8 +236,8 @@ public class MainController {
 		try {
 			setEnvData(model, "setFirstStage");
 			is.setPageInfo(model);
-			if(model.getAttribute("page") == null) {
-				model.addAttribute("page", "setFirstStage");
+			if(model.getAttribute("setPage") == null) {
+				model.addAttribute("setPage", "setFirstStage");
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -246,33 +246,94 @@ public class MainController {
 	}
 
 	@PostMapping("setFirstStage")
-	public String accessSetFirstStage(Model model, String mode) {
+	public String accessSetFirstStage(String test, Model model, String setPage, String mode, String loginMode, String keyword, Integer offset, Integer searchOffset, Integer listOffset, String page, String sysStageId, String stagePass, String sysGroupId, String groupPass) {
 		try {
 			setEnvData(model, "setFirstStage");
-			
-			switch (mode) {
+			System.out.println(setPage + mode);
+
+			switch (setPage) {
 			case "changeStage": {
 				chss.setPageInfo(model, null, null);
-				model.addAttribute("page", "changeStage");
+				model.addAttribute("setPage", "changeStage");
+
+				switch (mode) {
+				case "stageList": {
+					offset = listOffset;
+					break;
+				}
+				case "idSearch": {
+					offset = searchOffset;
+					offset = chss.setSearchStageList(model, mode, keyword, offset, page);
+					break;
+				}
+				case "nameSearch": {
+					offset = searchOffset;
+					offset = chss.setSearchStageList(model, mode, keyword, offset, page);
+					break;
+				}
+				case "select": {
+					pageName = chss.selectStage(model, sysStageId);
+					if(session.getAttribute("defStSession") != null) {
+						return goRootPage(model);
+					}
+					break;
+				}
+				case "login": {
+					loginMode = chss.loginStage(model, loginMode, sysStageId, stagePass);
+					if(session.getAttribute("defStSession") != null) {
+						return goRootPage(model);
+					}
+					break;
+				}
+				default:
+					break;
+				}
+
 				break;
 			}
 			case "changeGroup": {
-				System.out.println(mode + "が選択されましたB");
+				chgs.setPageInfo(model, offset, page);
+				model.addAttribute("setPage", "changeGroup");
+				switch (mode) {
+				case "groupList": {
+					offset = listOffset;
+					break;
+				}
+				case "idSearch": {
+					offset = searchOffset;
+					offset = chgs.setSearchGroupList(model, mode, keyword, offset, page);
+					break;
+				}
+				case "nameSearch": {
+					offset = searchOffset;
+					offset = chgs.setSearchGroupList(model, mode, keyword, offset, page);
+					break;
+				}
+				case "select": {
+					pageName = chgs.selectGroup(model, sysGroupId);
+					break;
+				}
+				case "login": {
+					loginMode = chgs.loginGroup(model, loginMode, sysGroupId, groupPass);
+					break;
+				}
+				default:
+					break;
+				}
 				break;
 			}
 			case "setUser": {
-				System.out.println(mode + "が選択されましたC");
+				System.out.println(setPage + "が選択されましたC");
 				break;
 			}
 			case "createGroup": {
-				System.out.println(mode + "が選択されましたD");
+				System.out.println(setPage + "が選択されましたD");
 				break;
 			}
 			default:
 				break;
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		return goSetFirstStage(model);
 	}
@@ -457,7 +518,7 @@ public class MainController {
 		}
 		return goSetSeat(model);
 	}
-	
+
 	@GetMapping("/setAdvertisement")
 	public String goSetAdvertisement(Model model) {
 		try {
@@ -468,7 +529,7 @@ public class MainController {
 		}
 		return goAnyPage(model, "setAdvertisement");
 	}
-	
+
 	@PostMapping("/setAdvertisement")
 	public String accessSetAdvertisement(Model model, String mode, String nextMode, String sysStageId, String sysUserId, String castCharaName, String[] castCharaNames,
 			String sysCastId, String[] sysCastIds, String deleteId, Integer[] sortNums,
@@ -493,45 +554,45 @@ public class MainController {
 				sas.changeCast(model, mode, sysStageId, sysCastId, sysCastIds, castCharaNames, sortNums);
 				break;
 			}
-            case "addStaff": {
-                if(nextMode != null) {
-                    mode = nextMode;
-                }
-                sas.addStaff(model, mode, sysStageId, sysUserId, staffDepName);
-                break;
-            }
-            case "changeStaff": {
-                if(nextMode != null) {
-                    mode = nextMode;
-                }
-                if(deleteId != null) {
-                    mode = "deleteStaff";
-                    sysStaffId = deleteId;
-                }
-                sas.changeStaff(model, mode, sysStageId, sysStaffId, sysStaffIds, staffDepNames, sortNums);
-                break;
-            }
-            case "setStageOpenMinutes": {
-                if(nextMode != null) {
-                    mode = nextMode;
-                }
-                sas.setStageOpenMinutes(model, mode, stageOpenMinutes);
-                break;
-            }
-            case "setStageRuntime": {
-                if(nextMode != null) {
-                    mode = nextMode;
-                }
-                sas.setStageRuntime(model, mode, stageRuntime);
-                break;
-            }
-            case "setStageStory": {
-                if(nextMode != null) {
-                    mode = nextMode;
-                }
-                sas.setStageStory(model, mode, stageStory);
-                break;
-            }
+			case "addStaff": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sas.addStaff(model, mode, sysStageId, sysUserId, staffDepName);
+				break;
+			}
+			case "changeStaff": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				if(deleteId != null) {
+					mode = "deleteStaff";
+					sysStaffId = deleteId;
+				}
+				sas.changeStaff(model, mode, sysStageId, sysStaffId, sysStaffIds, staffDepNames, sortNums);
+				break;
+			}
+			case "setStageOpenMinutes": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sas.setStageOpenMinutes(model, mode, stageOpenMinutes);
+				break;
+			}
+			case "setStageRuntime": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sas.setStageRuntime(model, mode, stageRuntime);
+				break;
+			}
+			case "setStageStory": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				sas.setStageStory(model, mode, stageStory);
+				break;
+			}
 			default:
 				break;
 			}
@@ -600,7 +661,7 @@ public class MainController {
 		}
 		return goSetStageMember(model, offset, page);
 	}
-	
+
 	@GetMapping("checkReserveList")
 	public String goCheckReserveList(Model model) {
 		try {
@@ -612,7 +673,7 @@ public class MainController {
 		}
 		return goAnyPage(model, "checkReserveList");
 	}
-	
+
 	@PostMapping("checkReserveList")
 	public String accessCheckReserveList(Model model, String mode, String nextMode, String sysTransactionId, String sysDateId, String sysTicketId, Integer traAmount, String traComment) {
 		try {
@@ -637,18 +698,18 @@ public class MainController {
 		}
 		return goCheckReserveList(model);
 	}
-	
+
 	@GetMapping("countReserve")
 	public String goCountReserve(Model model) {
 		try {
 			setEnvData(model, "manager");
 			crs.setPageInfo(model);
 		} catch (Exception e) {
-//			System.out.println(e);
+			//			System.out.println(e);
 		}
 		return goAnyPage(model, "countReserve");
 	}
-	
+
 	@GetMapping("checkFormList")
 	public String goCheckFormList(Model model) {
 		try {

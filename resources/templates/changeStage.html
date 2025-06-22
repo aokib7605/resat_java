@@ -223,7 +223,7 @@
                             </tr>
                             <th:block th:each="item : ${stageList}">
                                 <form action="/changeStage" method="post">
-                                    <tr>
+                                    <tr th:if="${item.stage_authority != null}">
                                         <input type="hidden" name="sysStageId" th:value="${item.sys_stage_id}">
                                         <td th:text="${item.group_name}"></td>
                                         <td th:text="${item.stage_id}"></td>

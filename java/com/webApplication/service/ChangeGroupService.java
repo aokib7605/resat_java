@@ -123,7 +123,7 @@ public class ChangeGroupService {
 		}
 
 		if(sql.getGroupDataList(column, keyword, null, null).size() <= 0) {
-			model.addAttribute("message", "検索条件に一致する団体は見つかりませんでした");
+			model.addAttribute("message", Env.enterGroupNotExistMessage);
 			return null;
 		}
 

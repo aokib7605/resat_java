@@ -419,6 +419,204 @@
                     </div>
                 </div>
 
+                <!-- ページ内容 -->
+                <!-- ユーザー基本情報 -->
+                <div th:if="${setPage == 'setUser'}">
+                    <table>
+                        <tr>
+                            <th>ユーザーID</th>
+                            <td th:text="${userData.user_id}"></td>
+                            <td th:if="${mode != 'setUserId'}">
+                                <form action="/setFirstStage" method="post">
+                                    <input type="hidden" name="setPage" value="setUser">
+                                    <button type="submit" name="mode" value="setUserId">編集</button>
+                                </form>
+                            </td>
+                            <td th:if="${mode == 'setUserId'}">
+                                <form action="/setFirstStage" method="post">
+                                    <input type="hidden" name="setPage" value="setUser">
+                                    <input type="hidden" name="sysUserId" th:value="${userData.sys_user_id}">
+                                    <input type="hidden" name="nextMode" th:value="inputValue">
+                                    <p>
+                                        新しいユーザーIDを入力してください<br>
+                                        <input type="text" name="userId" th:value="${userId}" required><br>
+                                        <button type="submit" name="mode" value="setUserId">決定</button>
+                                    </p>
+                                    <p th:text="${message}" style="color: red;"></p>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>メールアドレス</th>
+                            <td th:text="${userData.user_mail}"></td>
+                            <td th:if="${mode != 'setMail'}">
+                                <form action="/setFirstStage" method="post">
+                                    <input type="hidden" name="setPage" value="setUser">
+                                    <button type="submit" name="mode" value="setMail">編集</button>
+                                </form>
+                            </td>
+                            <td th:if="${mode == 'setMail'}">
+                                <form action="/setFirstStage" method="post">
+                                    <input type="hidden" name="setPage" value="setUser">
+                                    <input type="hidden" name="sysUserId" th:value="${userData.sys_user_id}">
+                                    <input type="hidden" name="nextMode" th:value="inputValue">
+                                    <p>
+                                        新しいメールアドレスを入力してください<br>
+                                        <input type="email" name="userMail" th:value="${userMail}" required><br>
+                                        <button type="submit" name="mode" value="setMail">決定</button>
+                                    </p>
+                                    <p th:text="${message}" style="color: red;"></p>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>パスワード</th>
+                            <td>非表示</td>
+                            <td th:if="${mode != 'setUserPass'}">
+                                <form action="/setFirstStage" method="post">
+                                    <input type="hidden" name="setPage" value="setUser">
+                                    <button type="submit" name="mode" value="setUserPass">編集</button>
+                                </form>
+                            </td>
+                            <td th:if="${mode == 'setUserPass'}">
+                                <form action="/setFirstStage" method="post">
+                                    <input type="hidden" name="setPage" value="setUser">
+                                    <input type="hidden" name="sysUserId" th:value="${userData.sys_user_id}">
+                                    <input type="hidden" name="nextMode" th:value="inputValue">
+                                    <p>
+                                        現在のパスワード<br>
+                                        <span th:text="${userData.user_pass}"></span>
+                                    </p>
+                                    <p>
+                                        新しいパスワードを入力してください<br>
+                                        <input type="password" name="userPass" required><br>
+                                        <input type="password" name="rePass" required placeholder="再度入力">
+                                        <button type="submit" name="mode" value="setUserPass">決定</button>
+                                    </p>
+                                    <p th:text="${message}" style="color: red;"></p>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>電話番号</th>
+                            <td th:text="${userData.user_tell}"></td>
+                            <td th:if="${mode != 'setUserTel'}">
+                                <form action="/setFirstStage" method="post">
+                                    <input type="hidden" name="setPage" value="setUser">
+                                    <button type="submit" name="mode" value="setUserTel">編集</button>
+                                </form>
+                            </td>
+                            <td th:if="${mode == 'setUserTel'}">
+                                <form action="/setFirstStage" method="post">
+                                    <input type="hidden" name="setPage" value="setUser">
+                                    <input type="hidden" name="sysUserId" th:value="${userData.sys_user_id}">
+                                    <input type="hidden" name="mode" th:value="setUserTel">
+                                    <p>
+                                        新しい電話番号を入力してください<br>
+                                        <input type="tel" name="userTel"><br>
+                                        <button type="submit" name="nextMode" value="inputValue">決定</button>
+                                    </p>
+                                    <p>
+                                        電話番号を設定しない ⇒
+                                        <button type="submit" name="nextMode" value="crearValue">設定しない</button>
+                                    </p>
+                                    <p th:text="${message}" style="color: red;"></p>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>ユーザーネーム</th>
+                            <td th:text="${userData.user_name + '(' + userData.user_kana_name + ')'}"></td>
+                            <td th:if="${mode != 'setUserName'}">
+                                <form action="/setFirstStage" method="post">
+                                    <input type="hidden" name="setPage" value="setUser">
+                                    <button type="submit" name="mode" value="setUserName">編集</button>
+                                </form>
+                            </td>
+                            <td th:if="${mode == 'setUserName'}">
+                                <form action="/setFirstStage" method="post">
+                                    <input type="hidden" name="setPage" value="setUser">
+                                    <input type="hidden" name="sysUserId" th:value="${userData.sys_user_id}">
+                                    <input type="hidden" name="nextMode" th:value="inputValue">
+                                    <p>
+                                        新しいユーザーネームを入力してください<br>
+                                        <input type="text" name="userName" th:text="${userName}" required
+                                            placeholder="ユーザーネーム"><br>
+                                        <input type="text" name="userKanaName" th:text="${userKanaName}" required
+                                            placeholder="フリガナ"><br>
+                                        <button type="submit" name="mode" value="setUserName">決定</button>
+                                    </p>
+                                    <p th:text="${message}" style="color: red;"></p>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>芸名</th>
+                            <td th:text="${userData.user_stage_name + '(' + userData.user_stage_kana_name + ')'}"
+                                th:if="${userData.user_stage_name != null}"></td>
+                            <td th:if="${userData.user_stage_name == null}"></td>
+                            <td th:if="${mode != 'setUserStageName'}">
+                                <form action="/setFirstStage" method="post">
+                                    <input type="hidden" name="setPage" value="setUser">
+                                    <button type="submit" name="mode" value="setUserStageName">編集</button>
+                                </form>
+                            </td>
+                            <td th:if="${mode == 'setUserStageName'}">
+                                <form action="/setFirstStage" method="post">
+                                    <input type="hidden" name="setPage" value="setUser">
+                                    <input type="hidden" name="sysUserId" th:value="${userData.sys_user_id}">
+                                    <input type="hidden" name="mode" th:value="setUserStageName">
+                                    <p>
+                                        新しい芸名を入力してください<br>
+                                        <input type="text" name="userName" th:text="${userName}" placeholder="芸名"><br>
+                                        <input type="text" name="userKanaName" th:text="${userKanaName}"
+                                            placeholder="フリガナ"><br>
+                                        <button type="submit" name="nextMode" value="inputValue">決定</button>
+                                    </p>
+                                    <p>
+                                        芸名を設定しない ⇒
+                                        <button type="submit" name="nextMode" value="crearValue">設定しない</button>
+                                    </p>
+                                    <p th:text="${message}" style="color: red;"></p>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>生年月日</th>
+                            <td th:text="${userData.user_birthday + '(年齢非公開)'}" th:if="${userData.user_hide_age == 0}">
+                            </td>
+                            <td th:text="${userData.user_birthday + '(年齢公開)'}" th:if="${userData.user_hide_age == 1}">
+                            </td>
+                            <td th:if="${mode != 'setUserBirthday'}">
+                                <form action="/setFirstStage" method="post">
+                                    <input type="hidden" name="setPage" value="setUser">
+                                    <button type="submit" name="mode" value="setUserBirthday">編集</button>
+                                </form>
+                            </td>
+                            <td th:if="${mode == 'setUserBirthday'}">
+                                <form action="/setFirstStage" method="post">
+                                    <input type="hidden" name="setPage" value="setUser">
+                                    <input type="hidden" name="sysUserId" th:value="${userData.sys_user_id}">
+                                    <input type="hidden" name="nextMode" th:value="inputValue">
+                                    <p>
+                                        新しい生年月日を入力してください<br>
+                                        <input type="date" name="userBirthday" th:text="${userBirthday}"><br>
+                                        年齢を非公開にする ⇒
+                                        <span th:if="${userData.user_hide_age == 0}">
+                                            <input type="checkbox" name="hideBirthYear">
+                                        </span>
+                                        <span th:if="${userData.user_hide_age == 1}">
+                                            <input type="checkbox" name="hideBirthYear" checked>
+                                        </span><br>
+                                        <button type="submit" name="mode" value="setUserBirthday">決定</button>
+                                    </p>
+                                    <p th:text="${message}" style="color: red;"></p>
+                                </form>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
             </div>
 
         </div>

@@ -248,7 +248,11 @@ public class MainController {
 	}
 
 	@PostMapping("setFirstStage")
-	public String accessSetFirstStage(String test, Model model, String setPage, String mode, String loginMode, String keyword, Integer offset, Integer searchOffset, Integer listOffset, String page, String sysStageId, String stagePass, String sysGroupId, String groupPass) {
+	public String accessSetFirstStage(String test, Model model, String setPage, String mode, String nextMode, 
+			String loginMode, String keyword, Integer offset, Integer searchOffset, Integer listOffset, String page, 
+			String sysStageId, String stagePass, String sysGroupId, String groupPass,
+			String sysUserId, String userId, String userMail, String userPass, String rePass,
+			String userTel,String userName,String userKanaName,String userBirthday,String hideBirthYear) {
 		try {
 			setEnvData(model, "setFirstStage");
 			System.out.println(setPage + mode);
@@ -330,7 +334,60 @@ public class MainController {
 			}
 			
 			case "setUser": {
-				System.out.println(setPage + "が選択されましたC");
+				sus.setPageInfo(model);
+				model.addAttribute("setPage", "setUser");
+				switch (mode) {
+				case "setUserId": {
+					if(nextMode != null) {
+						mode = nextMode;
+					}
+					sus.setUserId(model, mode, sysUserId, userId);
+					break;
+				}
+				case "setMail": {
+					if(nextMode != null) {
+						mode = nextMode;
+					}
+					sus.setUserMail(model, mode, sysUserId, userMail);
+					break;
+				}
+				case "setUserPass": {
+					if(nextMode != null) {
+						mode = nextMode;
+					}
+					sus.setUserPass(model, mode, sysUserId, userPass, rePass);
+					break;
+				}
+				case "setUserTel": {
+					if(nextMode != null) {
+						mode = nextMode;
+					}
+					sus.setUserTel(model, mode, sysUserId, userTel);
+					break;
+				}
+				case "setUserName": {
+					if(nextMode != null) {
+						mode = nextMode;
+					}
+					sus.setUserName(model, mode, sysUserId, userName, userKanaName);
+					break;
+				}
+				case "setUserStageName": {
+					if(nextMode != null) {
+						mode = nextMode;
+					}
+					sus.setUserStageName(model, mode, sysUserId, userName, userKanaName);
+					break;
+				}
+				case "setUserBirthday": {
+					if(nextMode != null) {
+						mode = nextMode;
+					}
+					sus.setUserBirthday(model, mode, sysUserId, userBirthday, hideBirthYear);
+					break;
+				}
+				default:
+				}
 				break;
 			}
 			

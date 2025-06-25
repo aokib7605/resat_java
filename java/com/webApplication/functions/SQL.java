@@ -1005,7 +1005,7 @@ public class SQL {
 		
 		// ユーザーデータ更新処理
 		where = " where sys_user_id = '" + sysUserId + "' ";
-		if(inputTableName == "group_login_list" && userData.getUser_def_group() == sysAnyId) {
+		if(inputTableName == "group_login_list" && userData.getUser_def_group().equals(sysAnyId)) {
 			tableName = "users";
 			mr.updateData(tableName, "user_def_group", "null", where);
 		} else {

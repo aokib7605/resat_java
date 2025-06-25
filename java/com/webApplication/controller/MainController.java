@@ -25,6 +25,7 @@ import com.webApplication.service.EnvService;
 import com.webApplication.service.IndexService;
 import com.webApplication.service.LoginService;
 import com.webApplication.service.SetAdvertisementService;
+import com.webApplication.service.SetFirstStageService;
 import com.webApplication.service.SetFormService;
 import com.webApplication.service.SetGroupMemberService;
 import com.webApplication.service.SetGroupService;
@@ -106,6 +107,7 @@ public class MainController {
 	private final CheckFormListService cfls;
 	private final CountReserveService crs;
 	private final CheckReserveListService crls;
+	private final SetFirstStageService sfss;
 
 	private String goAnyPage(Model model, String pageName) {
 		switch (pageName) {
@@ -252,6 +254,7 @@ public class MainController {
 			System.out.println(setPage + mode);
 
 			switch (setPage) {
+			
 			case "changeStage": {
 				chss.setPageInfo(model, null, null);
 				model.addAttribute("setPage", "changeStage");
@@ -291,6 +294,7 @@ public class MainController {
 
 				break;
 			}
+			
 			case "changeGroup": {
 				chgs.setPageInfo(model, offset, page);
 				model.addAttribute("setPage", "changeGroup");
@@ -315,6 +319,8 @@ public class MainController {
 				}
 				case "login": {
 					loginMode = chgs.loginGroup(model, loginMode, sysGroupId, groupPass);
+					sfss.updateUserSession();
+					chgs.setPageInfo(model, offset, page);
 					break;
 				}
 				default:
@@ -322,10 +328,12 @@ public class MainController {
 				}
 				break;
 			}
+			
 			case "setUser": {
 				System.out.println(setPage + "が選択されましたC");
 				break;
 			}
+			
 			case "createGroup": {
 				System.out.println(setPage + "が選択されましたD");
 				break;

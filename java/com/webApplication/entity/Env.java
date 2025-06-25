@@ -61,6 +61,7 @@ public class Env {
 	public static String compReserveMessage = "予約登録が完了しました";
 	public static String changeTransactionCompMessage = "予約内容を変更しました";
 	public static String deleteTransactionCompMessage = "予約を削除しました";
+	public static String removeUserFromGroupMessage = "該当ユーザーが団体から退会しました";
 	public static String enterStageNotExistMessage = "現在、公演に参加していません";
 	public static String enterGroupNotExistMessage = "検索条件に一致する団体は見つかりませんでした";
 	public static String confiDeleteMessage = "本当に削除してもよろしいですか？";

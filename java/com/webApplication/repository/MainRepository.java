@@ -182,7 +182,7 @@ public class MainRepository {
 	public void updateData(String table, String column, String value, String where) {
 		try {
 			sql = "update " + table + " set " + column + " = '" + value + "' " + where;
-			if(value == null) {
+			if(value == null || value.equals("null")) {
 				sql = sql.replace("'" + value + "' ", "" + value + " ");
 			}
 			System.out.println(sql);

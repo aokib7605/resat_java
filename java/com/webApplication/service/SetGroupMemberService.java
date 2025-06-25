@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.webApplication.entity.DataEntity;
+import com.webApplication.entity.Env;
 import com.webApplication.functions.SQL;
 
 import lombok.RequiredArgsConstructor;
@@ -58,8 +59,10 @@ public class SetGroupMemberService {
 			break;
 		}
 		case "logout": {
+			// 団体ログインリストからユーザーを削除
+			// デフォルトに設定されている場合、nullに更新
 			sql.deleteLoginData("group_login_list", sysUserId, userData.getUser_def_group());
-			model.addAttribute("message", "該当ユーザーが団体から退会しました");
+			model.addAttribute("message", Env.removeUserFromGroupMessage);
 			break;
 		}
 		default:

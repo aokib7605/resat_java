@@ -2,8 +2,8 @@ package com.webApplication.entity;
 
 public class Env {
 	//アプリケーション名
-	public static String applicationTitle = "予約管理システム りざっと";
-	public static String custApplicationTitle = "りざっと";
+	public static String applicationTitle = "予約管理システム Cue Card";
+	public static String custApplicationTitle = "Cue Card";
 	
 	//ドメイン名
 	public static String domainName = "http://localhost:8080";

@@ -5,6 +5,7 @@ window.setStageElement = {};
 
 // レスポンシブ対応にて使用するdiv
 commonElement.startDiv = "div[name='startDiv']";
+commonElement.custPage = "div[name='custPage']";
 commonElement.responsiveWidth = "(max-width: 768px)";
 
 // cmn_managerMenu

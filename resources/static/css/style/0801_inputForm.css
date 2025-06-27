@@ -1,0 +1,115 @@
+.toMypageBtn {
+    background-color: #ff9900;
+    border: none;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.toMypageBtn .toMypageText {
+    background-color: #ff9900;
+    border: none;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.toMypageBtn .toMypageText:hover {
+    background-color: #e68200;
+}
+
+.pc .inputForm button {
+    width: 12vw;
+    height: 90%;
+}
+
+.mobile .inputForm button {
+    width: 52vw;
+}
+
+.submitBtn .submitText {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: auto;
+    max-width: 250px;
+    padding: 10px 25px;
+    color: #333;
+    font-family: "Noto Sans Japanese";
+    text-decoration: none;
+    color: #333;
+    line-height: 1.8;
+    transition: 0.3s ease-in-out;
+    font-weight: 500;
+    background: #eee;
+    border-radius: 9999px;
+    border-bottom: 2px solid #999;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+}
+
+.submitBtn .submitText:hover {
+    color: #fff;
+    background: #999;
+    border-bottom: 2px solid #fff;
+    transform: translateY(3px);
+}
+
+.inputForm input {
+    margin-bottom: 2vh;
+}
+
+.inputForm input {
+    font-size: 1em;
+    padding: 15px 10px 10px;
+    font-family: 'Source Sans Pro', arial, sans-serif;
+    border: 1px solid #cecece;
+    background: #f8f8f8;
+    color: #000000;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+}
+
+.inputForm .inputFormSelect {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+
+.inputForm .inputFormSelect::after {
+    position: absolute;
+    right: 15px;
+    width: 10px;
+    height: 7px;
+    background-color: #535353;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    content: '';
+    pointer-events: none;
+}
+
+.inputForm .inputFormSelect select {
+    appearance: none;
+    min-width: 230px;
+    height: 2.8em;
+    padding: .4em calc(.8em + 30px) .4em .8em;
+    border: none;
+    border-bottom: 2px solid #d0d0d0;
+    background-color: #fff;
+    color: #333333;
+    font-size: 1em;
+    cursor: pointer;
+    margin-bottom: 2vh;
+}
+
+.inputForm .inputFormSelect select:focus {
+    outline: none;
+}

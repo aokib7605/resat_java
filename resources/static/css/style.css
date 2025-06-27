@@ -21,6 +21,7 @@
 @import './style/0604_createGroup.css';
 @import './style/0701_createUser.css';
 @import './style/0702_setFirstStage.css';
+@import './style/0801_inputForm.css';
 
 html,
 body {
@@ -29,12 +30,16 @@ body {
     height: 100%;
 }
 
-.pc p, span {
+.pc p,
+.pc span {
     font-size: 1.2vw;
 }
 
 .pc td,
-th, ul, li, a {
+.pc th,
+.pc ul,
+.pc li,
+.pc a {
     font-size: 1.2vw;
 }
 
@@ -50,6 +55,76 @@ th, ul, li, a {
     appearance: none;
     outline: none;
     background: transparent;
+}
+
+.mobile {
+    text-align: center;
+}
+
+.mobile p,
+.mobile span {
+    font-size: 4.2vw;
+}
+
+.mobile td,
+.mobile th,
+.mobile ul,
+.mobile li,
+.mobile a {
+    font-size: 4.2vw;
+}
+
+.mobile h2 {
+    font-size: 6.5vw;
+}
+
+.mobile h3 {
+    font-size: 5.5vw;
+}
+
+.mobile input {
+    width: 30vw;
+    height: 3vh;
+}
+
+.mobile select {
+    height: 5vh;
+    /* 標準のスタイルを無効にする */
+    border: none;
+    appearance: none;
+    outline: none;
+    background: transparent;
+}
+
+.mobile table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.custPage {
+    padding-left: 1rem;
+}
+
+.custPage hr {
+    height: 3px;
+    border-width: 0;
+    background-repeat: repeat-x;
+    background-size: 0.7em 0.3em, 1.7em 0.3em, 3.5em 0.3em, 3.7em 0.3em;
+    background-position: right bottom;
+    background-image:
+        radial-gradient(0.3em 0.2em at center center, #4d4013, rgba(246, 89, 115, 0)),
+        radial-gradient(0.5em 0.2em at center center, #4d4013, rgba(246, 89, 115, 0)),
+        radial-gradient(0.8em 0.2em at center center, #4d4013, rgba(246, 89, 115, 0)),
+        radial-gradient(7.2em 0.2em at center center, #4d4013, rgba(246, 89, 115, 0));
+}
+
+.custPage button {
+    border: none;
+    background: none;
+}
+
+.custPage img {
+    height: 20vh;
 }
 
 .hidden {

@@ -252,7 +252,10 @@ public class MainController {
 			String loginMode, String keyword, Integer offset, Integer searchOffset, Integer listOffset, String page, 
 			String sysStageId, String stagePass, String sysGroupId, String groupPass,
 			String sysUserId, String userId, String userMail, String userPass, String rePass,
-			String userTel,String userName,String userKanaName,String userBirthday,String hideBirthYear) {
+			String userTel, String userName, String userKanaName, String userBirthday, String hideBirthYear,
+			String back, String groupId, String groupName, String groupKanaName, String groupMail,
+			String stageId, String stageName, Integer stageAttractCustomers, String stageUrlTitle,
+			String stagePlaceName, String stagePlaceAddress, MultipartFile file1, MultipartFile file2) {
 		try {
 			setEnvData(model, "setFirstStage");
 			System.out.println(setPage + mode);
@@ -325,6 +328,10 @@ public class MainController {
 					loginMode = chgs.loginGroup(model, loginMode, sysGroupId, groupPass);
 					sfss.updateUserSession();
 					chgs.setPageInfo(model, offset, page);
+					if(loginMode.equals("inputPass")) {
+						csls.setPageInfo(model, offset, page);
+						model.addAttribute("setPage", "checkStageList");
+					}
 					break;
 				}
 				default:
@@ -387,14 +394,103 @@ public class MainController {
 					break;
 				}
 				default:
+					break;
 				}
 				break;
 			}
 			
 			case "createGroup": {
-				System.out.println(setPage + "が選択されましたD");
+				cgs.setPageInfo(model);
+				model.addAttribute("setPage", "createGroup");
+				if(mode == null) {
+					model.addAttribute("mode", "inputGroupId");
+				}
+				switch (mode) {
+				case "inputGroupId": {
+					mode = cgs.inputGroupId(model, groupId);
+					break;
+				}
+				case "inputGroupData": {
+					mode = cgs.inputGroupData(model, back, groupId, groupName, groupKanaName, groupPass, rePass, groupMail);
+					break;
+				}
+				case "confiResult": {
+					pageName = cgs.confiResult(model, back, groupId, groupName, groupKanaName, groupPass, rePass, groupMail);
+					if(pageName.equals("index")) {
+						css.setPageInfo(model);
+						model.addAttribute("mode", "inputSysGroupId");
+						model.addAttribute("setPage", "createStage");
+						return goRootPage(model);
+					}
+					break;
+				}
+				default:
+					break;
+				}
 				break;
 			}
+			
+			case "createStage": {
+				css.setPageInfo(model);
+				if(mode == null) {
+					model.addAttribute("mode", "inputSysGroupId");
+				}
+				model.addAttribute("setPage", "createStage");
+				switch (mode) {
+				case "inputSysGroupId": {
+					mode = css.inputSysGroupId(model, sysGroupId);
+					break;
+				}
+				case "inputStageId": {
+					mode = css.inputStageId(model, back, sysGroupId, stageId);
+					break;
+				}
+				case "inputBaseData": {
+					mode = css.inputBaseData(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle);
+					break;
+				}
+				case "inputPlaceData": {
+					mode = css.inputPlaceData(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword);
+					break;
+				}
+				case "uploadImages": {
+					mode = css.uploadImages(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword, file1, file2);
+					break;
+				}
+				case "confiResult": {
+					pageName = css.confiResult(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword);
+					if(pageName.equals("index")) {
+						return goRootPage(model);
+					}
+					break;
+				}
+				default:
+					break;
+				}
+				break;
+			}
+			
+			case "checkStageList": {
+				csls.setPageInfo(model, offset, page);
+				model.addAttribute("setPage", "checkStageList");
+				switch (mode) {
+				case "stageList": {
+					offset = listOffset;
+					break;
+				}
+				case "select": {
+					pageName = chss.selectStage(model, sysStageId);
+					break;
+				}
+				case "login": {
+					loginMode = chss.loginStage(model, loginMode, sysStageId, stagePass);
+					break;
+				}
+				default:
+					break;
+				}
+			}
+			
 			default:
 				break;
 			}

@@ -31,6 +31,16 @@
     width: 52vw;
 }
 
+.pc .traMemo {
+    width: 30vw;
+    height: 22vh;
+}
+
+.mobile .traMemo {
+    width: 100%;
+    height: 25vh;
+}
+
 .submitBtn .submitText {
     position: relative;
     display: flex;

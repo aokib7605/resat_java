@@ -22,6 +22,7 @@
 @import './style/0701_createUser.css';
 @import './style/0702_setFirstStage.css';
 @import './style/0801_inputForm.css';
+@import './style/0901_custLogin.css';
 
 html,
 body {
@@ -103,9 +104,12 @@ body {
 
 .custPage {
     padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 .custPage hr {
+    margin-left: auto;
+    margin-right: auto;
     height: 3px;
     border-width: 0;
     background-repeat: repeat-x;

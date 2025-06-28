@@ -30,7 +30,7 @@
                         <select name="sysDateId">
                             <th:block th:each="item : ${dateFormList}">
                                 <option th:value="${item.sys_date_id}"
-                                    th:text="${#temporals.format(item.st_date, 'yyyy-MM-dd HH:mm')}"
+                                    th:text="${#temporals.format(item.st_date, 'yyyy年 M月d日 H時m分')}"
                                     th:selected="${sysDateId == item.sys_date_id}">
                                 </option>
                             </th:block>
@@ -67,7 +67,7 @@
 
                 <form action="/reserve" method="post" th:if="${mode == 'inputMemo'}">
                     <p>何かコメントがあれば入力してください</p>
-                    <textarea name="traMemo" th:text="${traMemo}"></textarea>
+                    <textarea name="traMemo" th:text="${traMemo}" class="traMemo"></textarea>
                     <input type="hidden" name="sysFormId" th:value="${sysFormId}">
                     <input type="hidden" name="sysManagerId" th:value="${sysManagerId}">
                     <input type="hidden" name="sysDateId" th:value="${sysDateId}">
@@ -84,7 +84,7 @@
                     <table>
                         <tr>
                             <th>日時</th>
-                            <td th:text="${#temporals.format(stDate, 'yyyy-MM-dd HH:mm')}"></td>
+                            <td th:text="${#temporals.format(stDate, 'yyyy年 M月d日 H時m分')}"></td>
                         </tr>
                         <tr>
                             <th>購入チケット</th>

@@ -100,20 +100,30 @@ public class CustController {
 			}
 
 			if(form != null) {
-				if(form.equals("login")) {
+				switch (form) {
+				case "login": {
 					setEnvData(model, "login");
 					cls.setPageInfo(model);
 					pageName = "reserve/custLogin";
-				} else if(form.equals("myPage")) {
+					break;
+				}
+				
+				case "myPage": {
 					setEnvData(model, "customer");
 					rls.setPageInfo(model);
 					model.addAttribute("message", Env.compReserveMessage);
 					pageName = "reserve/myPage/reserveList";
-				} else if(form.equals("noLoginPage")) {
+					break;
+				}
+				
+				case "noLoginPage": {
 					pageName = "reserve/noLoginPage";
-				} else {
+					break;
+				}
+				default:
 					// 初回遷移時のみ実行
 					ifs.inputDate(model, "inputDate", null);
+					break;
 				}
 			}
 		} catch (Exception e) {
@@ -155,7 +165,10 @@ public class CustController {
 					mode = nextMode;
 				}
 				ifs.confiResult(model, mode, sysFormId, sysDateId, traAmounts, traMemo, sysManagerId);
-				pageName = ifs.registTransaction(model, false);
+				if(!mode.equals("back")) {
+					// 決定ボタンが押下された場合の処理
+					pageName = ifs.registTransaction(model, false);
+				}
 				break;
 			}
 			default:

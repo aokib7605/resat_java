@@ -1,0 +1,28 @@
+.custLogin .submitBtn .submitText {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: auto;
+    max-width: 250px;
+    padding: 10px 25px;
+    color: #333;
+    font-family: "Noto Sans Japanese";
+    text-decoration: none;
+    color: #333;
+    line-height: 1.8;
+    transition: 0.3s ease-in-out;
+    font-weight: 500;
+    background: #eee;
+    border-radius: 9999px;
+    border-bottom: 2px solid #999;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+}
+
+.custLogin .submitBtn .submitText:hover {
+    color: #fff;
+    background: #999;
+    border-bottom: 2px solid #fff;
+    transform: translateY(3px);
+}

@@ -4,31 +4,37 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${title}"></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
-    <div class="center_container">
-        <h1 th:text="${title}"></h1>
-        <h2 th:text="${title2}"></h2>
+    <div class="custPage" name="custPage">
+        <div class="custLogin center_container">
+            <img src="./img/0101/application_logo.png" class="topLogo">
+            <!-- <h1 th:text="${title}"></h1> -->
+            <h2 th:text="${title2}"></h2>
 
-        <form action="/myPage" method="post">
-            <input type="hidden" name="mode" value="login">
+            <form action="/myPage" method="post">
+                <input type="hidden" name="mode" value="login">
+                <p>
+                    ユーザーID<br>
+                    <input type="text" name="userId">
+                </p>
+                <p>
+                    パスワード<br>
+                    <input type="text" name="userPass">
+                </p>
+                <p><button type="submit" class="submitBtn"><span class="submitText">ログイン</span></button></p>
+                <p th:text="${message}" style="color: red;"></p>
+            </form>
             <p>
-                ユーザーID<br>
-                <input type="text" name="userId">
+                アカウント新規作成は<a href="/reserve/createUser?mode=start">こちら</a>
             </p>
-            <p>
-                パスワード<br>
-                <input type="text" name="userPass">
-            </p>
-            <p> <input type="submit" value="ログイン"></p>
-            <p th:text="${message}" style="color: red;"></p>
-        </form>
-        <p>
-            アカウント新規作成は<a href="/reserve/createUser?mode=start">こちら</a>
-        </p>
+        </div>
     </div>
+
+    <script type="module" src="./js/main.js"></script>
 </body>
 
 </html>

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.webApplication.entity.Env;
+import com.webApplication.entity.FormEntity;
 import com.webApplication.service.EnvService;
 import com.webApplication.service.cust.CustLoginService;
 import com.webApplication.service.cust.InputFormService;
@@ -89,12 +90,22 @@ public class CustController {
 		return goLoginPage(model);
 	}
 
+	/**
+	 * 
+	 * @param model
+	 * @param form
+	 * @param sys ... sysFormId
+	 * @param ma ... sysUserId(Manager)
+	 * @return
+	 */
 	@GetMapping("/reserve")
 	public String goInputForm(Model model, String form, String sys, String ma) {
 		// sys = sysFormId, ma = sysUserId
 		try {
 			pageName = "reserve/inputForm";
 			model.addAttribute("title", Env.custApplicationTitle);
+			
+			// 予約フォームURL初回アクセス時
 			if(sys != null && ma != null) {
 				ifs.setPageInfo(model, sys, ma);
 			}
@@ -107,7 +118,7 @@ public class CustController {
 					pageName = "reserve/custLogin";
 					break;
 				}
-				
+
 				case "myPage": {
 					setEnvData(model, "customer");
 					rls.setPageInfo(model);
@@ -115,7 +126,7 @@ public class CustController {
 					pageName = "reserve/myPage/reserveList";
 					break;
 				}
-				
+
 				case "noLoginPage": {
 					pageName = "reserve/noLoginPage";
 					break;
@@ -135,7 +146,8 @@ public class CustController {
 
 	@PostMapping("/reserve")
 	public String accessInputForm(Model model, String mode, String nextMode, String sysFormId, String sysStageId, String sysDateId, 
-			String sysManagerId, String[] traAmounts, String traMemo) {
+			String sysManagerId, String[] traAmounts, String traMemo, String custName, String custKanaName, String custMail,
+			String custTel) {
 		pageName = null;
 		try {
 			switch (mode) {
@@ -157,18 +169,65 @@ public class CustController {
 				if(nextMode != null) {
 					mode = nextMode;
 				}
-				ifs.inputMemo(model, mode, sysFormId, sysDateId, traAmounts, traMemo);
+				ifs.inputMemo(model, mode, sysFormId, sysDateId, traAmounts, traMemo, sysManagerId);
+				if(!mode.equals("back")) {
+					// 決定ボタンが押下された場合の処理
+					pageName = ifs.loginCheck(model);
+
+					if(pageName != null && pageName.equals("login")) {
+						// 未ログインの場合、ログイン画面に遷移
+						model.addAttribute("mode", "reserveLogin");
+						return goLoginPage(model);
+					} else {
+						// ログイン済の場合、入力確認画面に遷移
+						ifs.inputLoginUser(model, "inputLoginUser");
+						model.addAttribute("mode", "confiResult");
+						
+						// セッションから各種フォームデータをmodelに保持
+						FormEntity formData = (FormEntity) session.getAttribute("formDataSession");
+						sysFormId = formData.getSysFormId();	// フォームID
+						sysManagerId = formData.getSysUserId();	// 担当者ID
+					}
+				}
 				break;
 			}
+
+			// ログインせずに予約登録を完了する
+			case "inputUser": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				ifs.inputUser(model, mode, sysFormId, sysDateId, traAmounts, traMemo, custName, custKanaName, custMail, custTel);
+				
+				// セッションから各種フォームデータをmodelに保持
+				FormEntity formData = (FormEntity) session.getAttribute("formDataSession");
+				sysFormId = formData.getSysFormId();	// フォームID
+				sysManagerId = formData.getSysUserId();	// 担当者ID
+				break;
+			}
+
+			// ログインして予約登録を完了する
+			case "inputLoginUser": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				ifs.inputLoginUser(model, "inputLoginUser");
+				model.addAttribute("mode", "confiResult");
+				
+				// セッションから各種フォームデータをmodelに保持
+				FormEntity formData = (FormEntity) session.getAttribute("formDataSession");
+				sysFormId = formData.getSysFormId();	// フォームID
+				sysManagerId = formData.getSysUserId();	// 担当者ID
+				break;
+			}
+			
+			// 予約内容確認
 			case "confiResult": {
 				if(nextMode != null) {
 					mode = nextMode;
 				}
-				ifs.confiResult(model, mode, sysFormId, sysDateId, traAmounts, traMemo, sysManagerId);
-				if(!mode.equals("back")) {
-					// 決定ボタンが押下された場合の処理
-					pageName = ifs.registTransaction(model, false);
-				}
+				
+				pageName = ifs.confiResult(model, mode, sysFormId, sysDateId, traAmounts, traMemo, sysManagerId, custName, custKanaName, custMail, custTel);
 				break;
 			}
 			default:
@@ -177,6 +236,12 @@ public class CustController {
 		} catch (Exception e) {
 			System.out.println(e);
 			// TODO: handle exception
+		}
+		if(sysFormId == null) {
+			sysFormId = "";
+		}
+		if(sysManagerId == null) {
+			sysManagerId = "";
 		}
 		return goInputForm(model, pageName, sysFormId, sysManagerId);
 	}
@@ -200,9 +265,23 @@ public class CustController {
 				if(pageName.equals("login")) {
 					return goLoginPage(model);
 				} else {
+					// セッションに仮受付データが存在する場合
 					if(session.getAttribute("tempReceptionList") != null) {
-						pageName = ifs.registTransaction(model, false);
-						return goInputForm(model, pageName, null, null);
+												
+						ifs.inputLoginUser(model, "inputLoginUser");
+						model.addAttribute("mode", "confiResult");
+						
+						// セッションから各種フォームデータをmodelに保持
+						FormEntity formData = (FormEntity) session.getAttribute("formDataSession");
+						String sysFormId = formData.getSysFormId();	// フォームID
+						String sysManagerId = formData.getSysUserId();	// 担当者ID
+						if(sysFormId == null) {
+							sysFormId = "";
+						}
+						if(sysManagerId == null) {
+							sysManagerId = "";
+						}
+						return goInputForm(model, null, sysFormId, sysManagerId);
 					}
 				}
 			}
@@ -211,7 +290,7 @@ public class CustController {
 		}
 		return goMyPage(model);
 	}
-	
+
 	@GetMapping("/myPage/reserveList")
 	public String goReserveList(Model model) {
 		try {
@@ -222,7 +301,7 @@ public class CustController {
 		}
 		return goAnyPage(model, "reserve/myPage/reserveList");
 	}
-	
+
 	@PostMapping("/myPage/reserveList")
 	public String accessReserveList(Model model, String mode, String nextMode) {
 		try {

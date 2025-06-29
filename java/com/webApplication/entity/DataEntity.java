@@ -144,6 +144,14 @@ public class DataEntity {
     private Date tra_cre_date;
     private String tra_comment;
     private int tra_discount;
+    private String no_login;
+    
+    // none_users
+    private String sys_none_user_id;
+    private String none_user_name;
+    private String none_user_kana_name;
+    private String none_user_mail;
+    private String none_user_tell;
     
     //sqlで生成するカラム名
     private String user_names;

@@ -31,6 +31,17 @@
             <p>
                 アカウント新規作成は<a href="/reserve/createUser?mode=start">こちら</a>
             </p>
+
+            <div th:if="${mode == 'reserveLogin'}">
+                <p>
+                <form action="/reserve" method="post">
+                    <input type="hidden" name="nextMode" value="inputUser">
+                    <button type="submit" name="mode" value="inputUser">
+                        ログインせずに予約登録
+                    </button>
+                </form>
+                </p>
+            </div>
         </div>
     </div>
 

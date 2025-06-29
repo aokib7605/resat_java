@@ -31,8 +31,8 @@ public class MainRepository {
 		DataEntity data = new DataEntity();
 		try {
 			for (String column : columns) {
-//				String type = column.getClass().getSimpleName();
-//				System.out.println(column + "の変数の型は" + type + "（" + dbObj.get(column) + "）");
+				//				String type = column.getClass().getSimpleName();
+				//				System.out.println(column + "の変数の型は" + type + "（" + dbObj.get(column) + "）");
 				if (column.contains(".")) {
 					column = column.substring(column.indexOf(".") + 1);
 				}
@@ -42,7 +42,7 @@ public class MainRepository {
 						String record = (Integer) dbObj.get(column) + "";
 						data.setEntity(column, record);
 					} catch (Exception e) {
-//						System.out.println(e);
+						//						System.out.println(e);
 					}
 
 					// BigDecimal 型処理
@@ -50,7 +50,7 @@ public class MainRepository {
 						String record = ((BigDecimal) dbObj.get(column)).toPlainString();
 						data.setEntity(column, record);
 					} catch (Exception e) {
-//						System.out.println(e);
+						//						System.out.println(e);
 					}
 
 					// Date 型処理（java.sql.Date）
@@ -58,7 +58,7 @@ public class MainRepository {
 						String record = new SimpleDateFormat("yyyy-MM-dd").format((Date) dbObj.get(column));
 						data.setEntity(column, record);
 					} catch (Exception e) {
-//						System.out.println(e);
+						//						System.out.println(e);
 					}
 
 					// LocalDateTime 型処理（java.time.LocalDateTime）
@@ -66,14 +66,14 @@ public class MainRepository {
 						String record = ((LocalDateTime) dbObj.get(column)).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 						data.setEntity(column, record);
 					} catch (Exception e) {
-//						System.out.println(e);
+						//						System.out.println(e);
 					}
 
 					// String 型処理
 					try {
 						data.setEntity(column, (String) dbObj.get(column));
 					} catch (Exception e) {
-//						System.out.println(e);
+						//						System.out.println(e);
 					}
 				}
 			}
@@ -94,7 +94,7 @@ public class MainRepository {
 		}
 		return null;
 	}
-	
+
 	public DataEntity getData(String table, List<String> columns, List<String> getColumns, String where) {
 		try {
 			sql = "select " + Pub.convertListToStr(getColumns) + " from " + table + " " + where;
@@ -122,13 +122,13 @@ public class MainRepository {
 		}
 		return null;
 	}
-	
+
 	public ArrayList<DataEntity> getDataList(String table, List<String> columns, List<String> getColumns, String where){
 		try {
 			sql = "select " + Pub.convertListToStr(getColumns) + " from " + table + " " + where;
 			System.out.println(sql);
 			List<Map<String, Object>> dbObjList = tmp.queryForList(sql);
-			
+
 			ArrayList<DataEntity> resultList = new ArrayList<DataEntity>();
 			for(Map<String, Object> dbObj : dbObjList) {
 				resultList.add(setData(dbObj, columns));
@@ -146,7 +146,7 @@ public class MainRepository {
 			System.out.println(sql);
 			List<Map<String, Object>> dbObjList = tmp.queryForList(sql);
 			ArrayList<DataEntity> resultList = new ArrayList<DataEntity>();
-			
+
 			List<String> targetColumns = (getColumns != null) ? getColumns : columns;
 			for(Map<String, Object> dbObj : dbObjList) {
 				resultList.add(setData(dbObj, targetColumns));
@@ -168,7 +168,7 @@ public class MainRepository {
 			System.out.println(e);
 		}
 	}
-	
+
 	public void insertImage(String uuid, String fileName, String fileType, byte[] binaryData, String sysAnyId, String contentType) {
 		try {
 			sql = "insert into " + "images" + " values( ?, ?, ?, ?, ?, ? )";
@@ -191,7 +191,7 @@ public class MainRepository {
 			System.out.println(e);
 		}
 	}
-	
+
 	public void updateData(String table, String column, byte[] value, String where) {
 		try {
 			sql = "update " + table + " set " + column + " = '" + value + "' " + where;
@@ -204,7 +204,7 @@ public class MainRepository {
 			System.out.println(e);
 		}
 	}
-	
+
 	public void deleteData(String table, String where) {
 		try {
 			sql = "delete from " + table + where;
@@ -332,75 +332,75 @@ public class MainRepository {
 	}
 
 	public List<String> getStaffTableColumns(){ 
-	    List<String> columns = new ArrayList<String>(Arrays.asList(
-	    		"sys_staff_id", 
-	            "sys_stage_id", 
-	            "staff_dep_name", 
-	            "sys_user_id", 
-	            "staff_sort_num", 
-	            "user_sort_num" 
-	            ));
-	    return columns; 
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_staff_id", 
+				"sys_stage_id", 
+				"staff_dep_name", 
+				"sys_user_id", 
+				"staff_sort_num", 
+				"user_sort_num" 
+				));
+		return columns; 
 	}
-	
+
 	public List<String> getGroupAuthorityTableColumns(){ 
 		List<String> columns = new ArrayList<String>(Arrays.asList(
-			"authority_id", 
-			"authority_name"
-		));
+				"authority_id", 
+				"authority_name"
+				));
 		return columns;
 	}
-	
+
 	public List<String> getStageAuthorityTableColumns(){ 
 		List<String> columns = new ArrayList<String>(Arrays.asList(
-			"authority_id", 
-			"authority_name"
-		));
+				"authority_id", 
+				"authority_name"
+				));
 		return columns;
 	}
-	
+
 	public List<String> getFormsTableColumns(){ 
-	    List<String> columns = new ArrayList<String>(Arrays.asList(
-	            "sys_form_id",
-	            "sys_stage_id",
-	            "form_name",
-	            "date_st",
-	            "date_ed"
-	    ));
-	    return columns; 
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_form_id",
+				"sys_stage_id",
+				"form_name",
+				"date_st",
+				"date_ed"
+				));
+		return columns; 
 	}
-	
+
 	public List<String> getTicketsTableColumns(){ 
-	    List<String> columns = new ArrayList<String>(Arrays.asList(
-	            "sys_ticket_id",
-	            "sys_stage_id",
-	            "ticket_name",
-	            "ticket_price"
-	            ));
-	    return columns; 
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_ticket_id",
+				"sys_stage_id",
+				"ticket_name",
+				"ticket_price"
+				));
+		return columns; 
 	}
-	
+
 	public List<String> getDatesTableColumns(){ 
-	    List<String> columns = new ArrayList<String>(Arrays.asList(
-	            "sys_date_id",
-	            "sys_stage_id",
-	            "st_date",
-	            "st_seat",
-	            "st_info"
-	            ));
-	    return columns; 
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_date_id",
+				"sys_stage_id",
+				"st_date",
+				"st_seat",
+				"st_info"
+				));
+		return columns; 
 	}
-	
+
 	public List<String> getFormsetTableColumns(){ 
-	    List<String> columns = new ArrayList<String>(Arrays.asList(
-	        "sys_stage_id",
-	        "sys_form_id",
-	        "sys_ticket_id",
-	        "sys_date_id"
-	    ));
-	    return columns; 
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_stage_id",
+				"sys_form_id",
+				"sys_ticket_id",
+				"sys_date_id"
+				));
+		return columns; 
 	}
-	
+
 	public List<String> getTransactionsTableColumns(){ 
 		List<String> columns = new ArrayList<String>(Arrays.asList(
 				"sys_tra_id",
@@ -413,7 +413,20 @@ public class MainRepository {
 				"tra_memo",
 				"tra_cre_date",
 				"tra_comment",
-				"tra_discount"));
+				"tra_discount",
+				"no_login"
+				));
+		return columns; 
+	}
+
+	public List<String> getNoneUsersTableColumns(){ 
+		List<String> columns = new ArrayList<String>(Arrays.asList(
+				"sys_none_user_id",
+				"none_user_name",
+				"none_user_kana_name",
+				"none_user_mail",
+				"none_user_tell"
+				));
 		return columns; 
 	}
 }

@@ -804,6 +804,18 @@ public class SQL {
 				));
 		mr.insertData("staff", columns, values);
 	}
+	
+	public void addNoneUser(String sysNoneuserId, String noneUserName, String noneUserKanaName, String noneUserMail, String noneUserTel) {
+		columns = mr.getNoneUsersTableColumns();
+		List<String> values = new ArrayList<String>(Arrays.asList(
+				sysNoneuserId,
+				noneUserName,
+				noneUserKanaName,
+				noneUserMail,
+				noneUserTel
+				));
+		mr.insertData("none_users", columns, values);
+	}
 
 	public void addTransaction(DataEntity tempReceptionList) {
 		columns = mr.getTransactionsTableColumns();
@@ -818,7 +830,8 @@ public class SQL {
 				tempReceptionList.getTra_memo(), //tra_memo
 				Pub.getCurrentDate()+"", //tra_cre_date
 				tempReceptionList.getTra_comment(), //tra_comment
-				tempReceptionList.getTra_discount()+"" //tra_discount
+				tempReceptionList.getTra_discount()+"", //tra_discount
+				tempReceptionList.getNo_login()
 				));
 		mr.insertData("transactions", columns, values);
 	}

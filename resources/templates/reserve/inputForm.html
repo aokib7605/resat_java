@@ -65,6 +65,7 @@
                                 class="btnText">戻る</span></button></p>
                 </form>
 
+                <!-- コメント入力画面 -->
                 <form action="/reserve" method="post" th:if="${mode == 'inputMemo'}">
                     <p>何かコメントがあれば入力してください</p>
                     <textarea name="traMemo" th:text="${traMemo}" class="traMemo"></textarea>
@@ -79,9 +80,73 @@
                                 class="btnText">戻る</span></button></p>
                 </form>
 
+                <!-- ユーザー情報入力画面 -->
+                <form action="/reserve" method="post" th:if="${mode == 'inputUser' || mode == 'inputLoginUser'}">
+                    <p>
+                        お客様情報を入力してください<br>
+                        <span class="alertText">ログインなしで予約登録する場合、公演予約履歴は残りません</span><br>
+                        <span class="alertText">（予約完了通知メールは送られます）</span>
+                    </p>
+                    <p>
+                        お名前<br>
+                        <input type="text" name="custName" th:value="${custName}">
+                    </p>
+                    <p>
+                        お名前（フリガナ）<br>
+                        <input type="text" name="custKanaName" th:value="${custKanaName}">
+                    </p>
+                    <p>
+                        メールアドレス<br>
+                        <input type="email" name="custMail" th:value="${custMail}">
+                    </p>
+                    <p>
+                        ご連絡先電話番号<br>
+                        <input type="tel" name="custTel" th:value="${custTel}">
+                    </p>
+                    <p>
+                        <button type="submit" name="nextMode" value="inputValue" class="btn">
+                            <span class="btnText">送信</span>
+                        </button>
+                    </p>
+                    <input type="hidden" name="sysFormId" th:value="${sysFormId}">
+                    <input type="hidden" name="sysManagerId" th:value="${sysManagerId}">
+                    <input type="hidden" name="sysDateId" th:value="${sysDateId}">
+                    <input type="hidden" name="traAmounts" th:value="${traAmounts}">
+                    <input type="hidden" name="mode" value="inputUser"><br>
+                </form>
+                <form action="/reserve" method="post" th:if="${mode == 'inputUser' || mode == 'inputLoginUser'}">
+                    <p>
+                        <button type="submit" name="nextMode" value="back" class="btn">
+                            <span class="btnText">戻る</span>
+                        </button>
+                    </p>
+                    <input type="hidden" name="sysFormId" th:value="${sysFormId}">
+                    <input type="hidden" name="sysManagerId" th:value="${sysManagerId}">
+                    <input type="hidden" name="sysDateId" th:value="${sysDateId}">
+                    <input type="hidden" name="traAmounts" th:value="${traAmounts}">
+                    <input type="hidden" name="mode" value="inputUser"><br>
+                </form>
+
+                <!-- 内容確認画面 -->
                 <form action="/reserve" method="post" th:if="${mode == 'confiResult'}">
                     <p>下記の内容でよろしいですか？</p>
                     <table>
+                        <tr>
+                            <th>お名前</th>
+                            <td th:text="${custName}"></td>
+                        </tr>
+                        <tr>
+                            <th>お名前<br>（フリガナ）</th>
+                            <td th:text="${custKanaName}"></td>
+                        </tr>
+                        <tr>
+                            <th>メールアドレス</th>
+                            <td th:text="${custMail}"></td>
+                        </tr>
+                        <tr>
+                            <th>ご連絡先<br>電話番号</th>
+                            <td th:text="${custTel}"></td>
+                        </tr>
                         <tr>
                             <th>日時</th>
                             <td th:text="${#temporals.format(stDate, 'yyyy年 M月d日 H時m分')}"></td>
@@ -113,8 +178,12 @@
                     <input type="hidden" name="sysDateId" th:value="${sysDateId}">
                     <input type="hidden" name="traAmounts" th:value="${traAmounts}">
                     <input type="hidden" name="traMemo" th:value="${traMemo}">
+                    <input type="hidden" name="custName" th:value="${custName}">
+                    <input type="hidden" name="custKanaName" th:value="${custKanaName}">
+                    <input type="hidden" name="custMail" th:value="${custMail}">
+                    <input type="hidden" name="custTel" th:value="${custTel}">
                     <input type="hidden" name="mode" value="confiResult">
-                    <button name="nextMode" value="inputValue" class="btn"><span class="btnText">決定</span></button>
+                    <button name="nextMode" th:value="${nextMode}" class="btn"><span class="btnText">決定</span></button>
 
                     <p><button type="submit" name="nextMode" value="back" class="btn"><span
                                 class="btnText">戻る</span></button></p>

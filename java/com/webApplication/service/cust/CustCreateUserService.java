@@ -1,4 +1,4 @@
-package com.webApplication.service;
+package com.webApplication.service.cust;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,11 +23,11 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CreateUserService {
+public class CustCreateUserService {
 	private final MainRepository mr;
 	private final HttpSession session;
 	private final JavaMailSender mailSender;
-
+	
 	public void setPageInfo(Model model) {
 		model.addAttribute("title2", Env.createManageUserView);
 	}
@@ -43,8 +43,7 @@ public class CreateUserService {
 		if(mr.getData("users", columns, where) == null) {
 			String mailBase64 = Base64.getUrlEncoder().encodeToString(userMail.getBytes());
 			System.out.println(mailBase64);
-			model.addAttribute("message", userMail + " にメールを送信しました。<br>URLをクリックして以降のステップを進めてください。" + 
-					"<p>メールが届かない場合、迷惑メールの設定にて<br> nukikugi@gmail.com からの受信設定を確認してください。</p>");
+			model.addAttribute("message", userMail + Env.sendMailMessageForCreateuser);
 			model.addAttribute("mode", "confiMail");
 			sendMail(userMail, mailBase64);
 			return true;
@@ -87,13 +86,12 @@ public class CreateUserService {
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setTo(userMail);
 		message.setFrom(Env.sendFromMail);
-		message.setSubject(Env.custApplicationTitle + "アカウント新規登録手続き");
+		message.setSubject(Env.custApplicationTitle + Env.createUserAccountTitle);
 		message.setText(
-				Env.custApplicationTitle + "開発団体 劇団抜きにくい釘です。\n"
-						+ "まだアカウント登録は完了しておりません。下記URLから以降の登録処理を進めてください。\n"
-						+ Env.domainName + "/createUser?mode=confiData&data=" + mailBase64
+				Env.custApplicationTitle + Env.notCompMessage
+						+ Env.domainName + "/reserve/createUser?mode=confiData&data=" + mailBase64
 				);
-		System.out.println(Env.domainName + "/createUser?mode=confiData&data=" + mailBase64);
+		System.out.println(Env.domainName + "/reserve/createUser?mode=confiData&data=" + mailBase64);
 
 		// メール送信を実施する。
 		mailSender.send(message);
@@ -123,8 +121,8 @@ public class CreateUserService {
 		}
 	}
 
-	public String inputBaseData(Model model, String mode, String back, String userMail, String userId, String userName, String userKanaName, String userStageName, String userStageKanaName, String userPass, String rePass) {
-		setBaseDataModel(model, userMail, userId, userName, userKanaName, userStageName, userStageKanaName, userPass, rePass);
+	public String inputBaseData(Model model, String mode, String back, String userMail, String userId, String userName, String userKanaName, String userPass, String rePass) {
+		setBaseDataModel(model, userMail, userId, userName, userKanaName, userPass, rePass);
 		if(back != null) {
 			if(back.equals("back")) {
 				mode = "inputUserId";
@@ -143,9 +141,9 @@ public class CreateUserService {
 		return mode;
 	}
 
-	public String inputContactData(Model model, String mode, String back, String userMail, String userId, String userName, String userKanaName, String userStageName, String userStageKanaName, String userPass, String userTel, String userBirthday, String hideBirthYear, String userMode) {
-		setBaseDataModel(model, userMail, userId, userName, userKanaName, userStageName, userStageKanaName, userPass, userPass);
-		setContactData(model, userTel, userBirthday, hideBirthYear, userMode);
+	public String inputContactData(Model model, String mode, String back, String userMail, String userId, String userName, String userKanaName, String userPass, String userTel, String userBirthday, String hideBirthYear) {
+		setBaseDataModel(model, userMail, userId, userName, userKanaName, userPass, userPass);
+		setContactData(model, userTel, userBirthday, hideBirthYear);
 		if(back != null) {
 			if(back.equals("back")) {
 				mode = "inputBaseData";
@@ -158,51 +156,42 @@ public class CreateUserService {
 		return mode;
 	}
 
-	public String confiResult(Model model, String mode, String back, String userMail, String userId, String userName, String userKanaName, String userStageName, String userStageKanaName, String userPass, String userTel, String userBirthday, String hideBirthYear, String userMode) {
+	public String confiResult(Model model, String mode, String back, String userMail, String userId, String userName, String userKanaName, String userPass, String userTel, String userBirthday, String hideBirthYear) {
 		if(back != null) {
 			if(back.equals("back")) {
-				setBaseDataModel(model, userMail, userId, userName, userKanaName, userStageName, userStageKanaName, userPass, userPass);
-				setContactData(model, userTel, userBirthday, hideBirthYear, userMode);
+				setBaseDataModel(model, userMail, userId, userName, userKanaName, userPass, userPass);
+				setContactData(model, userTel, userBirthday, hideBirthYear);
 				mode = "inputContactData";
 				model.addAttribute("mode", "inputContactData");
 				return "createUser";
 			}
 		}
-		createUser(model, setInputDataObject(userMail, userId, userName, userKanaName, userStageName, userStageKanaName, userPass, userTel, userBirthday, hideBirthYear, userMode));
-		return "index";
+		createUser(model, setInputDataObject(userMail, userId, userName, userKanaName, userPass, userTel, userBirthday, hideBirthYear));
+		return "myPage";
 	}
 
-	private void setBaseDataModel(Model model, String userMail, String userId, String userName, String userKanaName, String userStageName, String userStageKanaName, String userPass, String rePass) {
+	private void setBaseDataModel(Model model, String userMail, String userId, String userName, String userKanaName, String userPass, String rePass) {
 		model.addAttribute("userMail", userMail);
 		model.addAttribute("userId", userId);
 		model.addAttribute("userName", userName);
 		model.addAttribute("userKanaName", userKanaName);
-		model.addAttribute("userStageName", userStageName);
-		model.addAttribute("userStageKanaName", userStageKanaName);
 		model.addAttribute("userPass", userPass);
 		model.addAttribute("rePass", rePass);
 	}
 
-	private void setContactData(Model model, String userTel, String userBirthday, String hideBirthYear, String userMode) {
+	private void setContactData(Model model, String userTel, String userBirthday, String hideBirthYear) {
 		model.addAttribute("userTel", userTel);
 		model.addAttribute("userBirthday", userBirthday);
 		model.addAttribute("hideBirthYear", hideBirthYear);
-		model.addAttribute("userMode", userMode);
 	}
 
-	private DataEntity setInputDataObject(String userMail, String userId, String userName, String userKanaName, String userStageName, String userStageKanaName, String userPass, String userTel, String userBirthday, String hideBirthYear, String userMode) {
+	private DataEntity setInputDataObject(String userMail, String userId, String userName, String userKanaName, String userPass, String userTel, String userBirthday, String hideBirthYear) {
 		DataEntity inputData = new DataEntity();
-		if(userMode != null && !(userMode.equals(""))) {
-			inputData.setSys_user_mode("doubleUser");
-		} else {
-			inputData.setSys_user_mode("sysUser");
-		}
+		inputData.setSys_user_mode("custUser");
 		inputData.setUser_mail(userMail);
 		inputData.setUser_id(userId);
 		inputData.setUser_name(userName);
 		inputData.setUser_kana_name(userKanaName);
-		inputData.setUser_stage_name(userStageName);
-		inputData.setUser_stage_kana_name(userStageKanaName);
 		inputData.setUser_pass(userPass);
 		inputData.setUser_tell(userTel);
 		inputData.setUser_birthday(Pub.convertStringToSqlDate(userBirthday));
@@ -221,15 +210,15 @@ public class CreateUserService {
 				data.getUser_tell(),			//user_tell
 				data.getUser_name(),			//user_name
 				data.getUser_kana_name(),		//user_kana_name
-				data.getUser_stage_name(),		//user_stage_name
-				data.getUser_stage_kana_name(),	//user_stage_kana_name
+				null,							//user_stage_name
+				null,							//user_stage_kana_name
 				data.getUser_pass(),			//user_pass
 				null,							//user_def_stage
 				Pub.getCurrentDate() + "",		//user_cre_date
 				Pub.getCurrentDate() + "",		//user_last_login
 				data.getUser_birthday() + "",	//user_birthday
 				data.getUser_hide_age() + "",	//user_hide_age
-				data.getUser_def_group()		//user_def_group
+				null							//user_def_group
 				));
 		mr.insertData("users", columns, values);
 
@@ -237,7 +226,7 @@ public class CreateUserService {
 		columns = Stream.concat(mr.getUsersTableColumns().stream(), mr.getGroupeLoginListTableColumns().stream()).collect(Collectors.toList());
 		columns = Stream.concat(columns.stream(), mr.getGroupesTableColumns().stream()).collect(Collectors.toList());
 		if(mr.getData("users u", columns, where) != null) {
-			session.setAttribute("userSession", mr.getData("users u", columns, where));
+			session.setAttribute("custSession", mr.getData("users u", columns, where));
 		} else {
 			model.addAttribute("message", "アカウント登録時にエラーが発生しました");
 		}

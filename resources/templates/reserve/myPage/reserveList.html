@@ -4,108 +4,280 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${title}"></title>
-    <link rel="stylesheet" href="./css/style.css">
+    <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
-    <h1 th:text="${title}"></h1>
-    <h2 th:text="${title2}"></h2>
+    <div class="custPage" name="custPage">
 
-    <!-- 各種メニュー -->
-    <ul>
-        <th:block th:each="column : ${custMenuList}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
-    <!-- ここにタイムリーフ -->
+        <!-- ナビゲーション -->
+        <button class="hamburger-overlay" name="hamburgerOverlay" aria-label="メニュー" aria-controls="overlay-menu"
+            aria-expanded="false">
+            <span class="hamburger-overlay__line"></span>
+            <span class="hamburger-overlay__line"></span>
+            <span class="hamburger-overlay__line"></span>
+        </button>
 
-    <hr>
+        <nav name="menuContent">
+            <img th:src="@{/img/0101/application_logo.png}" class="menuLogo" />
+            <!-- <h1 th:text="${title}"></h1> -->
+            <h2 th:text="${title2}"></h2>
 
-    <div>
-        <p th:text="${message}" style="color: red;"></p>
-
-        <p>予約済の公演一覧です</p>
-        <div th:if="${reserveList != null}">
-            <table>
-                <th:block th:each="data : ${reserveList}">
-                    <tr>
-                        <th th:text="${data.group_name}"></th>
-                    </tr>
-                    <tr>
-                        <th th:text="${data.stage_name}"></th>
-                    </tr>
-                    <tr>
-                        <th>予約日</th>
-                        <td th:text="${data.st_date}"></td>
-                    </tr>
-                    <tr>
-                        <th>予約チケット</th>
-                        <td th:text="${data.ticket_name + ' ' + data.ticket_price + '円' + ' ' + data.tra_amount + '枚'}">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>お支払い</th>
-                        <td th:text="${(data.ticket_price * data.tra_amount) + '円'}"></td>
-                    </tr>
-                    <tr>
-                        <th>詳細</th>
-                        <td>
-                            <form action="" method="post">
-                                <button type="submit">公演詳細</button>
-                            </form>
-                        </td>
-                    </tr>
+            <!-- 各種メニュー -->
+            <ul>
+                <th:block th:each="column : ${custMenuList}">
+                    <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
                 </th:block>
-            </table>
+            </ul>
+        </nav>
+
+        <div name="navContent">
+            <img th:src="@{/img/0101/application_logo.png}" class="menuLogo" />
+            <!-- <h1 th:text="${title}"></h1> -->
+            <h2 th:text="${title2}"></h2>
         </div>
+
+        <nav id="overlay-menu" aria-hidden="true">
+            <div class="nav-overlay_content" name="navContent">
+                <!-- 各種メニュー -->
+                <ul>
+                    <th:block th:each="column : ${custMenuList}">
+                        <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
+            </div>
+        </nav>
+        <!-- ナビゲーションここまで -->
+
         <hr>
-        <div th:if="${pastReserveList != null}">
-            <form action="" method="post">
-                <span th:if="${showPast != true}"><button type="submit" name="mode" value="showPast">過去の予約公演一覧</button></span>
-                <span th:if="${showPast == true}"><button type="submit" name="mode" value="closePast">閉じる</button></span>
-            </form>
-            <div th:if="${showPast == true}">
-                            <table>
-                <th:block th:each="data : ${pastReserveList}">
-                    <tr>
-                        <th th:text="${data.group_name}"></th>
-                    </tr>
-                    <tr>
-                        <th th:text="${data.stage_name}"></th>
-                    </tr>
-                    <tr>
-                        <th>予約日</th>
-                        <td th:text="${data.st_date}"></td>
-                    </tr>
-                    <tr>
-                        <th>予約チケット</th>
-                        <td th:text="${data.ticket_name + ' ' + data.ticket_price + '円' + ' ' + data.tra_amount + '枚'}">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>お支払い</th>
-                        <td th:text="${(data.ticket_price * data.tra_amount) + '円'}"></td>
-                    </tr>
-                    <tr>
-                        <th>詳細</th>
-                        <td>
-                            <form action="" method="post">
-                                <button type="submit">公演詳細</button>
-                            </form>
-                        </td>
-                    </tr>
+
+        <div class="reserveList" th:if="${mode != 'openStage'}">
+            <p th:text="${message}" style="color: red;"></p>
+
+            <p>予約済の公演一覧です</p>
+            <p name="mobileMessage">タップで公演詳細が表示されます</p>
+            <div class="currentReserve" th:if="${reserveList != null}">
+                <th:block th:each="data : ${reserveList}">
+                    <table th:attr="data-systraid=${data.sys_tra_id}">
+                        <tr>
+                            <th colspan="2" th:text="${data.group_name}"></th>
+                        </tr>
+                        <tr>
+                            <td th:text="${data.stage_name}"></td>
+                            <td rowspan="2" name="openStageCol">
+                                <form action="/myPage/reserveList" method="post">
+                                    <input type="hidden" name="sysTraId" th:value="${data.sys_tra_id}">
+                                    <button class="btn" type="submit" name="mode" value="openStage">
+                                        <span class="btnText">公演詳細</span>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td th:text="${#temporals.format(data.st_date, 'yyyy年 M月d日 HH時mm分')}"></td>
+                        </tr>
+                    </table>
                 </th:block>
-            </table>
+            </div>
+
+            <div class="pastReserveList" th:if="${pastReserveList != null && pastReserveList.size != 0}">
+                <form action="/myPage/reserveList" method="post">
+                    <span th:if="${showPast != true}">
+                        <button class="btn" type="submit" name="mode" value="showPast">
+                            <span class="btnText">過去の予約公演一覧</span>
+                        </button>
+                    </span>
+                    <span th:if="${showPast == true}">
+                        <button class="btn" type="submit" name="mode" value="closePast">
+                            <span class="btnText">閉じる</span>
+                        </button>
+                    </span>
+                </form>
+                <div th:if="${showPast == true}">
+                    <th:block th:each="data : ${pastReserveList}">
+                        <table th:attr="data-systraid=${data.sys_tra_id}">
+                            <tr>
+                                <th colspan="2" th:text="${data.group_name}"></th>
+                            </tr>
+                            <tr>
+                                <td th:text="${data.stage_name}"></td>
+                                <td rowspan="2" name="openStageCol">
+                                    <form action="/myPage/reserveList" method="post">
+                                        <input type="hidden" name="sysTraId" th:value="${data.sys_tra_id}">
+                                        <button class="btn" type="submit" name="mode" value="openStage">
+                                            <span class="btnText">公演詳細</span>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td th:text="${#temporals.format(data.st_date, 'yyyy年 M月d日 HH時mm分')}"></td>
+                            </tr>
+                        </table>
+                    </th:block>
+                </div>
             </div>
         </div>
+
+        <div class="openStage" th:if="${mode == 'openStage'}">
+
+            <h4 th:text="${stageInfo.group_name}"></h4>
+            <h3 th:text="${stageInfo.stage_name}"></h3>
+
+            <table>
+                <tr>
+                    <th class="firstCol" colspan="2">予約内容</th>
+                </tr>
+                <tr>
+                    <th>お名前</th>
+                    <td th:text="${traData.cust_name}"></td>
+                </tr>
+                <tr>
+                    <th>予約日時</th>
+                    <td th:text="${#temporals.format(traData.st_date, 'yyyy年 M月d日 HH時mm分')}"></td>
+                </tr>
+                <tr>
+                    <th>予約チケット</th>
+                    <td th:text="${traData.ticket_name + ' ： ' + traData.ticket_price + ' 円'}"></td>
+                </tr>
+                <tr>
+                    <th>予約数</th>
+                    <td th:text="${traData.tra_amount + ' 枚'}"></td>
+                </tr>
+                <tr>
+                    <th>お支払い</th>
+                    <td th:text="${(traData.ticket_price * traData.tra_amount) + '円'}"></td>
+                </tr>
+            </table>
+
+            <!-- 戻るボタン -->
+            <div class="backBtn" name="backBtn">
+                <form action="/myPage/reserveList" method="get">
+                    <button type="submit" class="btn">
+                        <span class="btnText">戻る</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- キャンセルボタン -->
+            <div class="traCancel" name="traCancel">
+                <button type="button" name="traCancel" class="btn">
+                    <span class="btnText">予約キャンセル</span>
+                </button>
+            </div>
+
+            <div class="confiCancel hidden" name="confiCancel">
+                <form action="/myPage/reserveList" method="post">
+                    <p class="alertText">本当に削除してもよろしいですか？</p>
+                    <input type="hidden" name="sysTraId" th:value="${traData.sys_tra_id}">
+                    <button type="submit" name="mode" value="traCancel" class="btn">
+                        <span class="btnText">はい</span>
+                    </button>
+                </form>
+                <button type="button" name="notCancel" class="btn">
+                    <span class="btnText">いいえ</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="openStage" th:if="${mode == 'openStage'}">
+            <table>
+                <tr>
+                    <th class="firstCol" colspan="2">公演内容</th>
+                </tr>
+                <tr>
+                    <th>上演時間</th>
+                    <td th:text="${'約 ' + stageInfo.stage_runtime + ' 分'}"></td>
+                </tr>
+                <tr>
+                    <th>上演日時</th>
+                    <td>
+                        <th:block th:if="${dateList != null}">
+                            <th:block th:each="date : ${dateList}">
+                                <span th:text="${#temporals.format(date.st_date, 'yyyy年 M月d日 HH時mm分')}"></span><br>
+                            </th:block>
+                        </th:block>
+                    </td>
+                </tr>
+                <tr>
+                    <th>開場時間</th>
+                    <td th:text="${'開場は開演の ' + stageInfo.stage_open_minutes + ' 分前です'}"></td>
+                </tr>
+                <tr>
+                    <th>公演会場</th>
+                    <td>
+                        <span th:text="${stageInfo.stage_place_address}"></span><br>
+                        <span th:text="${stageInfo.stage_place_name}"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="openStage" th:if="${mode == 'openStage'}">
+            <table>
+                <tr th:if="${stageInfo.stage_story != null && stageInfo.stage_story != ''}">
+                    <th class="firstCol" colspan="2">あらすじ</th>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <th:block th:each="str, stat : ${stageInfo.stage_story.split('\r\n|\r|\n', -1)}">
+                            <th:block th:text="${str}" />
+                            <br th:if="${!stat.last}" />
+                        </th:block>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="openStage" th:if="${mode == 'openStage'}">
+            <table>
+                <tr th:if="${castList != null && castList.size != 0}">
+                    <th class="firstCol" colspan="2">出演</th>
+                </tr>
+                <tr>
+                    <td>
+                        <table>
+                            <th:block th:each="cast : ${castList}">
+                                <tr>
+                                    <th th:text="${cast.cast_chara_name}"></th>
+                                    <td th:text="${cast.user_names}"></td>
+                                </tr>
+                            </th:block>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="openStage" th:if="${mode == 'openStage'}">
+            <table>
+                <tr th:if="${staffList != null && staffList.size != 0}">
+                    <th class="firstCol" colspan="2">スタッフ</th>
+                </tr>
+                <tr>
+                    <td>
+                        <table>
+                            <th:block th:each="staff : ${staffList}">
+                                <tr>
+                                    <th th:text="${staff.staff_dep_name}"></th>
+                                    <td th:text="${staff.user_names}"></td>
+                                </tr>
+                            </th:block>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <p>
+        <form action="/custLogin" method="post">
+            <button type="submit" name="mode" value="logout" class="btn"><span class="btnText">ログアウト</span></button>
+        </form>
+        </p>
     </div>
 
-    <p>
-    <form action="/custLogin" method="post">
-        <input type="hidden" name="mode" value="logout">
-        <input type="submit" value="ログアウト">
-    </form>
-    </p>
+    <script type="module" th:src="@{/js/main.js}"></script>
 </body>
 
 </html>

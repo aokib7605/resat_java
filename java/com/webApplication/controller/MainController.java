@@ -393,6 +393,10 @@ public class MainController {
 					sus.setUserBirthday(model, mode, sysUserId, userBirthday, hideBirthYear);
 					break;
 				}
+				case "deleteUser": {
+					sus.deleteUser(model);
+					return goLoginPage(model);
+				}
 				default:
 					break;
 				}
@@ -1251,6 +1255,10 @@ public class MainController {
 				}
 				sus.setUserBirthday(model, mode, sysUserId, userBirthday, hideBirthYear);
 				break;
+			}
+			case "deleteUser": {
+				sus.deleteUser(model);
+				return goLoginPage(model);
 			}
 			default:
 			}

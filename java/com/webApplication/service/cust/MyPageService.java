@@ -17,5 +17,7 @@ public class MyPageService {
 	public void setPageInfo(Model model) {
 		model.addAttribute("title2", Env.myPageView);
 	}
+	
+	
 
 }

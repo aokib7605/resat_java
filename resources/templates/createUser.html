@@ -141,10 +141,13 @@
                                 </p>
                                 <p>
                                     アカウント設定<br>
-                                    顧客アカウントと併用する <span th:if="${userMode == null || userMode == ''}"><input
-                                            type="checkbox" name="userMode"></span>
-                                    <span th:if="${userMode != null && userMode != ''}"><input type="checkbox"
-                                            name="userMode" checked></span>
+                                    顧客アカウントと併用する<br>
+                                    <span th:if="${userMode == null || userMode == ''}">
+                                        <input type="checkbox" name="userMode">
+                                    </span>
+                                    <span th:if="${userMode != null && userMode != ''}">
+                                        <input type="checkbox" name="userMode" checked>
+                                    </span>
                                     <br>
                                     ※お客様として公演を予約する際、このアカウントが使用可能になります
                                 </p>

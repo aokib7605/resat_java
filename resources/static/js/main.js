@@ -16,3 +16,7 @@ import './view/0101_managerLogin.js';
 import './view/0201_managerTop.js';
 import './view/0202_setStage.js';
 import './view/0801_inputForm.js';
+import './view/0902_createUser.js';
+import './view/1001_myPage.js';
+import './view/1002_setCust.js';
+import './view/1003_reserveList.js';

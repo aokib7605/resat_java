@@ -4,31 +4,67 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${title}"></title>
-    <link rel="stylesheet" href="./css/style.css">
+    <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
-    <h1 th:text="${title}"></h1>
-    <h2 th:text="${title2}"></h2>
+    <div class="custPage" name="custPage">
 
-    <!-- 各種メニュー -->
-    <ul>
-        <th:block th:each="column : ${custMenuList}">
-            <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
-        </th:block>
-    </ul>
-    <!-- ここにタイムリーフ -->
+        <!-- ナビゲーションここから -->
+        <button class="hamburger-overlay" name="hamburgerOverlay" aria-label="メニュー" aria-controls="overlay-menu"
+            aria-expanded="false">
+            <span class="hamburger-overlay__line"></span>
+            <span class="hamburger-overlay__line"></span>
+            <span class="hamburger-overlay__line"></span>
+        </button>
 
-    <hr>
+        <nav name="menuContent">
+            <img th:src="@{/img/0101/application_logo.png}" class="menuLogo" />
+            <!-- <h1 th:text="${title}"></h1> -->
+            <h2 th:text="${title2}"></h2>
 
-    <p>
-    <form action="/custLogin" method="post">
-        <input type="hidden" name="mode" value="logout">
-        <input type="submit" value="ログアウト">
-    </form>
-    </p>
+            <!-- 各種メニュー -->
+            <ul>
+                <th:block th:each="column : ${custMenuList}">
+                    <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+        </nav>
 
+        <div name="navContent">
+            <img th:src="@{/img/0101/application_logo.png}" class="menuLogo" />
+            <!-- <h1 th:text="${title}"></h1> -->
+            <h2 th:text="${title2}"></h2>
+        </div>
 
+        <nav id="overlay-menu" aria-hidden="true">
+            <div class="nav-overlay_content" name="navContent">
+                <!-- 各種メニュー -->
+                <ul>
+                    <th:block th:each="column : ${custMenuList}">
+                        <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
+            </div>
+        </nav>
+        <!-- ナビゲーションここまで -->
+
+        <hr>
+
+        <div class="information" name="information">
+            <h3>お知らせ</h3>
+            <p>現在、お知らせはありません</p>
+        </div>
+
+        <p>
+        <form action="/custLogin" method="post">
+            <button type="submit" name="mode" value="logout" class="btn"><span class="btnText">ログアウト</span></button>
+        </form>
+        </p>
+    </div>
+
+    <script type="module" th:src="@{/js/main.js}"></script>
 </body>
 
 </html>

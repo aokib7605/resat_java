@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.webApplication.entity.Env;
 import com.webApplication.entity.FormEntity;
 import com.webApplication.service.EnvService;
+import com.webApplication.service.cust.CustCreateUserService;
 import com.webApplication.service.cust.CustLoginService;
 import com.webApplication.service.cust.InputFormService;
 import com.webApplication.service.cust.MyPageService;
 import com.webApplication.service.cust.ReserveListService;
+import com.webApplication.service.cust.SetCustService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -55,7 +57,7 @@ public class CustController {
 		case "reserve/custLogin": {
 			return pageName;
 		}
-		case "createUser": {
+		case "reserve/createUser": {
 			return pageName;
 		}
 		case "reserve/inputForm": {
@@ -63,6 +65,9 @@ public class CustController {
 		}
 		default:
 			pageName = checkSession(model, pageName);
+			if(pageName.equals("login")) {
+				return goLoginPage(model);
+			}
 		}
 		return pageName;
 	}
@@ -73,6 +78,8 @@ public class CustController {
 	private final InputFormService ifs;
 	private final MyPageService mps;
 	private final ReserveListService rls;
+	private final CustCreateUserService ccus;
+	private final SetCustService scs;
 
 	@GetMapping("/")
 	public String goLoginPage(Model model) {
@@ -228,6 +235,12 @@ public class CustController {
 				}
 				
 				pageName = ifs.confiResult(model, mode, sysFormId, sysDateId, traAmounts, traMemo, sysManagerId, custName, custKanaName, custMail, custTel);
+				if(pageName.equals("myPage")) {
+					return "redirect:/myPage/reserveList";
+				} else if(pageName.equals("noneUserReserveComp")) {
+					session.setAttribute("custSession", null);
+					return goLoginPage(model);
+				}
 				break;
 			}
 			default:
@@ -290,6 +303,87 @@ public class CustController {
 		}
 		return goMyPage(model);
 	}
+	
+	@GetMapping("/reserve/createUser")
+	public String goCreateUser(Model model, String mode, String data) {
+		try {
+			setEnvData(model, "createUser");
+			ccus.setPageInfo(model);
+			if(mode.equals("start")) {
+				ccus.start(model);
+			} else if(mode.equals("confiData")){
+				ccus.confiMail(model, data);
+			}
+		} catch (Exception e) {
+
+		}
+		return goAnyPage(model, "reserve/createUser");
+	}
+
+	@PostMapping("/reserve/createUser")
+	public String accessCreateUser(Model model, String back, String mode, String userMail, String userId, String userName, String userKanaName, 
+			String userPass, String rePass, String userTel, String userBirthday, String hideBirthYear) {
+		String pageName = "createUser";
+		try {
+			switch (mode) {
+			case "checkMail": {
+				if(ccus.checkMail(model, userMail) == false) {
+					mode = "start";
+				}
+				break;
+			}
+			case "confiMail": {
+				ccus.confiMail(model, mode);
+				break;
+			}
+			case "inputUserId": {
+				mode = ccus.inputUserId(model, mode, userMail, userId);
+				break;
+			}
+			case "inputBaseData": {
+				mode = ccus.inputBaseData(model, mode, back, userMail, userId, userName, userKanaName, userPass, rePass);
+				break;
+			}
+			case "inputContactData": {
+				mode = ccus.inputContactData(model, mode, back, userMail, userId, userName, userKanaName, userPass, userTel, userBirthday, hideBirthYear);
+				break;
+			}
+			case "confiResult": {
+				pageName = ccus.confiResult(model, mode, back, userMail, userId, userName, userKanaName, userPass, userTel, userBirthday, hideBirthYear);
+				break;
+			}
+			default:
+				System.out.println("新規ユーザー作成で例外フローが発生しました");
+				break;
+			}
+		} catch (Exception e) {
+			
+		}
+		if(pageName.equals("createUser")) {
+			return goCreateUser(model, mode, null);
+		} else {
+			// セッションに仮受付データが存在する場合
+			if(session.getAttribute("tempReceptionList") != null) {
+										
+				ifs.inputLoginUser(model, "inputLoginUser");
+				model.addAttribute("mode", "confiResult");
+				
+				// セッションから各種フォームデータをmodelに保持
+				FormEntity formData = (FormEntity) session.getAttribute("formDataSession");
+				String sysFormId = formData.getSysFormId();	// フォームID
+				String sysManagerId = formData.getSysUserId();	// 担当者ID
+				if(sysFormId == null) {
+					sysFormId = "";
+				}
+				if(sysManagerId == null) {
+					sysManagerId = "";
+				}
+				return goInputForm(model, null, sysFormId, sysManagerId);
+			} else {
+				return goMyPage(model);
+			}
+		}
+	}
 
 	@GetMapping("/myPage/reserveList")
 	public String goReserveList(Model model) {
@@ -303,7 +397,7 @@ public class CustController {
 	}
 
 	@PostMapping("/myPage/reserveList")
-	public String accessReserveList(Model model, String mode, String nextMode) {
+	public String accessReserveList(Model model, String mode, String sysTraId) {
 		try {
 			switch (mode) {
 			case "showPast": {
@@ -314,12 +408,94 @@ public class CustController {
 				rls.closePast(model);
 				break;
 			}
+			case "openStage": {
+				rls.openStage(model, mode, sysTraId);
+				break;
+			}
+			case "traCancel": {
+				rls.traCancel(model, mode, sysTraId);
+				break;
+			}
 			default:
 				break;
 			}
 		} catch (Exception e) {
+			System.out.println(e);
 			// TODO: handle exception
 		}
 		return goReserveList(model);
+	}
+	
+	@GetMapping("/myPage/setCust")
+	public String goSetCust(Model model) {
+		pageName = "reserve/myPage/setCust";
+		try {
+			setEnvData(model, "customer");
+			scs.setPageInfo(model);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return goAnyPage(model, pageName);
+	}
+	
+	@PostMapping("/myPage/setCust")
+	public String accessSetCust(Model model, String mode, String nextMode, String sysUserId, String userId, 
+			String userMail, String userPass, String rePass, String userTel, String userName, String userKanaName, 
+			String userBirthday, String hideBirthYear) {
+		try {
+			switch (mode) {
+			case "setUserId": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				scs.setUserId(model, mode, sysUserId, userId);
+				break;
+			}
+			case "setMail": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				scs.setUserMail(model, mode, sysUserId, userMail);
+				break;
+			}
+			case "setUserPass": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				scs.setUserPass(model, mode, sysUserId, userPass, rePass);
+				break;
+			}
+			case "setUserTel": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				scs.setUserTel(model, mode, sysUserId, userTel);
+				break;
+			}
+			case "setUserName": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				scs.setUserName(model, mode, sysUserId, userName, userKanaName);
+				break;
+			}
+			case "setUserBirthday": {
+				if(nextMode != null) {
+					mode = nextMode;
+				}
+				scs.setUserBirthday(model, mode, sysUserId, userBirthday, hideBirthYear);
+				break;
+			}
+			case "deleteUser": {
+				scs.deleteUser(model);
+				return goLoginPage(model);
+			}
+			default:
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+			// TODO: handle exception
+		}
+		return goSetCust(model);
 	}
 }

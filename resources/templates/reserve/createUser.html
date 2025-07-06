@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}"></title>
+    <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="custPage" name="custPage">
+        <div class="createCustUser center_container">
+            <img th:src="@{/img/0101/application_logo.png}" class="topLogo" />
+            <!-- <h1 th:text="${title}"></h1> -->
+            <h2 th:text="${title2}"></h2>
+
+            <!-- model.addAttribute('mode')の値で表示内容を分岐 -->
+            <div th:switch="${mode}">
+                <div th:case="'checkMail'">
+                    <form action="/reserve/createUser" method="post" id="confiMailSubmit">
+                        <input type="hidden" name="mode" value="checkMail">
+                        <p>
+                            メールアドレス<br>
+                            <input type="email" name="userMail" required placeholder="登録済みアドレスは使用不可">
+                        </p>
+                        <p class="submitBox">
+                            <button type="button" class="loginBtn" name="confiMail">
+                                <span class="loginText" name="confiMail">確認</span>
+                            </button>
+                        </p>
+                        <p th:text="${message}" style="color: red;"></p>
+                    </form>
+                </div>
+                <div th:case="'confiMail'">
+                    <p th:utext="${message}"></p>
+                </div>
+                <div th:case="'inputUserId'">
+                    <form action="/reserve/createUser" method="post" id="confiUserIdSubmit">
+                        <input type="hidden" name="mode" value="inputUserId">
+                        <input type="hidden" name="userMail" th:value="${userMail}">
+                        <p>
+                            ユーザーID<br>
+                            <input type="text" name="userId" th:value="${userId}" required>
+                        </p>
+                        <p class="submitBox">
+                            <button type="submit" class="btn loginBtn" name="confiUserId">
+                                <span class="loginText" name="btnText">確定</span>
+                            </button>
+                        </p>
+                        <p th:text="${message}" style="color: red;"></p>
+                    </form>
+                </div>
+                <div th:case="'inputBaseData'">
+                    <form action="/reserve/createUser" method="post" id="confiUserPassSubmit">
+                        <input type="hidden" name="mode" value="inputBaseData">
+                        <input type="hidden" name="userMail" th:value="${userMail}">
+                        <input type="hidden" name="userId" th:value="${userId}">
+                        <p>
+                            ユーザーネーム<br>
+                            <input type="text" name="userName" th:value="${userName}" required>
+                        </p>
+                        <p>
+                            ユーザーネーム（フリガナ）<br>
+                            <input type="text" name="userKanaName" th:value="${userKanaName}" required>
+                        </p>
+                        <p>
+                            パスワード<br>
+                            <input type="password" name="userPass" required>
+                        </p>
+                        <p>
+                            パスワード再入力<br>
+                            <input type="password" name="rePass" required>
+                        </p>
+                        <p class="submitBox">
+                            <button type="submit" class="btn loginBtn" name="confiUserPass">
+                                <span class="loginText" name="btnText">確定</span>
+                            </button>
+                        </p>
+                        <p th:text="${message}" style="color: red;"></p>
+                    </form>
+                    <form action="/reserve/createUser" method="post">
+                        <input type="hidden" name="mode" value="inputBaseData">
+                        <input type="hidden" name="userMail" th:value="${userMail}">
+                        <input type="hidden" name="userId" th:value="${userId}">
+                        <input type="hidden" name="back" value="back">
+                        <p class="submitBox">
+                            <button type="submit" class="loginBtn">
+                                <span class="loginText">戻る</span>
+                            </button>
+                        </p>
+                    </form>
+                </div>
+                <div th:case="'inputContactData'">
+                    <form action="/reserve/createUser" method="post">
+                        <input type="hidden" name="mode" value="inputContactData">
+                        <input type="hidden" name="userMail" th:value="${userMail}">
+                        <input type="hidden" name="userId" th:value="${userId}">
+                        <input type="hidden" name="userName" th:value="${userName}">
+                        <input type="hidden" name="userKanaName" th:value="${userKanaName}">
+                        <input type="hidden" name="userPass" th:value="${userPass}">
+                        <p>
+                            電話番号<br>
+                            <input type="tel" name="userTel" placeholder="任意入力" th:value="${userTel}">
+                        </p>
+                        <p>
+                            生年月日<br>
+                            <input type="date" name="userBirthday" id="userBirthday" th:value="${userBirthday}"
+                                required><br>
+                        </p>
+                        <p>
+                            年齢を非公開にする<br>
+                            <span th:if="${hideBirthYear == null || hideBirthYear == ''}">
+                                <input type="checkbox" name="hideBirthYear">
+                            </span>
+                            <span th:if="${hideBirthYear != null && hideBirthYear != ''}">
+                                <input type="checkbox" name="hideBirthYear" checked>
+                            </span><br>
+                        </p>
+                        <p class="submitBox">
+                            <button type="submit" class="loginBtn">
+                                <span class="loginText">確定</span>
+                            </button>
+                        </p>
+                        <p th:text="${message}" style="color: red;"></p>
+                    </form>
+                    <form action="/reserve/createUser" method="post">
+                        <input type="hidden" name="mode" value="inputContactData">
+                        <input type="hidden" name="userMail" th:value="${userMail}">
+                        <input type="hidden" name="userId" th:value="${userId}">
+                        <input type="hidden" name="userName" th:value="${userName}">
+                        <input type="hidden" name="userKanaName" th:value="${userKanaName}">
+                        <input type="hidden" name="userPass" th:value="${userPass}">
+                        <input type="hidden" name="back" value="back">
+                        <p class="submitBox">
+                            <button type="submit" class="loginBtn">
+                                <span class="loginText">戻る</span>
+                            </button>
+                        </p>
+                    </form>
+                </div>
+                <div th:case="'confiResult'">
+                    <p>
+                        下記の内容でユーザーを登録します。<br>
+                        よろしければ「確定」を、修正する場合は「戻る」を押してください。
+                    </p>
+                    <table>
+                        <tr>
+                            <th>Eメール</th>
+                            <td th:text="${userMail}"></td>
+                        </tr>
+                        <tr>
+                            <th>ユーザーID</th>
+                            <td th:text="${userId}"></td>
+                        </tr>
+                        <tr>
+                            <th>ユーザーネーム</th>
+                            <td th:text="${userName}"></td>
+                        </tr>
+                        <tr>
+                            <th>ユーザーネーム（フリガナ）</th>
+                            <td th:text="${userKanaName}"></td>
+                        </tr>
+                        <tr>
+                            <th>パスワード</th>
+                            <td th:text="${userPass}"></td>
+                        </tr>
+                        <tr>
+                            <th>電話番号</th>
+                            <td th:text="${userTel}"></td>
+                        </tr>
+                        <tr>
+                            <th>生年月日</th>
+                            <td th:text="${userBirthday}"></td>
+                        </tr>
+                        <tr>
+                            <th>年齢</th>
+                            <td th:if="${hideBirthYear != null}">非公開</td>
+                            <td th:if="${hideBirthYear == null}">公開する</td>
+                        </tr>
+                    </table>
+                    <form action="/reserve/createUser" method="post">
+                        <input type="hidden" name="mode" value="confiResult">
+                        <input type="hidden" name="userMail" th:value="${userMail}">
+                        <input type="hidden" name="userId" th:value="${userId}">
+                        <input type="hidden" name="userName" th:value="${userName}">
+                        <input type="hidden" name="userKanaName" th:value="${userKanaName}">
+                        <input type="hidden" name="userPass" th:value="${userPass}">
+                        <input type="hidden" name="userTel" th:value="${userTel}">
+                        <input type="hidden" name="userBirthday" th:value="${userBirthday}">
+                        <input type="hidden" name="hideBirthYear" th:value="${hideBirthYear}">
+                        <p class="submitBox">
+                            <button type="submit" class="loginBtn">
+                                <span class="loginText">確定</span>
+                            </button>
+                        </p>
+                        <p>
+                            <button type="submit" name="back" value="back" class="loginBtn">
+                                <span class="loginText">戻る</span>
+                            </button>
+                        </p>
+                    </form>
+                </div>
+
+            </div>
+            <p>
+                <a href="/">キャンセル</a>
+            </p>
+        </div>
+    </div>
+
+    <script type="module" th:src="@{/js/main.js}"></script>
+</body>
+
+</html>

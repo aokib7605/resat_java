@@ -191,6 +191,32 @@ public class MainRepository {
 			System.out.println(e);
 		}
 	}
+	
+	public void updateData(String table, String column, Integer value, String where) {
+		try {
+			sql = "update " + table + " set " + column + " = " + value + " " + where;
+			if(value == null || value.equals("null")) {
+				sql = sql.replace("'" + value + "' ", "" + value + " ");
+			}
+			System.out.println(sql);
+			tmp.update(sql);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void updateData(String table, String column, Boolean value, String where) {
+		try {
+			sql = "update " + table + " set " + column + " = " + value + " " + where;
+			if(value == null || value.equals("null")) {
+				sql = sql.replace("'" + value + "' ", "" + value + " ");
+			}
+			System.out.println(sql);
+			tmp.update(sql);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
 
 	public void updateData(String table, String column, byte[] value, String where) {
 		try {
@@ -246,7 +272,8 @@ public class MainRepository {
 				"user_last_login",
 				"user_birthday",
 				"user_hide_age",
-				"user_def_group"
+				"user_def_group",
+				"deleteFlg"
 				));
 		return columns;
 	}

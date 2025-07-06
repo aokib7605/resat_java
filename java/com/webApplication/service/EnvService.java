@@ -127,6 +127,7 @@ public class EnvService {
 				ArrayList<MenuEntity> custMenuList = new ArrayList<MenuEntity>();
 				custMenuList.add(getMenuObject(Env.myPageMenu, "/myPage"));
 				custMenuList.add(getMenuObject(Env.myReserveListMenu, "/myPage/reserveList"));
+				custMenuList.add(getMenuObject(Env.setCustMenu, "/myPage/setCust"));
 				if(custData.getSys_user_mode().equals("doubleUser")) {
 					custMenuList.add(getMenuObject(Env.changeModeMenu, "/changeMode"));
 				}

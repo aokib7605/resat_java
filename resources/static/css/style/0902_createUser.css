@@ -1,0 +1,11 @@
+/* お客様ユーザー作成画面用css */
+
+.pc .createCustUser button {
+    width: 12vw;
+    height: 90%;
+}
+
+.pc .createCustUser table {
+    margin-left: auto;
+    margin-right: auto;
+}

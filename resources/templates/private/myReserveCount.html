@@ -3,7 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <title th:text="${pageTitle}"></title>
+    <title th:text="${title}"></title>
+    <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
@@ -74,6 +76,7 @@
         </th:block>
     </table>
 
+    <script type="module" src="./js/main.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,85 @@
+.pc .reserveList table {
+    border-bottom: 3px solid;
+    border-color: rgb(49, 79, 136);
+    padding-bottom: 2vh;
+}
+
+.pc .reserveList th {
+    text-align: left;
+}
+
+.pc .reserveList td {
+    background-color: white;
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+.currentReserve {
+    padding-bottom: 5vh;
+}
+
+.openStage {
+    padding-bottom: 5vh;
+}
+
+.pc .openStage table {
+    background-color: white;
+}
+
+.pc .openStage td,
+.pc .openStage th {
+    text-align: left;
+    background-color: white;
+}
+
+.pc .openStage .firstCol {
+    border-bottom: 3px solid;
+    border-color: rgb(49, 79, 136);
+    font-size: large;
+}
+
+.mobile .reserveList table {
+    width: 100%;
+    margin-bottom: 5vh;
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    border-color: rgb(49, 79, 136);
+    border-collapse: separate;
+    border-spacing: 0;
+    background: linear-gradient(135deg, #fffdfa, #f7f3ee);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-align: left;
+    background-color: rgba(255, 244, 223, 0.66);
+    ;
+}
+
+.mobile .reserveList table th {
+    background-color: rgba(255, 244, 223, 0.66);
+}
+
+.mobile .reserveList table td {
+    padding-left: 2rem;
+    background-color: rgba(255, 244, 223, 0.66);
+}
+
+.mobile .openStage table {
+    width: 100%;
+}
+
+.mobile .openStage .firstCol {
+    border-bottom: 3px solid;
+    border-color: rgb(49, 79, 136);
+    font-size: large;
+}
+
+.mobile .openStage th,
+.mobile .openStage td {
+    text-align: left;
+    word-break: keep-all;
+    white-space: normal;
+    overflow-wrap: break-word;
+    background-color: white;
+    border-bottom: #ccc 1px solid;
+}

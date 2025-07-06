@@ -45,4 +45,46 @@ public class ReserveListService {
 	public void closePast(Model model) {
 		model.addAttribute("showPast", false);
 	}
+	
+	public void openStage(Model model, String mode, String sysTraId) {
+		switch (mode) {
+		case "openStage": {
+			// トランザクションIDから公演情報を取得
+			DataEntity transactionData = sql.getTransaction(sysTraId);
+			DataEntity stageData = sql.getStageData("sys_stage_id", transactionData.getSys_stage_id());
+			
+			// 公演日時のリストを取得
+			ArrayList<DataEntity> dateList = sql.getDateDataList(stageData.getSys_stage_id());
+			
+			// 出演者のリストを取得
+			ArrayList<DataEntity> castList = sql.getCastOrStaffDataListGroupByColumn("cast", stageData.getSys_stage_id());
+			
+			// スタッフのリストを取得
+			ArrayList<DataEntity> staffList = sql.getCastOrStaffDataListGroupByColumn("staff", stageData.getSys_stage_id()); 
+			
+			// 取得した公演情報を画面に渡す
+			model.addAttribute("mode", "openStage");
+			model.addAttribute("stageInfo", stageData);
+			model.addAttribute("traData", transactionData);
+			model.addAttribute("dateList", dateList);
+			model.addAttribute("castList", castList);
+			model.addAttribute("staffList", staffList);
+			break;
+		}
+		default:
+			break;
+		}
+	}
+	
+	public void traCancel(Model model, String mode, String sysTraId) {
+		switch (mode) {
+		case "traCancel": {
+			sql.deleteTransaction(sysTraId);
+			model.addAttribute("message", Env.reserveCancelMessage);
+			break;
+		}
+		default:
+			break;
+		}
+	}
 }

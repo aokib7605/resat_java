@@ -294,6 +294,26 @@
                                     </form>
                                 </td>
                             </tr>
+                            <tr>
+                                <td colspan="3" style="text-align: center;">
+                                    <div name="deleteUser">
+                                        <button type="button" class="btn" name="deleteUser">
+                                            <span class="btnText">アカウント削除</span>
+                                        </button>
+                                    </div>
+                                    <div name="confiDeleteUser" class="hidden">
+                                        <p class="alertText">本当に削除してもよろしいですか？</p>
+                                        <button type="button" class="btn" name="notDeleteUser">
+                                            <span class="btnText">いいえ</span>
+                                        </button>
+                                        <form action="/setUser" method="post">
+                                            <button type="submit" class="btn" name="mode" value="deleteUser">
+                                                <span class="btnText">はい</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
                         </table>
                     </div>
                 </div>

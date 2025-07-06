@@ -23,12 +23,19 @@
 @import './style/0702_setFirstStage.css';
 @import './style/0801_inputForm.css';
 @import './style/0901_custLogin.css';
+@import './style/0902_createUser.css';
+@import './style/1001_myPage.css';
+@import './style/1002_setCust.css';
+@import './style/1003_reserveList.css';
 
 html,
 body {
     margin: 0;
     padding: 0;
     height: 100%;
+    word-break: keep-all;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
 .pc p,
@@ -109,16 +116,6 @@ body {
 .custPage hr {
     margin-left: auto;
     margin-right: auto;
-    height: 3px;
-    border-width: 0;
-    background-repeat: repeat-x;
-    background-size: 0.7em 0.3em, 1.7em 0.3em, 3.5em 0.3em, 3.7em 0.3em;
-    background-position: right bottom;
-    background-image:
-        radial-gradient(0.3em 0.2em at center center, #4d4013, rgba(246, 89, 115, 0)),
-        radial-gradient(0.5em 0.2em at center center, #4d4013, rgba(246, 89, 115, 0)),
-        radial-gradient(0.8em 0.2em at center center, #4d4013, rgba(246, 89, 115, 0)),
-        radial-gradient(7.2em 0.2em at center center, #4d4013, rgba(246, 89, 115, 0));
 }
 
 .custPage button {
@@ -144,4 +141,10 @@ body {
 
 .alertText {
     color: rgb(233, 40, 40);
+}
+
+.linkText {
+    color: blue;
+    cursor: pointer;
+    border-bottom: solid 1px blue;
 }

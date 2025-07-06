@@ -1,0 +1,47 @@
+.pc .setCust .submitForm {
+    text-align: center;
+}
+
+.pc .setCust tr {
+    display: table-row;
+}
+
+.pc .setCust th,
+.pc .setCust td {
+    display: table-cell;
+    padding: 0.5em;
+    border-bottom: 1px solid #ccc;
+}
+
+.mobile .setCust table {
+    width: 100%;
+}
+
+.mobile .setCust tr {
+    background-color: white;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.5em;
+    display: block;
+    width: 100%;
+}
+
+.mobile .setCust th {
+    background-color: white;
+    background: #f7f7f7;
+    font-weight: bold;
+    padding: 0.5em 0;
+    display: block;
+    width: 100%;
+}
+
+.mobile .setCust td {
+    background-color: white;
+    padding: 0.5em 0;
+    display: block;
+    width: 100%;
+}
+
+.mobile .btn {
+    padding-bottom: 1rem;
+}

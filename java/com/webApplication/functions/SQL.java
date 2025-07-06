@@ -65,7 +65,7 @@ public class SQL {
 		columns = Stream.concat(mr.getUsersTableColumns().stream(), mr.getGroupeLoginListTableColumns().stream()).collect(Collectors.toList());
 		columns = Stream.concat(columns.stream(), mr.getGroupesTableColumns().stream()).collect(Collectors.toList());
 		joinTable = " left outer join groupes on sys_group_id = user_def_group ";
-		where = " where <COLUMN> =  '" + anyValue + "'";
+		where = " where <COLUMN> =  '" + anyValue + "' and deleteFlg is null";
 		where = joinTable + where.replace("<COLUMN>", column);
 		return mr.getData("users u", columns, where);
 	}
@@ -90,6 +90,36 @@ public class SQL {
 		}
 		default:
 		}
+		
+		where += " and deleteFlg is null";
+
+		columns = Stream.concat(mr.getUsersTableColumns().stream(), mr.getGroupeLoginListTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), mr.getGroupesTableColumns().stream()).collect(Collectors.toList());
+		return mr.getData("users u", columns, where);
+	}
+	
+	public DataEntity reGetCustData(String column, String anyValue) {
+		DataEntity userData = (DataEntity)session.getAttribute("custSession");
+		where = "left outer join groupes on sys_group_id = user_def_group where sys_user_id =  '" + userData.getSys_user_id() + "'";
+		switch (column) {
+		case "sys_user_id": {
+			if(anyValue != null) {
+				where = where.replace(userData.getSys_user_id(), anyValue);
+			}
+			break;
+		}
+		case "user_id": {
+			where = where.replace("where sys_user_id =  '" + userData.getSys_user_id(), "where user_id =  '" + anyValue);
+			break;
+		}
+		case "user_mail": {
+			where = where.replace("where sys_user_id =  '" + userData.getSys_user_id(), "where user_mail =  '" + anyValue);
+			break;
+		}
+		default:
+		}
+		
+		where += " and deleteFlg is null";
 
 		columns = Stream.concat(mr.getUsersTableColumns().stream(), mr.getGroupeLoginListTableColumns().stream()).collect(Collectors.toList());
 		columns = Stream.concat(columns.stream(), mr.getGroupesTableColumns().stream()).collect(Collectors.toList());
@@ -118,8 +148,10 @@ public class SQL {
 
 	public DataEntity getStageData(String column, String anyId) {
 		columns = Stream.concat(mr.getStagesTableColumns().stream(), mr.getImagesTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(mr.getGroupesTableColumns().stream(), columns.stream()).collect(Collectors.toList());
 		joinTable = " left outer join images i1 on stage_flyer_1 = i1.sys_image_id"
-				+ " left outer join images i2 on stage_flyer_2 = i2.sys_image_id";
+				+ " left outer join images i2 on stage_flyer_2 = i2.sys_image_id"
+				+ " left outer join groupes g on g.sys_group_id = stages.sys_group_id";
 		where = joinTable + " where <ID> = '" + anyId + "' limit 1";
 
 		switch (column) {
@@ -264,13 +296,14 @@ public class SQL {
 	public ArrayList<DataEntity> getUserDataList(String column, String keyword, Integer limit, Integer offset){
 		columns = mr.getUsersTableColumns();
 		if(offset != null) {
-			where = " where " + column + " = '" + keyword + "' limit " + limit + " offset " + offset * limit;
+			where = " where " + column + " = '" + keyword + "' and deleteFlg is null limit " + limit + " offset " + offset * limit;
 		} else {
-			where = " where " + column + " = '" + keyword + "'";
+			where = " where " + column + " = '" + keyword + "' and deleteFlg is null";
 		}
 		if(keyword != null) {
 			where = where.replace(" = '" + keyword + "'", " like '%" + keyword + "%'");
 		}
+
 		return mr.getDataList("users u", columns, where);
 	}
 
@@ -441,6 +474,37 @@ public class SQL {
 			// TODO: handle exception
 		}
 		return null;
+	}
+	
+	public DataEntity getTransaction(String sysTraId) {
+		List<String> getColumns = new ArrayList<String>(Arrays.asList(
+				"*", 
+				"u.sys_user_id as 'cust_id'",
+				"u.user_name as 'cust_name'",
+				"u.user_kana_name as 'cust_kana_name'",
+				"m.sys_user_id as 'manager_id'",
+				"m.user_name as 'manager_name'",
+				"m.user_kana_name as 'manager_kana_name'"));
+		List<String> entityColumns = new ArrayList<String>(Arrays.asList(
+				"cust_id",
+				"cust_name",
+				"cust_kana_name",
+				"manager_id",
+				"manager_name",
+				"manager_kana_name"
+				));
+		columns = Stream.concat(mr.getTransactionsTableColumns().stream(), mr.getDatesTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), mr.getTicketsTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), mr.getUsersTableColumns().stream()).collect(Collectors.toList());
+		columns = Stream.concat(columns.stream(), entityColumns.stream()).collect(Collectors.toList());
+		joinTable = " left outer join dates d on tra.sys_date_id = d.sys_date_id ";
+		joinTable = joinTable + " left outer join tickets t on tra.sys_ticket_id = t.sys_ticket_id ";
+		joinTable = joinTable + " left outer join users m on tra.tra_manager_id = m.sys_user_id ";
+		joinTable = joinTable + " left outer join users u on tra.sys_user_id = u.sys_user_id ";
+		where = " where tra.sys_tra_id = '" + sysTraId + "' ";
+		String orderBy = " order by st_date";
+		where = joinTable + where + orderBy;
+		return mr.getData("transactions tra", columns, getColumns, where);
 	}
 
 	public ArrayList<DataEntity> getTransactionList(String sysStageId){
@@ -845,11 +909,53 @@ public class SQL {
 		if(sysUserId != null) {
 			userData = reGetUserData("sys_user_id", sysUserId);
 		}
+		
+		if(value.equals("null")) {
+			value = null;
+		}
 
 		where = " where sys_user_id = '" + userData.getSys_user_id() + "'";
 		mr.updateData("users", column, value, where);
 
 		return reGetUserData("sys_user_id", userData.getSys_user_id());
+	}
+	
+	public DataEntity updateUserData(String column, Boolean value, String sysUserId) {
+		DataEntity userData = (DataEntity)session.getAttribute("userSession");
+		if(sysUserId != null) {
+			userData = reGetUserData("sys_user_id", sysUserId);
+		}
+
+		where = " where sys_user_id = '" + userData.getSys_user_id() + "'";
+		mr.updateData("users", column, value, where);
+
+		return reGetUserData("sys_user_id", userData.getSys_user_id());
+	}
+	
+	public DataEntity updateCustData(String column, String value, String sysUserId) {
+		DataEntity userData = (DataEntity)session.getAttribute("custSession");
+		if(sysUserId != null) {
+			userData = reGetCustData("sys_user_id", sysUserId);
+		}
+		if(value.equals("null")) {
+			value = null;
+		}
+		where = " where sys_user_id = '" + userData.getSys_user_id() + "'";
+		mr.updateData("users", column, value, where);
+
+		return reGetCustData("sys_user_id", userData.getSys_user_id());
+	}
+	
+	public DataEntity updateCustData(String column, Boolean value, String sysUserId) {
+		DataEntity userData = (DataEntity)session.getAttribute("custSession");
+		if(sysUserId != null) {
+			userData = reGetCustData("sys_user_id", sysUserId);
+		}
+
+		where = " where sys_user_id = '" + userData.getSys_user_id() + "'";
+		mr.updateData("users", column, value, where);
+
+		return reGetCustData("sys_user_id", userData.getSys_user_id());
 	}
 
 	public DataEntity updateStageData(String column, String value, String sysStageId) {
@@ -1061,8 +1167,17 @@ public class SQL {
 		mr.deleteData(tableName, where);
 	}
 
+	/**
+	 * 公演予約を削除します
+	 * @param sysTransactionId
+	 */
 	public void deleteTransaction(String sysTransactionId) {
 		where = " where sys_tra_id = '" + sysTransactionId + "' ";
 		mr.deleteData("transactions", where);
+	}
+	
+	public void deleteUser(String sysUserId) {
+		where = " sys_user_id = '" + sysUserId + "' ";
+		mr.deleteData("users", sysUserId);
 	}
 }

@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${title}"></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="stylesheet" href="./css/style.css">
+    <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
-    <div class="custPage" name="custPage">
+    <div class="custPage" name="custPage" th:if="${mode != 'noneUserReserveComp'}">
         <div class="custLogin center_container">
             <img src="./img/0101/application_logo.png" class="topLogo">
             <!-- <h1 th:text="${title}"></h1> -->
@@ -23,7 +23,7 @@
                 </p>
                 <p>
                     パスワード<br>
-                    <input type="text" name="userPass">
+                    <input type="password" name="userPass">
                 </p>
                 <p><button type="submit" class="submitBtn"><span class="submitText">ログイン</span></button></p>
                 <p th:text="${message}" style="color: red;"></p>
@@ -37,7 +37,7 @@
                 <form action="/reserve" method="post">
                     <input type="hidden" name="nextMode" value="inputUser">
                     <button type="submit" name="mode" value="inputUser">
-                        ログインせずに予約登録
+                        <span class="submitText linkText">ログインせずに予約登録</span>
                     </button>
                 </form>
                 </p>
@@ -45,7 +45,17 @@
         </div>
     </div>
 
-    <script type="module" src="./js/main.js"></script>
+        <div class="custPage" name="custPage" th:if="${mode == 'noneUserReserveComp'}">
+        <nav name="menuContent">
+            <img th:src="@{/img/0101/application_logo.png}" class="menuLogo" />
+        </nav>
+        <hr>
+
+        <p>予約が完了しました</p>
+        <p>ご入力頂いたメールアドレス宛に、予約内容をお送りしました</p>
+    </div>
+
+    <script type="module" th:src="@{/js/main.js}"></script>
 </body>
 
 </html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}"></title>
+    <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="custPage" name="custPage">
+
+        <button class="hamburger-overlay" name="hamburgerOverlay" aria-label="メニュー" aria-controls="overlay-menu"
+            aria-expanded="false">
+            <span class="hamburger-overlay__line"></span>
+            <span class="hamburger-overlay__line"></span>
+            <span class="hamburger-overlay__line"></span>
+        </button>
+
+        <nav name="menuContent">
+            <img th:src="@{/img/0101/application_logo.png}" class="menuLogo" />
+            <!-- <h1 th:text="${title}"></h1> -->
+            <h2 th:text="${title2}"></h2>
+
+            <!-- 各種メニュー -->
+            <ul>
+                <th:block th:each="column : ${custMenuList}">
+                    <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+        </nav>
+
+        <div name="navContent">
+            <img th:src="@{/img/0101/application_logo.png}" class="menuLogo" />
+            <!-- <h1 th:text="${title}"></h1> -->
+            <h2 th:text="${title2}"></h2>
+        </div>
+
+        <nav id="overlay-menu" aria-hidden="true">
+            <div class="nav-overlay_content" name="navContent">
+                <!-- 各種メニュー -->
+                <ul>
+                    <th:block th:each="column : ${custMenuList}">
+                        <li><a th:href="${column.page_url}"><span th:text="${column.page_name}"></span></a></li>
+                    </th:block>
+                </ul>
+            </div>
+        </nav>
+        <hr>
+
+        <div class="setCust">
+            <table>
+                <tr>
+                    <th>ユーザーID</th>
+                    <td th:text="${custData.user_id}"></td>
+                    <td th:if="${mode != 'setUserId'}">
+                        <form action="/myPage/setCust" method="post">
+                            <button class="btn" type="submit" name="mode" value="setUserId">
+                                <span class="btnText">
+                                    編集
+                                </span>
+                            </button>
+                        </form>
+                    </td>
+                    <td class="submitForm" th:if="${mode == 'setUserId'}">
+                        <form action="/myPage/setCust" method="post">
+                            <input type="hidden" name="sysUserId" th:value="${custData.sys_user_id}">
+                            <input type="hidden" name="nextMode" th:value="inputValue">
+                            <p>
+                                新しいユーザーIDを入力してください<br>
+                                <input type="text" name="userId" th:value="${userId}" required><br>
+                                <button class="btn" type="submit" name="mode" value="setUserId"
+                                    style="margin-left: auto; margin-right: auto;">
+                                    <span class="btnText">
+                                        決定
+                                    </span>
+                                </button>
+                            </p>
+                            <p th:text="${message}" style="color: red;"></p>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <th>メールアドレス</th>
+                    <td th:text="${custData.user_mail}"></td>
+                    <td th:if="${mode != 'setMail'}">
+                        <form action="/myPage/setCust" method="post">
+                            <button class="btn" type="submit" name="mode" value="setMail">
+                                <span class="btnText">
+                                    編集
+                                </span>
+                            </button>
+                        </form>
+                    </td>
+                    <td class="submitForm" th:if="${mode == 'setMail'}">
+                        <form action="/myPage/setCust" method="post">
+                            <input type="hidden" name="sysUserId" th:value="${custData.sys_user_id}">
+                            <input type="hidden" name="nextMode" th:value="inputValue">
+                            <p>
+                                新しいメールアドレスを入力してください<br>
+                                <input type="email" name="userMail" th:value="${userMail}" required><br>
+                                <button class="btn" type="submit" name="mode" value="setMail">
+                                    <span class="btnText">
+                                        決定
+                                    </span>
+                                </button>
+                            </p>
+                            <p th:text="${message}" style="color: red;"></p>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <th>パスワード</th>
+                    <td>非表示</td>
+                    <td th:if="${mode != 'setUserPass'}">
+                        <form action="/myPage/setCust" method="post">
+                            <button class="btn" type="submit" name="mode" value="setUserPass">
+                                <span class="btnText">
+                                    編集
+                                </span>
+                            </button>
+                        </form>
+                    </td>
+                    <td class="submitForm" th:if="${mode == 'setUserPass'}">
+                        <form action="/myPage/setCust" method="post">
+                            <input type="hidden" name="sysUserId" th:value="${custData.sys_user_id}">
+                            <input type="hidden" name="nextMode" th:value="inputValue">
+                            <p>
+                                現在のパスワード<br>
+                                <span th:text="${custData.user_pass}"></span>
+                            </p>
+                            <p>
+                                新しいパスワードを入力してください<br>
+                                <input type="password" name="userPass" required><br>
+                                <input type="password" name="rePass" required placeholder="再度入力"><br>
+                                <button class="btn" type="submit" name="mode" value="setUserPass">
+                                    <span class="btnText">
+                                        決定
+                                    </span>
+                                </button>
+                            </p>
+                            <p th:text="${message}" style="color: red;"></p>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <th>電話番号</th>
+                    <td th:text="${custData.user_tell}"></td>
+                    <td th:if="${mode != 'setUserTel'}">
+                        <form action="/myPage/setCust" method="post">
+                            <button class="btn" type="submit" name="mode" value="setUserTel">
+                                <span class="btnText">
+                                    編集
+                                </span>
+                            </button>
+                        </form>
+                    </td>
+                    <td class="submitForm" th:if="${mode == 'setUserTel'}">
+                        <form action="/myPage/setCust" method="post">
+                            <input type="hidden" name="sysUserId" th:value="${custData.sys_user_id}">
+                            <input type="hidden" name="mode" th:value="setUserTel">
+                            <p>
+                                新しい電話番号を入力してください<br>
+                                <input type="tel" name="userTel"><br>
+                                <button class="btn" type="submit" name="nextMode" value="inputValue">
+                                    <span class="btnText">
+                                        決定
+                                    </span>
+                                </button>
+                            </p>
+                            <p>
+                                電話番号を設定しない<br>
+                                <button class="btn" type="submit" name="nextMode" value="crearValue">
+                                    <span class="btnText">
+                                        設定しない
+                                    </span>
+                                </button>
+                            </p>
+                            <p th:text="${message}" style="color: red;"></p>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <th>ユーザーネーム</th>
+                    <td th:text="${custData.user_name + '(' + custData.user_kana_name + ')'}"></td>
+                    <td th:if="${mode != 'setUserName'}">
+                        <form action="/myPage/setCust" method="post">
+                            <button class="btn" type="submit" name="mode" value="setUserName">
+                                <span class="btnText">
+                                    編集
+                                </span>
+                            </button>
+                        </form>
+                    </td>
+                    <td class="submitForm" th:if="${mode == 'setUserName'}">
+                        <form action="/myPage/setCust" method="post">
+                            <input type="hidden" name="sysUserId" th:value="${custData.sys_user_id}">
+                            <input type="hidden" name="nextMode" th:value="inputValue">
+                            <p>
+                                新しいユーザーネームを入力してください<br>
+                                <input type="text" name="userName" th:text="${userName}" required
+                                    placeholder="ユーザーネーム"><br>
+                                <input type="text" name="userKanaName" th:text="${userKanaName}" required
+                                    placeholder="フリガナ"><br>
+                                <button class="btn" type="submit" name="mode" value="setUserName">
+                                    <span class="btnText">
+                                        決定
+                                    </span>
+                                </button>
+                            </p>
+                            <p th:text="${message}" style="color: red;"></p>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <th>生年月日</th>
+                    <td th:text="${custData.user_birthday + '(年齢公開)'}" th:if="${custData.user_hide_age == 0}"></td>
+                    <td th:text="${custData.user_birthday + '(年齢非公開)'}" th:if="${custData.user_hide_age == 1}"></td>
+                    <td th:if="${mode != 'setUserBirthday'}">
+                        <form action="/myPage/setCust" method="post">
+                            <button class="btn" type="submit" name="mode" value="setUserBirthday">
+                                <span class="btnText">
+                                    編集
+                                </span>
+                            </button>
+                        </form>
+                    </td>
+                    <td class="submitForm" th:if="${mode == 'setUserBirthday'}">
+                        <form action="/myPage/setCust" method="post">
+                            <input type="hidden" name="sysUserId" th:value="${custData.sys_user_id}">
+                            <input type="hidden" name="nextMode" th:value="inputValue">
+                            <p>
+                                新しい生年月日を入力してください<br>
+                                <input type="date" name="userBirthday" th:text="${userBirthday}"><br>
+                            </p>
+                            <p>
+                                年齢を非公開にする<br>
+                                <span th:if="${custData.user_hide_age == 0}">
+                                    <input type="checkbox" name="hideBirthYear">
+                                </span>
+                                <span th:if="${custData.user_hide_age == 1}">
+                                    <input type="checkbox" name="hideBirthYear" checked>
+                                </span><br>
+                                <button class="btn" type="submit" name="mode" value="setUserBirthday">
+                                    <span class="btnText">
+                                        決定
+                                    </span>
+                                </button>
+                            </p>
+                            <p th:text="${message}" style="color: red;"></p>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align: center;">
+                        <div name="deleteUser">
+                            <button type="button" class="btn" name="deleteUser">
+                                <span class="btnText">アカウント削除</span>
+                            </button>
+                        </div>
+                        <div name="confiDeleteUser" class="hidden">
+                            <p class="alertText">本当に削除してもよろしいですか？</p>
+                            <button type="button" class="btn" name="notDeleteUser">
+                                <span class="btnText">いいえ</span>
+                            </button>
+                            <form action="/myPage/setCust" method="post">
+                                <button type="submit" class="btn" name="mode" value="deleteUser">
+                                    <span class="btnText">はい</span>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <p>
+        <form action="/custLogin" method="post">
+            <button type="submit" name="mode" value="logout" class="btn"><span class="btnText">ログアウト</span></button>
+        </form>
+        </p>
+    </div>
+
+    <script type="module" th:src="@{/js/main.js}"></script>
+</body>
+
+</html>

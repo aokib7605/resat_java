@@ -7,10 +7,16 @@ $(function () {
             // モバイル時の処理
             $(managerMenuElement.managerMenu).addClass('mobile');
             $(managerMenuElement.managerMenu).removeClass('pc');
+            $(commonElement.hamburger_overlay).removeClass('hidden');
+            $(commonElement.navContent).removeClass('hidden');
+            $(commonElement.menuContent).addClass('hidden');
         } else {
             // PC時の処理
             $(managerMenuElement.managerMenu).addClass('pc');
             $(managerMenuElement.managerMenu).removeClass('mobile');
+            $(commonElement.hamburger_overlay).addClass("hidden");
+            $(commonElement.navContent).addClass('hidden');
+            $(commonElement.menuContent).removeClass('hidden');
         }
     }
 
@@ -21,7 +27,7 @@ $(function () {
         } else {
             $(managerMenuElement.stageMenu).addClass('hidden');
         }
-    })
+    });
 
     // 票券管理メニューのトグル機能
     $(managerMenuElement.manage).on("click", function () {
@@ -30,7 +36,7 @@ $(function () {
         } else {
             $(managerMenuElement.manageMenu).addClass('hidden');
         }
-    })
+    });
 
     // 便利機能メニューのトグル機能
     $(managerMenuElement.tool).on("click", function () {
@@ -39,7 +45,7 @@ $(function () {
         } else {
             $(managerMenuElement.toolMenu).addClass('hidden');
         }
-    })
+    });
 
     // 団体メニューのトグル機能
     $(managerMenuElement.group).on("click", function () {
@@ -48,7 +54,7 @@ $(function () {
         } else {
             $(managerMenuElement.groupMenu).addClass('hidden');
         }
-    })
+    });
 
     // ユーザーメニューのトグル機能
     $(managerMenuElement.user).on("click", function () {
@@ -57,5 +63,5 @@ $(function () {
         } else {
             $(managerMenuElement.userMenu).addClass('hidden');
         }
-    })
+    });
 });

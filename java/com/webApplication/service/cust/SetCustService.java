@@ -1,4 +1,4 @@
-package com.webApplication.service;
+package com.webApplication.service.cust;
 
 import java.util.Base64;
 
@@ -17,31 +17,41 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class SetUserService {
+public class SetCustService {
 	private final HttpSession session;
 	private final JavaMailSender mailSender;
 	//	private final MainRepository mr;
 	private final SQL sql;
 
 	public void setPageInfo(Model model) {
-		model.addAttribute("title2", Env.setUserView);
+		model.addAttribute("title2", Env.setCustView);
 	}
 
 	public void setUserId(Model model, String mode, String sysUserId, String userId) {
 		switch (mode) {
 		case "setUserId": {
+
+			// 画面をユーザーID更新モードに切り替えます
 			model.addAttribute("mode", "setUserId");
 			break;
 		}
 		case "inputValue": {
-			if(sql.reGetUserData("user_id", userId) != null) {
+			if(sql.reGetCustData("user_id", userId) != null) {
+
+				// DB.users => 入力したuserIdのユーザーデータが既に存在する場合、更新エラー
 				model.addAttribute("mode", "setUserId");
-				model.addAttribute("message", "そのIDは既に使用されています");
+				model.addAttribute("message", Env.userIdisAlreadyExist);
 			} else {
-				DataEntity userData = sql.updateUserData("user_id", userId, null);
-				model.addAttribute("message", "ユーザーIDを変更しました");
-				session.setAttribute("userSession", userData);
-				model.addAttribute("userData", userData);
+
+				// DB.users => ユーザーデータ更新処理
+				DataEntity custData = sql.updateCustData("user_id", userId, null);
+
+				// セッションに更新後のユーザーデータを格納
+				session.setAttribute("custSession", custData);
+
+				// 画面に更新後の値を渡します
+				model.addAttribute("custData", custData);
+				model.addAttribute("message", Env.updateUserIdMessage);
 			}
 			break;
 		}
@@ -57,11 +67,11 @@ public class SetUserService {
 			break;
 		}
 		case "inputValue": {
-			if(sql.reGetUserData("user_mail", userMail) != null) {
+			if(sql.reGetCustData("user_mail", userMail) != null) {
 				model.addAttribute("mode", "setMail");
 				model.addAttribute("message", "そのメールアドレスは既に使用されています");
 			} else {
-				DataEntity userData = (DataEntity)session.getAttribute("userSession");
+				DataEntity custData = (DataEntity)session.getAttribute("custSession");
 				String mailBase64 = Base64.getUrlEncoder().encodeToString(userMail.getBytes());
 				SimpleMailMessage message = new SimpleMailMessage();
 				message.setTo(userMail);
@@ -71,9 +81,9 @@ public class SetUserService {
 						"こんにちは！ \n"
 								+ "りざっと運営・開発団体の劇団抜きにくい釘です。\n"
 								+ "まだメールアドレスの変更手続きは完了しておりません。下記URLから手続きを完了してください。\n"
-								+ "http://localhost:8080/resat/userMailUpdate?sysDiResu=" + userData.getSys_user_id() + "&liam=" + mailBase64
+								+ "http://localhost:8080/resat/userMailUpdate?sysDiResu=" + custData.getSys_user_id() + "&liam=" + mailBase64
 						);
-				System.out.println("http://localhost:8080/resat/userMailUpdate?sysDiResu=" + userData.getSys_user_id() + "&liam=" + mailBase64);
+				System.out.println("http://localhost:8080/resat/userMailUpdate?sysDiResu=" + custData.getSys_user_id() + "&liam=" + mailBase64);
 				model.addAttribute("message", "入力されたアドレス宛てに送られたメールを確認してください");
 				// メール送信を実施する。
 				mailSender.send(message);
@@ -81,10 +91,10 @@ public class SetUserService {
 			break;
 		}
 		case "confiMail": {
-			DataEntity userData = sql.updateUserData("user_mail", userMail, null);
+			DataEntity custData = sql.updateCustData("user_mail", userMail, null);
 			model.addAttribute("message", "メールアドレスを変更しました");
-			session.setAttribute("userSession", userData);
-			model.addAttribute("userData", userData);
+			session.setAttribute("custSession", custData);
+			model.addAttribute("custData", custData);
 			model.addAttribute("mode", "setMail");
 			break;
 		}
@@ -104,10 +114,10 @@ public class SetUserService {
 				model.addAttribute("mode", "setUserPass");
 				model.addAttribute("message", "パスワードが一致していません");
 			} else {
-				DataEntity userData = sql.updateUserData("user_pass", userPass, null);
+				DataEntity custData = sql.updateCustData("user_pass", userPass, null);
 				model.addAttribute("message", "パスワードを変更しました");
-				session.setAttribute("userSession", userData);
-				model.addAttribute("userData", userData);
+				session.setAttribute("custSession", custData);
+				model.addAttribute("custData", custData);
 			}
 			break;
 		}
@@ -123,17 +133,17 @@ public class SetUserService {
 			break;
 		}
 		case "inputValue": {
-			DataEntity userData = sql.updateUserData("user_tell", userTel, null);
+			DataEntity custData = sql.updateCustData("user_tell", userTel, null);
 			model.addAttribute("message", "電話番号を変更しました");
-			session.setAttribute("userSession", userData);
-			model.addAttribute("userData", userData);
+			session.setAttribute("custSession", custData);
+			model.addAttribute("custData", custData);
 			break;
 		}
 		case "crearValue": {
-			DataEntity userData = sql.updateUserData("user_tell", "null", null);
+			DataEntity custData = sql.updateCustData("user_tell", "null", null);
 			model.addAttribute("message", "電話番号を削除しました");
-			session.setAttribute("userSession", userData);
-			model.addAttribute("userData", userData);
+			session.setAttribute("custSession", custData);
+			model.addAttribute("custData", custData);
 			break;
 		}
 		default:
@@ -148,38 +158,11 @@ public class SetUserService {
 			break;
 		}
 		case "inputValue": {
-			DataEntity userData = sql.updateUserData("user_name", userName, null);
-			userData = sql.updateUserData("user_kana_name", userKanaName, null);
+			DataEntity custData = sql.updateCustData("user_name", userName, null);
+			custData = sql.updateCustData("user_kana_name", userKanaName, null);
 			model.addAttribute("message", "ユーザーネームを変更しました");
-			session.setAttribute("userSession", userData);
-			model.addAttribute("userData", userData);
-			break;
-		}
-		default:
-			break;
-		}
-	}
-
-	public void setUserStageName(Model model, String mode, String sysUserId, String userName, String userKanaName) {
-		switch (mode) {
-		case "setUserStageName": {
-			model.addAttribute("mode", "setUserStageName");
-			break;
-		}
-		case "inputValue": {
-			DataEntity userData = sql.updateUserData("user_stage_name", userName, null);
-			userData = sql.updateUserData("user_stage_kana_name", userKanaName, null);
-			model.addAttribute("message", "芸名を変更しました");
-			session.setAttribute("userSession", userData);
-			model.addAttribute("userData", userData);
-			break;
-		}
-		case "crearValue": {
-			DataEntity userData = sql.updateUserData("user_stage_name", "null", null);
-			userData = sql.updateUserData("user_stage_kana_name", "null", null);
-			model.addAttribute("message", "芸名を削除しました");
-			session.setAttribute("userSession", userData);
-			model.addAttribute("userData", userData);
+			session.setAttribute("custSession", custData);
+			model.addAttribute("custData", custData);
 			break;
 		}
 		default:
@@ -199,11 +182,11 @@ public class SetUserService {
 			} else {
 				hideBirthYear = 1 + "";
 			}
-			DataEntity userData = sql.updateUserData("user_birthday", userBirthday, null);
-			userData = sql.updateUserData("user_hide_age", hideBirthYear, null);
+			DataEntity custData = sql.updateCustData("user_birthday", userBirthday, null);
+			custData = sql.updateCustData("user_hide_age", hideBirthYear, null);
 			model.addAttribute("message", "生年月日を変更しました");
-			session.setAttribute("userSession", userData);
-			model.addAttribute("userData", userData);
+			session.setAttribute("custSession", custData);
+			model.addAttribute("custData", custData);
 			break;
 		}
 		default:
@@ -214,12 +197,12 @@ public class SetUserService {
 	// アカウント削除ボタン押下時の処理
 	public void deleteUser(Model model) {
 		// セッションからログイン中のユーザーデータを取得
-		DataEntity userData = (DataEntity)session.getAttribute("userSession");
+		DataEntity custData = (DataEntity)session.getAttribute("custSession");
 		
 		// ユーザーアカウント削除
-		sql.updateUserData("user_mail", "none", userData.getSys_user_id());
-		sql.updateUserData("user_id", "none", userData.getSys_user_id());
-		sql.updateUserData("deleteFlg", true, userData.getSys_user_id());
+		sql.updateCustData("user_mail", "none", custData.getSys_user_id());
+		sql.updateCustData("user_id", "none", custData.getSys_user_id());
+		sql.updateCustData("deleteFlg", true, custData.getSys_user_id());
 		
 		model.addAttribute("message", Env.deleteUserAccount);
 	}

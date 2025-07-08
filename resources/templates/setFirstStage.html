@@ -879,7 +879,8 @@
                             チラシ画像をアップロードできます<br>
                             アップロード不要の場合、そのまま「確認」を押してください
                         </p>
-                        <form action="/setFirstStage" method="post" enctype="multipart/form-data">
+                        <form action="/setFirstStage" method="post">
+                            <!-- <form action="/setFirstStage" method="post" enctype="multipart/form-data"> -->
                             <input type="hidden" name="setPage" value="createStage">
                             <input type="hidden" name="sysGroupId" th:value="${sysGroupId}">
                             <input type="hidden" name="stageId" th:value="${stageId}">
@@ -892,11 +893,11 @@
 
                             <p>
                                 表面<br>
-                                <input type="file" name="file1" accept=".png,.jpeg,.jpg">
+                                <!-- <input type="file" name="file1" accept=".png,.jpeg,.jpg"> -->
                             </p>
                             <p>
                                 裏面<br>
-                                <input type="file" name="file2" accept=".png,.jpeg,.jpg">
+                                <!-- <input type="file" name="file2" accept=".png,.jpeg,.jpg"> -->
                             </p>
                             <button type="submit" name="mode" value="uploadImages">確認</button>
                         </form>

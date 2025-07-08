@@ -10,6 +10,9 @@ public class Env {
 	public static String domainName = "https://grobe-reserve.com";
 	public static String sendFromMail = "globe.reserveticket@gmail.com";
 	
+	// バージョン
+	public static String applicationVer = "1.0.0";
+	
 	/*
 	 * 各ページのメニュータイトル
 	 */

@@ -151,8 +151,10 @@ public class CreateStageService {
 //			addImages(file1, file2, uuid);
 //			String file1Id = sql.getSysImageId("file_name", file1, "flyer1", uuid);
 //			String file2Id = sql.getSysImageId("file_name", file2, "flyer2", uuid);
+			System.out.println("登録開始");
 			createStage(uuid, sysGroupId, stageId, stagePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, null, null);
 //			createStage(uuid, sysGroupId, stageId, stagePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, file1Id, file2Id);
+			System.out.println("登録終了");
 			DataEntity stageData = setSession(model, stageId);
 			DataEntity userData = updateUserDefStage(model, stageData.getSys_stage_id());
 			addStageLoginList(model, stageData.getSys_stage_id(), userData.getSys_user_id());

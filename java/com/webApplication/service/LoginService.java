@@ -24,6 +24,7 @@ public class LoginService {
 	
 	public void setPageInfo(Model model) {
 		model.addAttribute("title2", Env.systemLoginView);
+		model.addAttribute("applicationVer", Env.applicationVer);
 	}
 	
 	public String checkLoginData(Model model, String pageName, String loginMethod, String userMail, String userId, String userPass) {

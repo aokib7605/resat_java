@@ -4,14 +4,14 @@ import java.util.Base64;
 
 import jakarta.servlet.http.HttpSession;
 
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.webApplication.entity.DataEntity;
 import com.webApplication.entity.Env;
+import com.webApplication.functions.Pub;
 import com.webApplication.functions.SQL;
+import com.webApplication.service.JavaMailSenderService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SetCustService {
 	private final HttpSession session;
-	private final JavaMailSender mailSender;
+	private final JavaMailSenderService mailSender;
 	//	private final MainRepository mr;
 	private final SQL sql;
 
@@ -73,20 +73,11 @@ public class SetCustService {
 			} else {
 				DataEntity custData = (DataEntity)session.getAttribute("custSession");
 				String mailBase64 = Base64.getUrlEncoder().encodeToString(userMail.getBytes());
-				SimpleMailMessage message = new SimpleMailMessage();
-				message.setTo(userMail);
-				message.setFrom("nukikugi@gmail.com");
-				message.setSubject("りざっとメールアドレス変更手続き");
-				message.setText(
-						"こんにちは！ \n"
-								+ "りざっと運営・開発団体の劇団抜きにくい釘です。\n"
-								+ "まだメールアドレスの変更手続きは完了しておりません。下記URLから手続きを完了してください。\n"
-								+ "http://localhost:8080/resat/userMailUpdate?sysDiResu=" + custData.getSys_user_id() + "&liam=" + mailBase64
-						);
-				System.out.println("http://localhost:8080/resat/userMailUpdate?sysDiResu=" + custData.getSys_user_id() + "&liam=" + mailBase64);
+				String title = "【" +Env.applicationTitle + "】メールアドレス変更手続き";
+				String content = Pub.createUpdateCustMailMessage(custData.getSys_user_id(), mailBase64);
+				mailSender.sendMail(userMail, title, content);
+				System.out.println(Env.domainName + "/mailUpdate?sysDiResu=" + custData.getSys_user_id() + "&liam=" + mailBase64);
 				model.addAttribute("message", "入力されたアドレス宛てに送られたメールを確認してください");
-				// メール送信を実施する。
-				mailSender.send(message);
 			}
 			break;
 		}

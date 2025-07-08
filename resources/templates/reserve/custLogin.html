@@ -11,7 +11,7 @@
 <body>
     <div class="custPage" name="custPage" th:if="${mode != 'noneUserReserveComp'}">
         <div class="custLogin center_container">
-            <img src="./img/0101/application_logo.png" class="topLogo">
+            <img th:src="@{/img/0101/application_logo.png}" class="topLogo" />
             <!-- <h1 th:text="${title}"></h1> -->
             <h2 th:text="${title2}"></h2>
 

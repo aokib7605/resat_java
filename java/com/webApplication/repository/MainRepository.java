@@ -31,8 +31,8 @@ public class MainRepository {
 		DataEntity data = new DataEntity();
 		try {
 			for (String column : columns) {
-				//				String type = column.getClass().getSimpleName();
-				//				System.out.println(column + "の変数の型は" + type + "（" + dbObj.get(column) + "）");
+//								String type = column.getClass().getSimpleName();
+//								System.out.println(column + "の変数の型は" + type + "（" + dbObj.get(column) + "）");
 				if (column.contains(".")) {
 					column = column.substring(column.indexOf(".") + 1);
 				}

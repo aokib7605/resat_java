@@ -1,15 +1,11 @@
 package com.webApplication.controller;
 
-import java.io.IOException;
-
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.webApplication.entity.Env;
 import com.webApplication.service.ChangeGroupService;
@@ -134,7 +130,7 @@ public class MainController {
 	public String accessLogin(Model model, String mode) {
 		if(mode.equals("logout")) {
 			session.invalidate();
-			model.addAttribute("message", "ログアウトしました");
+			model.addAttribute("message", Env.logoutCompMessage);
 		}
 		return goLoginPage(model);
 	}
@@ -221,7 +217,7 @@ public class MainController {
 				break;
 			}
 			default:
-				System.out.println("新規ユーザー作成で例外フローが発生しました");
+				break;
 			}
 		} catch (Exception e) {
 
@@ -255,7 +251,8 @@ public class MainController {
 			String userTel, String userName, String userKanaName, String userBirthday, String hideBirthYear,
 			String back, String groupId, String groupName, String groupKanaName, String groupMail,
 			String stageId, String stageName, Integer stageAttractCustomers, String stageUrlTitle,
-			String stagePlaceName, String stagePlaceAddress, MultipartFile file1, MultipartFile file2) {
+			String stagePlaceName, String stagePlaceAddress) {
+//			@RequestParam(required = false) MultipartFile file1, @RequestParam(required = false) MultipartFile file2) throws IOException {
 		try {
 			setEnvData(model, "setFirstStage");
 			System.out.println(setPage + mode);
@@ -458,7 +455,8 @@ public class MainController {
 					break;
 				}
 				case "uploadImages": {
-					mode = css.uploadImages(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword, file1, file2);
+//					mode = css.uploadImages(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword, file1, file2);
+					mode = css.uploadImages(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword);
 					break;
 				}
 				case "confiResult": {
@@ -516,8 +514,8 @@ public class MainController {
 
 	@PostMapping("/setStage")
 	public String accessSetStage(Model model, String mode, String nextMode, String stageId,
-			String stagePass, String rePass, String stageName, Integer stageAttractCustomers, String stagePlaceName, String stagePlaceAddress, String keyword,
-			MultipartFile file) throws IOException {
+			String stagePass, String rePass, String stageName, Integer stageAttractCustomers, String stagePlaceName, String stagePlaceAddress, String keyword) {
+//			MultipartFile file) throws IOException {
 		try {
 			switch (mode) {
 			case "setStageId": {
@@ -559,14 +557,16 @@ public class MainController {
 				if(nextMode != null) {
 					mode = nextMode;
 				}
-				sss.setStageFlyer(model, mode, null, 1, file);
+				sss.setStageFlyer(model, mode, null, 1);
+//				sss.setStageFlyer(model, mode, null, 1, file);
 				break;
 			}
 			case "setStageFlyer2": {
 				if(nextMode != null) {
 					mode = nextMode;
 				}
-				sss.setStageFlyer(model, mode, null, 2, file);
+				sss.setStageFlyer(model, mode, null, 2);
+//				sss.setStageFlyer(model, mode, null, 2, file);
 				break;
 			}
 			default:
@@ -881,6 +881,7 @@ public class MainController {
 			setEnvData(model, "manager");
 			cfls.setPageInfo(model);
 		} catch (Exception e) {
+			System.out.println(e);
 			// TODO: handle exception
 		}
 		return goAnyPage(model, "checkFormList");
@@ -907,8 +908,8 @@ public class MainController {
 	@PostMapping("/createStage")
 	public String accessCreateStage(
 			Model model, String mode, String back, String sysGroupId, String stageId, String stagePass, String rePass, String stageName, 
-			Integer stageAttractCustomers, String stageUrlTitle, String stagePlaceName, String stagePlaceAddress, String keyword, 
-			@RequestParam(required = false) MultipartFile file1, @RequestParam(required = false) MultipartFile file2) throws IOException {
+			Integer stageAttractCustomers, String stageUrlTitle, String stagePlaceName, String stagePlaceAddress, String keyword) {
+//			@RequestParam(required = false) MultipartFile file1, @RequestParam(required = false) MultipartFile file2) throws IOException {
 		pageName = "createStage";
 		try {
 			switch (mode) {
@@ -929,7 +930,8 @@ public class MainController {
 				break;
 			}
 			case "uploadImages": {
-				mode = css.uploadImages(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword, file1, file2);
+				mode = css.uploadImages(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword);
+//				mode = css.uploadImages(model, back, sysGroupId, stageId, stagePass, rePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, keyword, file1, file2);
 				break;
 			}
 			case "confiResult": {

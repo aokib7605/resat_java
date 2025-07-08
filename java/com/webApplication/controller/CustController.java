@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.webApplication.entity.Env;
 import com.webApplication.entity.FormEntity;
 import com.webApplication.service.EnvService;
+import com.webApplication.service.cust.ChangeModeService;
 import com.webApplication.service.cust.CustCreateUserService;
 import com.webApplication.service.cust.CustLoginService;
 import com.webApplication.service.cust.InputFormService;
@@ -27,8 +28,8 @@ public class CustController {
 	private String pageName = "";	//遷移先のページ名
 
 	private String checkSession(Model model, String pageName) {
-		if(checkCustSession(model, pageName).equals("login")) {
-			pageName = "login";
+		if(checkCustSession(model, pageName).equals("reserve/custLogin")) {
+			pageName = "reserve/custLogin";
 			accessLogin(model, "logout");
 		}
 		return pageName;
@@ -65,7 +66,8 @@ public class CustController {
 		}
 		default:
 			pageName = checkSession(model, pageName);
-			if(pageName.equals("login")) {
+			if(pageName.equals("reserve/custLogin")) {
+				System.out.println("セッション接続切れ");
 				return goLoginPage(model);
 			}
 		}
@@ -80,6 +82,7 @@ public class CustController {
 	private final ReserveListService rls;
 	private final CustCreateUserService ccus;
 	private final SetCustService scs;
+	private final ChangeModeService cms;
 
 	@GetMapping("/")
 	public String goLoginPage(Model model) {
@@ -111,7 +114,7 @@ public class CustController {
 		try {
 			pageName = "reserve/inputForm";
 			model.addAttribute("title", Env.custApplicationTitle);
-			
+
 			// 予約フォームURL初回アクセス時
 			if(sys != null && ma != null) {
 				ifs.setPageInfo(model, sys, ma);
@@ -189,7 +192,7 @@ public class CustController {
 						// ログイン済の場合、入力確認画面に遷移
 						ifs.inputLoginUser(model, "inputLoginUser");
 						model.addAttribute("mode", "confiResult");
-						
+
 						// セッションから各種フォームデータをmodelに保持
 						FormEntity formData = (FormEntity) session.getAttribute("formDataSession");
 						sysFormId = formData.getSysFormId();	// フォームID
@@ -205,7 +208,7 @@ public class CustController {
 					mode = nextMode;
 				}
 				ifs.inputUser(model, mode, sysFormId, sysDateId, traAmounts, traMemo, custName, custKanaName, custMail, custTel);
-				
+
 				// セッションから各種フォームデータをmodelに保持
 				FormEntity formData = (FormEntity) session.getAttribute("formDataSession");
 				sysFormId = formData.getSysFormId();	// フォームID
@@ -220,20 +223,20 @@ public class CustController {
 				}
 				ifs.inputLoginUser(model, "inputLoginUser");
 				model.addAttribute("mode", "confiResult");
-				
+
 				// セッションから各種フォームデータをmodelに保持
 				FormEntity formData = (FormEntity) session.getAttribute("formDataSession");
 				sysFormId = formData.getSysFormId();	// フォームID
 				sysManagerId = formData.getSysUserId();	// 担当者ID
 				break;
 			}
-			
+
 			// 予約内容確認
 			case "confiResult": {
 				if(nextMode != null) {
 					mode = nextMode;
 				}
-				
+
 				pageName = ifs.confiResult(model, mode, sysFormId, sysDateId, traAmounts, traMemo, sysManagerId, custName, custKanaName, custMail, custTel);
 				if(pageName.equals("myPage")) {
 					return "redirect:/myPage/reserveList";
@@ -280,10 +283,10 @@ public class CustController {
 				} else {
 					// セッションに仮受付データが存在する場合
 					if(session.getAttribute("tempReceptionList") != null) {
-												
+
 						ifs.inputLoginUser(model, "inputLoginUser");
 						model.addAttribute("mode", "confiResult");
-						
+
 						// セッションから各種フォームデータをmodelに保持
 						FormEntity formData = (FormEntity) session.getAttribute("formDataSession");
 						String sysFormId = formData.getSysFormId();	// フォームID
@@ -303,7 +306,7 @@ public class CustController {
 		}
 		return goMyPage(model);
 	}
-	
+
 	@GetMapping("/reserve/createUser")
 	public String goCreateUser(Model model, String mode, String data) {
 		try {
@@ -357,17 +360,17 @@ public class CustController {
 				break;
 			}
 		} catch (Exception e) {
-			
+
 		}
 		if(pageName.equals("createUser")) {
 			return goCreateUser(model, mode, null);
 		} else {
 			// セッションに仮受付データが存在する場合
 			if(session.getAttribute("tempReceptionList") != null) {
-										
+
 				ifs.inputLoginUser(model, "inputLoginUser");
 				model.addAttribute("mode", "confiResult");
-				
+
 				// セッションから各種フォームデータをmodelに保持
 				FormEntity formData = (FormEntity) session.getAttribute("formDataSession");
 				String sysFormId = formData.getSysFormId();	// フォームID
@@ -425,7 +428,7 @@ public class CustController {
 		}
 		return goReserveList(model);
 	}
-	
+
 	@GetMapping("/myPage/setCust")
 	public String goSetCust(Model model) {
 		pageName = "reserve/myPage/setCust";
@@ -437,7 +440,7 @@ public class CustController {
 		}
 		return goAnyPage(model, pageName);
 	}
-	
+
 	@PostMapping("/myPage/setCust")
 	public String accessSetCust(Model model, String mode, String nextMode, String sysUserId, String userId, 
 			String userMail, String userPass, String rePass, String userTel, String userName, String userKanaName, 
@@ -493,9 +496,18 @@ public class CustController {
 			default:
 			}
 		} catch (Exception e) {
-			System.out.println(e);
 			// TODO: handle exception
 		}
 		return goSetCust(model);
+	}
+
+	@GetMapping("/changeMode")
+	public String goChangeMode() {
+		try {
+			cms.changeMode();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return "redirect:/index";
 	}
 }

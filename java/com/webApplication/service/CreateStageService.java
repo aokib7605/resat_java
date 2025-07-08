@@ -1,6 +1,5 @@
 package com.webApplication.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,9 +12,9 @@ import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.webApplication.entity.DataEntity;
+import com.webApplication.entity.Env;
 import com.webApplication.functions.Pub;
 import com.webApplication.functions.SQL;
 import com.webApplication.repository.MainRepository;
@@ -70,7 +69,7 @@ public class CreateStageService {
 			}
 		}
 		if(!stagePass.equals(rePass)) {
-			model.addAttribute("message", "パスワードが一致していません");
+			model.addAttribute("message", Env.passwordIsUnMatchMessage);
 			model.addAttribute("mode", "inputBaseData");
 			return "inputBaseData";
 		}
@@ -112,32 +111,34 @@ public class CreateStageService {
 	}
 
 	public String uploadImages(Model model, String back, String sysGroupId, String stageId, String stagePass, String rePass, String stageName, 
-			Integer stageAttractCustomers, String stageUrlTitle, String stagePlaceName, String stagePlaceAddress, String keyword, MultipartFile file1, MultipartFile file2) throws IOException {
+			Integer stageAttractCustomers, String stageUrlTitle, String stagePlaceName, String stagePlaceAddress, String keyword) {
+		//			Integer stageAttractCustomers, String stageUrlTitle, String stagePlaceName, String stagePlaceAddress, String keyword, MultipartFile file1, MultipartFile file2) throws IOException {
 		setStageIdData(model, sysGroupId, stageId);
 		setBaseData(model, stagePass, stageName, stageAttractCustomers, stageUrlTitle);
 		setPlaceData(model, stagePlaceName, stagePlaceAddress, keyword);
-		setImagesSession(model, file1, file2);
+//		setImagesSession(model, file1, file2);
+		
 		if(back != null && back.equals("back")) {
 			model.addAttribute("mode", "inputPlaceData");
 			model.addAttribute("placeList", sql.getPlaceList(""));
 			return "inputPlaceData";
 		}
 		model.addAttribute("groupName", getGroup(sysGroupId).getGroup_name());
-		if(file1 != null) {
-			model.addAttribute("file1Name", file1.getOriginalFilename());
-		}
-		if(file2 != null) {
-			model.addAttribute("file2Name", file2.getOriginalFilename());
-		}
+//		if(file1 != null) {
+//			model.addAttribute("file1Name", file1.getOriginalFilename());
+//		}
+//		if(file2 != null) {
+//			model.addAttribute("file2Name", file2.getOriginalFilename());
+//		}
 		model.addAttribute("mode", "confiResult");
 		return "confiResult";
 
 	}
-	
+
 	public String confiResult(Model model, String back, String sysGroupId, String stageId, String stagePass, String rePass, String stageName, 
 			Integer stageAttractCustomers, String stageUrlTitle, String stagePlaceName, String stagePlaceAddress, String keyword) {
-		String file1 = (String)session.getAttribute("file1Name");
-		String file2 = (String)session.getAttribute("file2Name");
+//		String file1 = (String)session.getAttribute("file1Name");
+//		String file2 = (String)session.getAttribute("file2Name");
 		setStageIdData(model, sysGroupId, stageId);
 		setBaseData(model, stagePass, stageName, stageAttractCustomers, stageUrlTitle);
 		setPlaceData(model, stagePlaceName, stagePlaceAddress, keyword);
@@ -147,10 +148,11 @@ public class CreateStageService {
 		}
 		try {
 			String uuid = Pub.createUuid();
-			addImages(file1, file2, uuid);
-			String file1Id = sql.getSysImageId("file_name", file1, "flyer1", uuid);
-			String file2Id = sql.getSysImageId("file_name", file2, "flyer2", uuid);
-			createStage(uuid, sysGroupId, stageId, stagePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, file1Id, file2Id);
+//			addImages(file1, file2, uuid);
+//			String file1Id = sql.getSysImageId("file_name", file1, "flyer1", uuid);
+//			String file2Id = sql.getSysImageId("file_name", file2, "flyer2", uuid);
+			createStage(uuid, sysGroupId, stageId, stagePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, null, null);
+//			createStage(uuid, sysGroupId, stageId, stagePass, stageName, stageAttractCustomers, stageUrlTitle, stagePlaceName, stagePlaceAddress, file1Id, file2Id);
 			DataEntity stageData = setSession(model, stageId);
 			DataEntity userData = updateUserDefStage(model, stageData.getSys_stage_id());
 			addStageLoginList(model, stageData.getSys_stage_id(), userData.getSys_user_id());
@@ -166,7 +168,7 @@ public class CreateStageService {
 		String where = " gll left outer join groupes g on g.sys_group_id = gll.sys_group_id where sys_user_id = '" + userData.getSys_user_id() + "'";
 		return mr.getDataList("group_login_list", columns, where);
 	}
-	
+
 	private DataEntity getGroup(String sysGroupId) {
 		List<String> columns = mr.getGroupesTableColumns();
 		String where = " where sys_group_id = '" + sysGroupId + "'";
@@ -191,30 +193,30 @@ public class CreateStageService {
 		model.addAttribute("keyword", keyword);
 	}
 
-	private void setImagesSession(Model model, MultipartFile file1, MultipartFile file2) throws IOException {
-		session.setAttribute("file1Name", file1.getOriginalFilename());
-		session.setAttribute("file1Type", file1.getContentType());
-		session.setAttribute("file1Bytes", file1.getBytes());
-		session.setAttribute("file2Name", file2.getOriginalFilename());
-		session.setAttribute("file2Type", file2.getContentType());
-		session.setAttribute("file2Bytes", file2.getBytes());
-	}
-	
-	private void addImages(String file1, String file2, String uuid) throws IOException {
-		if(file1 != null) {
-			String file1Name = (String)session.getAttribute("file1Name");
-			String file1Type = (String)session.getAttribute("file1Type");
-			byte[] file1Bytes = (byte[])session.getAttribute("file1Bytes");
-			sql.addImage(file1Name, file1Type, file1Bytes, uuid, "flyer1");
-		}
-		if(file2 != null) {
-			String file2Name = (String)session.getAttribute("file2Name");
-			String file2Type = (String)session.getAttribute("file2Type");
-			byte[] file2Bytes = (byte[])session.getAttribute("file2Bytes");
-			sql.addImage(file2Name, file2Type, file2Bytes, uuid, "flyer2");
-		}
-	}
-	
+//	private void setImagesSession(Model model, MultipartFile file1, MultipartFile file2) throws IOException {
+//		session.setAttribute("file1Name", file1.getOriginalFilename());
+//		session.setAttribute("file1Type", file1.getContentType());
+//		session.setAttribute("file1Bytes", file1.getBytes());
+//		session.setAttribute("file2Name", file2.getOriginalFilename());
+//		session.setAttribute("file2Type", file2.getContentType());
+//		session.setAttribute("file2Bytes", file2.getBytes());
+//	}
+
+//	private void addImages(String file1, String file2, String uuid) throws IOException {
+//		if(file1 != null) {
+//			String file1Name = (String)session.getAttribute("file1Name");
+//			String file1Type = (String)session.getAttribute("file1Type");
+//			byte[] file1Bytes = (byte[])session.getAttribute("file1Bytes");
+//			sql.addImage(file1Name, file1Type, file1Bytes, uuid, "flyer1");
+//		}
+//		if(file2 != null) {
+//			String file2Name = (String)session.getAttribute("file2Name");
+//			String file2Type = (String)session.getAttribute("file2Type");
+//			byte[] file2Bytes = (byte[])session.getAttribute("file2Bytes");
+//			sql.addImage(file2Name, file2Type, file2Bytes, uuid, "flyer2");
+//		}
+//	}
+
 	private void createStage(String uuid, String sysGroupId, String stageId, String stagePass, String stageName, Integer stageAttractCustomers, String stageUrlTitle,
 			String stagePlaceName, String stagePlaceAddress, String file1Id, String file2Id) {
 		try {
@@ -242,7 +244,7 @@ public class CreateStageService {
 			// TODO: handle exception
 		}
 	}
-	
+
 	private DataEntity setSession(Model model, String stageId) {
 		List<String> columns = Stream.concat(mr.getStagesTableColumns().stream(), mr.getImagesTableColumns().stream()).collect(Collectors.toList());
 		String where = " left outer join images i1 on stage_flyer_1 = i1.sys_image_id"
@@ -252,7 +254,7 @@ public class CreateStageService {
 		session.setAttribute("defStSession", stageData);
 		return stageData;
 	}
-	
+
 	private DataEntity updateUserDefStage(Model model, String sysStageId) {
 		DataEntity userData = (DataEntity)session.getAttribute("userSession");
 		mr.updateData("users", "user_def_stage", sysStageId, " where sys_user_id = '" + userData.getSys_user_id() + "'");
@@ -263,7 +265,7 @@ public class CreateStageService {
 		session.setAttribute("userSession", userData);
 		return userData;
 	}
-	
+
 	private void addStageLoginList(Model model, String sysStageId, String sysUserId) {
 		List<String> columns = mr.getStageLoginListTableColumns();
 		List<String> values = new ArrayList<String>(Arrays.asList(

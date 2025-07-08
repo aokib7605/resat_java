@@ -2,12 +2,13 @@ package com.webApplication.entity;
 
 public class Env {
 	//アプリケーション名
-	public static String applicationTitle = "予約管理システム GLOBE";
-	public static String custApplicationTitle = "GLOBE";
+	public static String applicationTitle = "予約管理システム Globe";
+	public static String custApplicationTitle = "Globe";
+	public static String customerServiceName = custApplicationTitle + "運営事務局";
 	
 	//ドメイン名
-	public static String domainName = "http://localhost:8080";
-	public static String sendFromMail = "nukikugi@gmail.com";
+	public static String domainName = "https://grobe-reserve.com";
+	public static String sendFromMail = "globe.reserveticket@gmail.com";
 	
 	/*
 	 * 各ページのメニュータイトル
@@ -56,8 +57,10 @@ public class Env {
 	public static String userMailNotExist = "そのメールアドレスは存在しません";
 	public static String mailAddressIsUsed = "そのメールアドレスは既に使用されています";
 	public static String passwordIsFalse = "パスワードが間違っています";
+	public static String passwordIsUnMatchMessage = "パスワードが一致していません";
 	public static String stageNotExist = "検索条件に一致する公演は見つかりませんでした";
 	public static String inputTraAmountIsMissedMessage = "予約枚数が不正です";
+	public static String registAccountErrorMessage = "アカウント登録時にエラーが発生しました";
 	
 	// 処理完了メッセージ
 	public static String updateUserIdMessage = "ユーザーIDを変更しました";

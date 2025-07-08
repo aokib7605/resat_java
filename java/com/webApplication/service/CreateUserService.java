@@ -9,8 +9,6 @@ import java.util.stream.Stream;
 
 import jakarta.servlet.http.HttpSession;
 
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -26,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class CreateUserService {
 	private final MainRepository mr;
 	private final HttpSession session;
-	private final JavaMailSender mailSender;
+	private final JavaMailSenderService mailSender;
 
 	public void setPageInfo(Model model) {
 		model.addAttribute("title2", Env.createManageUserView);
@@ -41,62 +39,25 @@ public class CreateUserService {
 		List<String> columns = mr.getUsersTableColumns();
 		String where = " where user_mail = '" + userMail + "'";
 		if(mr.getData("users", columns, where) == null) {
+			
+			// メールアドレスをBase64に変換
 			String mailBase64 = Base64.getUrlEncoder().encodeToString(userMail.getBytes());
-			System.out.println(mailBase64);
-			model.addAttribute("message", userMail + " にメールを送信しました。<br>URLをクリックして以降のステップを進めてください。" + 
-					"<p>メールが届かない場合、迷惑メールの設定にて<br> nukikugi@gmail.com からの受信設定を確認してください。</p>");
+			
+			model.addAttribute("message", Env.sendMailMessageForCreateuser);
 			model.addAttribute("mode", "confiMail");
-			sendMail(userMail, mailBase64);
+			
+			// メール送信に必要な情報の準備
+			String content = Pub.createUserMailMessage(mailBase64);
+			String title = Env.custApplicationTitle + "アカウント新規登録手続き";
+			
+			System.out.println(Env.domainName + "/createUser?mode=confiData&data=" + mailBase64);
+			mailSender.sendMail(userMail, title, content);
 			return true;
 		} else {
 			model.addAttribute("message", Env.mailAddressIsUsed);
 			model.addAttribute("mode", "start");
 			return false;
 		}
-	}
-
-	private void sendMail(String userMail, String mailBase64) {
-		//build.gradleに下記の記述が必要
-		/*
-		plugins {
-			    id 'org.springframework.boot' version '3.2.4'
-			    id 'io.spring.dependency-management' version '1.1.4'
-			    id 'java'
-		}
-		group = 'com.example'
-		version = '0.0.1-SNAPSHOT'
-		sourceCompatibility = '17'  // Javaバージョンに応じて調整
-
-		repositories {
-		    mavenCentral()
-		}
-		dependencies {
-		    implementation 'org.springframework.boot:spring-boot-starter-mail'
-		    implementation 'org.springframework.boot:spring-boot-starter'
-		}
-		 */
-		//application.propertiesに下記の記述が必要
-		/*
-		spring.mail.host=smtp.gmail.com
-		spring.mail.port=587
-		spring.mail.username=nukikugi@gmail.com
-		spring.mail.password=kizm hdxv lpyr fbqx
-		spring.mail.properties.mail.smtp.auth=true
-		spring.mail.properties.mail.smtp.starttls.enable=true
-		 */
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(userMail);
-		message.setFrom(Env.sendFromMail);
-		message.setSubject(Env.custApplicationTitle + "アカウント新規登録手続き");
-		message.setText(
-				Env.custApplicationTitle + "開発団体 劇団抜きにくい釘です。\n"
-						+ "まだアカウント登録は完了しておりません。下記URLから以降の登録処理を進めてください。\n"
-						+ Env.domainName + "/createUser?mode=confiData&data=" + mailBase64
-				);
-		System.out.println(Env.domainName + "/createUser?mode=confiData&data=" + mailBase64);
-
-		// メール送信を実施する。
-		mailSender.send(message);
 	}
 
 	public String confiMail(Model model, String mode) {
@@ -117,7 +78,7 @@ public class CreateUserService {
 			model.addAttribute("mode", "inputBaseData");
 			return "inputBaseData";
 		} else {
-			model.addAttribute("message", "そのユーザーIDは既に使用されています");
+			model.addAttribute("message", Env.userIdisAlreadyExist);
 			model.addAttribute("mode", "inputUserId");
 			return "inputUserId";
 		}
@@ -137,7 +98,7 @@ public class CreateUserService {
 			model.addAttribute("mode", "inputContactData");
 		} else {
 			mode = "inputBaseData";
-			model.addAttribute("message", "パスワードが一致していません");
+			model.addAttribute("message", Env.passwordIsUnMatchMessage);
 			model.addAttribute("mode", "inputBaseData");
 		}
 		return mode;
@@ -229,7 +190,8 @@ public class CreateUserService {
 				Pub.getCurrentDate() + "",		//user_last_login
 				data.getUser_birthday() + "",	//user_birthday
 				data.getUser_hide_age() + "",	//user_hide_age
-				data.getUser_def_group()		//user_def_group
+				data.getUser_def_group(),		//user_def_group
+				null							// deleteFlg
 				));
 		mr.insertData("users", columns, values);
 
@@ -239,7 +201,7 @@ public class CreateUserService {
 		if(mr.getData("users u", columns, where) != null) {
 			session.setAttribute("userSession", mr.getData("users u", columns, where));
 		} else {
-			model.addAttribute("message", "アカウント登録時にエラーが発生しました");
+			model.addAttribute("message", Env.registAccountErrorMessage);
 		}
 	}
 }

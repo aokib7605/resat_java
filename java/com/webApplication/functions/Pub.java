@@ -178,6 +178,36 @@ public class Pub {
 		return "【" + groupName + "】" + Env.compReserveMailTitle;
 	}
 
+	public static String createUserMailMessage(String mailBase64) {
+		String content = ""
+				+ "こんにちは！ \n\r\n"
+				+ Env.customerServiceName + "です。\n\r\n"
+				+ "まだアカウント登録は完了しておりません。下記URLから手続きを完了してください。\n\r\n"
+				+ Env.domainName + "/createUser?mode=confiData&data=" + mailBase64;
+		
+		return content;
+	}
+
+	public static String createUpdateMailMessage(String sysDiResu, String mailBase64) {
+		String content = ""
+				+ "こんにちは！ \n\r\n"
+				+ Env.customerServiceName + "です。\n\r\n"
+				+ "まだメールアドレスの変更手続きは完了しておりません。下記URLから手続きを完了してください。\n\r\n"
+				+ Env.domainName + "/userMailUpdate?sysDiResu=" + sysDiResu + "&liam=" + mailBase64;
+
+		return content;
+	}
+
+	public static String createUpdateCustMailMessage(String sysDiResu, String mailBase64) {
+		String content = ""
+				+ "こんにちは！ \n\r\n"
+				+ Env.customerServiceName + "です。\n\r\n"
+				+ "まだメールアドレスの変更手続きは完了しておりません。下記URLから手続きを完了してください。\n\r\n"
+				+ Env.domainName + "/mailUpdate?sysDiResu=" + sysDiResu + "&liam=" + mailBase64;
+
+		return content;
+	}
+
 	public static String createCompReserveMailMessage(String groupName, String groupMail, String custName, String stageDate,
 			Integer traAmount, DataEntity stageData, boolean noLogin, String ticketName, Integer ticketPrice) {
 
@@ -212,5 +242,19 @@ public class Pub {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年 M月 d日 H時 m分");
 		return localDateTime.format(formatter);
+	}
+
+	public static ArrayList<DataEntity> convertNoneUsers(ArrayList<DataEntity> tempList){
+		ArrayList<DataEntity> transactionList = new ArrayList<DataEntity>();
+		for(DataEntity data: tempList) {
+			if(data.getNo_login().equals("true")) {
+				data.setCust_name(data.getNone_user_name());
+				data.setCust_kana_name(data.getNone_user_kana_name());
+				data.setUser_mail(data.getNone_user_mail());
+				data.setUser_tell(data.getNone_user_tell());
+			}
+			transactionList.add(data);
+		}
+		return transactionList;
 	}
 }

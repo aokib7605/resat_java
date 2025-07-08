@@ -103,7 +103,7 @@
         </div>
 
         <div class="rightView">
-            <div>
+            <div class="countReserve">
 
                 <!-- 右側画面タイトル -->
                 <h1 th:text="${title}"></h1>
@@ -114,40 +114,38 @@
 
                 <!-- ページ内容 -->
                 <div>
-                    <div th:if="${dateTicketList != null}">
+                    <div th:if="${dateList != null && ticketList != null}">
                         <table>
                             <tr>
                                 <th>日時</th>
-                                <th>総座席数</th>
-                                <th:block th:each="column: ${allTicketList}">
-                                    <th th:text="${column.ticket_name}"></th>
+                                <th>座席数</th>
+                                <th:block th:each="ticket: ${ticketList}">
+                                    <th>
+                                        <span th:text="${ticket.ticket_name}"></span><br>
+                                        <span th:text="${ticket.ticket_price + '円'}"></span>
+                                    </th>
                                 </th:block>
                                 <th>予約合計</th>
                                 <th>残席数</th>
                             </tr>
-                            <th:block th:each="dateTicket, stat: ${dateTicketList}">
+                            <th:block th:each="date, stat: ${dateList}">
                                 <tr>
-                                    <td th:text="${dateList[stat.index].st_date}"></td>
-                                    <td th:text="${dateList[stat.index].st_seat}"></td>
-                                    <th:block th:each="data: ${dateTicket}">
-                                        <th:block th:if="${data != null}">
-                                            <td th:text="${data.amount_by_date}"></td>
-                                        </th:block>
-                                        <th:block th:if="${data == null}">
-                                            <td>0</td>
-                                        </th:block>
+                                    <th th:text="${#temporals.format(date.st_date, 'yyyy年 M月d日 HH時mm分')}"></th>
+                                    <td th:text="${date.st_seat}"></td>
+                                    <th:block th:each="tra_amount: ${allDateTransactionList[stat.index]}">
+                                        <td th:text="${tra_amount}"></td>
                                     </th:block>
-                                    <!-- <td th:text="${dateTicket[0].amount_by_date}"></td>
-                        <td th:text="${dateTicket[0].st_seat - dateTicket[0].amount_by_date}"></td> -->
+                                    <td th:text="${date.st_seat - allDateTransactionList[stat.index][stat.size]}"></td>
                                 </tr>
                             </th:block>
                             <tr>
-                                <td>総計</td>
-                                <td>90</td>
-                                <td>4</td>
-                                <td>4</td>
-                                <td>8</td>
-                                <td>82</td>
+                                <th>総計</th>
+                                <td th:text="${totalSeat}"></td>
+                                <th:block th:each="totalAmount: ${allTicketTransactionList}">
+                                    <td th:text="${totalAmount}"></td>
+                                </th:block>
+                                <td th:text="${allTotalAmount}"></td>
+                                <td th:text="${totalSeat - allTotalAmount}"></td>
                             </tr>
                         </table>
                     </div>

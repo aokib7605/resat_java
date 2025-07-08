@@ -172,6 +172,7 @@ public class DataEntity {
 	private Integer total_price_by_ticket;
 	private Integer total_amount;
 	private Integer total_price;
+	private Integer rest_seat;
 
 	public void setEntity(String column, String value) {
 		try {

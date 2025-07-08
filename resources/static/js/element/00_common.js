@@ -9,7 +9,7 @@ window.reserveListElement = {};
 // レスポンシブ対応にて使用する要素
 commonElement.startDiv = "div[name='startDiv']";
 commonElement.custPage = "div[name='custPage']";
-commonElement.responsiveWidth = "(max-width: 768px)";
+commonElement.responsiveWidth = "(max-width: 1024px)";
 commonElement.hamburger_overlay = "button[name='hamburgerOverlay']";
 commonElement.overlay_menu = "#overlay-menu";
 commonElement.menuContent = "nav[name='menuContent']";

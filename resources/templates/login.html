@@ -13,13 +13,13 @@
         <div class="managerLoginContainer">
 
             <div class="leftSide">
-                <img src="./img/0101/application_logo.png" class="topLogo">
+                <img th:src="@{/img/0101/application_logo.png}" class="topLogo" />
                 <div class="innerBox">
                     <h1>管理者画面にログイン</h1>
                 </div>
                 <p class="offered">
-                    開発・提供<br>
-                    劇団抜きにくい釘
+                    ver <span th:text="${applicationVer}"></span><br>
+                    開発 劇団抜きにくい釘<br>
                 </p>
             </div>
 

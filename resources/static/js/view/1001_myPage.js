@@ -6,7 +6,7 @@ $(function () {
   const $nav = $('#overlay-menu');
 
   function isMobileView() {
-    return window.matchMedia('(max-width: 768px)').matches;
+    return window.matchMedia(commonElement.responsiveWidth).matches;
   }
 
   function openMenu() {

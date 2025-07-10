@@ -16,6 +16,11 @@ commonElement.menuContent = "nav[name='menuContent']";
 commonElement.navContent = "div[name='navContent']";
 commonElement.mobileMessage = "p[name='mobileMessage']";
 
+// 全ページ共通で使用する要素
+commonElement.causeLoadingForm = "form[id='causeLoadingForm']";
+commonElement.submitBtn = "button[name='submitBtn']";
+commonElement.messageText = "p[id='messageText']";
+
 // cmn_managerMenu
 managerMenuElement.managerMenu = "div[name='managerMenu']";
 managerMenuElement.stage = "a[name='stage']";
@@ -42,9 +47,12 @@ managerLoginElement.inputVal = "p[name='inputVal']";
 setStageElement.stagePlaceName = "select[name='stagePlaceName']";
 setStageElement.newStagePlaceName = "form[name='newStagePlaceName']";
 
+// 0801_inputForm
+
+
 // 0902_createUser
 createUserElement.confiMail = "button[name='confiMail']";
-createUserElement.mailBox = "#confiMailSubmit";
+createUserElement.mailBox = "#causeLoadingForm";
 createUserElement.inputUserId = "input[name='userId']";
 createUserElement.userIdBox = "#confiUserIdSubmit";
 createUserElement.confiUserId = "button[name='confiUserId']";

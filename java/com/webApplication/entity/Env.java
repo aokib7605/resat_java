@@ -7,7 +7,8 @@ public class Env {
 	public static String customerServiceName = custApplicationTitle + "運営事務局";
 	
 	//ドメイン名
-	public static String domainName = "https://grobe-reserve.com";
+	public static String domainName = "http://localhost:8080";
+//	public static String domainName = "https://grobe-reserve.com";
 	public static String sendFromMail = "globe.reserveticket@gmail.com";
 	
 	// バージョン

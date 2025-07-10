@@ -18,7 +18,7 @@
             <!-- model.addAttribute('mode')の値で表示内容を分岐 -->
             <div th:switch="${mode}">
                 <div th:case="'checkMail'">
-                    <form action="/reserve/createUser" method="post" id="confiMailSubmit">
+                    <form action="/reserve/createUser" method="post" id="causeLoadingForm">
                         <input type="hidden" name="mode" value="checkMail">
                         <p>
                             メールアドレス<br>

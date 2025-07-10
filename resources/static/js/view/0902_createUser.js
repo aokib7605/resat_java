@@ -5,17 +5,20 @@ $(function () {
     // メール「確認」ボタン押下時の処理
     $(createUserElement.confiMail).on("click", function () {
 
-        const form = document.getElementById("confiMailSubmit");
+        const form = document.getElementById("causeLoadingForm");
         if (!form.checkValidity()) {
             // 無効な場合 → ブラウザ標準の警告を表示
             form.reportValidity(); // ポップアップで警告を出す
             return;
         }
 
+        // ボタンの多重クリックを防止
+        $(this).prop("disabled", true);
+
         // フォーム送信
         $(createUserElement.mailBox).append("<p class='alertText'>少々お待ちください</p>");
         $(createUserElement.mailBox).submit();
-    })
+    });
 
     // 「ユーザーID入力欄」変化時
     $(createUserElement.inputUserId).on("input", function () {

@@ -135,7 +135,7 @@
                 </form>
 
                 <!-- 内容確認画面 -->
-                <form action="/reserve" method="post" th:if="${mode == 'confiResult'}">
+                <form action="/reserve" method="post" th:if="${mode == 'confiResult'}" id="causeLoadingForm">
                     <p>下記の内容でよろしいですか？</p>
                     <table>
                         <tr>
@@ -190,7 +190,12 @@
                     <input type="hidden" name="custMail" th:value="${custMail}">
                     <input type="hidden" name="custTel" th:value="${custTel}">
                     <input type="hidden" name="mode" value="confiResult">
-                    <button name="nextMode" th:value="${nextMode}" class="btn"><span class="btnText">決定</span></button>
+                    <input type="hidden" name="nextMode" th:value="${nextMode}">
+                    <button type="button" class="btn" name="submitBtn">
+                        <span class="btnText">決定</span>
+                    </button>
+
+                    <p id="messageText" class="alertText hidden">ただいま処理中です<br>少々お待ちください</p>
 
                     <p>
                         <button type="submit" name="nextMode" value="back" class="btn">

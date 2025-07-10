@@ -218,7 +218,8 @@ public class CustCreateUserService {
 				Pub.getCurrentDate() + "",		//user_last_login
 				data.getUser_birthday() + "",	//user_birthday
 				data.getUser_hide_age() + "",	//user_hide_age
-				null							//user_def_group
+				null,							//user_def_group
+				null							//deleteFlg
 				));
 		mr.insertData("users", columns, values);
 

@@ -98,6 +98,7 @@ public class EnvService {
 				menuList_user.add(getMenuObject("団体一覧・参加", "/changeGroup?offset=&page="));
 				menuList_user.add(getMenuObject("ユーザー基本情報", "/setUser"));
 				menuList_user.add(getMenuObject("団体の新規作成", "/createGroup?mode=inputGroupId"));
+				menuList_user.add(getMenuObject("ログアウト", "/logout"));
 				model.addAttribute("menuList_user", menuList_user);
 				model.addAttribute("menuList_user_title", userData.getUser_name());
 				break;

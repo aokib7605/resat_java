@@ -12,14 +12,48 @@
 
     <div class="managerMenu" name="managerMenu">
 
-        <div class="leftMenu">
+        <!-- モバイル版ヘッダー -->
+        <div class="header">
+            <div class="iconArea">
+                <div class="topLogo">
+                    <img th:src="@{/img/0101/application_logo.png}" class="topLogo" />
+                </div>
+                <!-- ユーザーアイコン -->
+                <div class="userIconWrapper">
+                    <img src="./img/userIcon_temp.png" alt="ユーザー" class="userIcon" name="headerAccount">
+                </div>
+            </div>
+            <nav>
+
+                <!-- 初期メニュー項目 -->
+                <a href="javascript:void(0)" class="headerLink">
+                    <h4 name="headerHome">ホーム</h4>
+                </a>
+
+                <!-- 公演が選択されている場合のみ表示されるメニュー項目 -->
+                <th:block th:if="${menuList_ctegory_stage != null && menuList_ctegory_stage != ''}">
+                    <span class="headerLink">
+                        <h4 th:text="${menuList_ctegory_stage}" name="headerStage"></h4>
+                    </span>
+                </th:block>
+
+                <!-- 団体が選択されている場合のみ表示されるメニュー項目 -->
+                <th:block th:if="${menuList_ctegory_group != null && menuList_ctegory_group != ''}">
+                    <span class="headerLink">
+                        <h4 th:text="${menuList_ctegory_group}" name="headerGroup"></h4>
+                    </span>
+                </th:block>
+            </nav>
+        </div>
+
+        <!-- PC版サイドメニュー -->
+        <div class="leftMenu" id="leftMenu">
             <div class="menuLogo">
-                <img src="./img/0101/application_logo.png" class="topLogo">
+                <img th:src="@{/img/0101/application_logo.png}" class="topLogo" />
             </div>
             <div class="menuContent">
                 <!-- <h1 th:text="${title}"></h1> -->
                 <h2 th:text="${title2}"></h2>
-
                 <hr>
 
                 <!-- 各種メニュー -->
@@ -103,132 +137,242 @@
             </div>
         </div>
 
-        <div class="rightView">
-            <div>
+        <!-- オーバーレイ背景 -->
+        <div id="overLayBackground" class="overLayBackground"></div>
 
-                <!-- 右側画面タイトル -->
-                <h1 th:text="${title}"></h1>
-                <h2 th:text="${title2}"></h2>
+        <!-- オーバーレイメニュー本体 -->
+        <div class="hidden overLayMenu" name="overLayMenu">
+            <!-- 各種メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_stage}">
+                    <li class="hidden" name="stageMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
 
-                <!-- 区切り線 -->
-                <hr>
+            <!-- 票券管理メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_manage}">
+                    <li class="hidden" name="manageMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
 
-                <!-- ページ内容 -->
-                <h3>ユーザーを検索して招待</h3>
-                <form action="/setStageMember" method="post">
-                    <input type="hidden" name="searchOffset" th:value="${searchOffset}">
-                    <input type="hidden" name="page" value="">
-                    <p>
-                        検索方法
-                        <select name="mode" required>
-                            <option value="" disabled selected>検索方法を選択してください</option>
-                            <option value="idSearch">ユーザーID</option>
-                            <option value="nameSearch">ユーザー名</option>
-                            <option value="mailSearch">メールアドレス</option>
-                        </select>
-                    </p>
-                    <p>
-                        <input type="text" name="keyword" th:value="${keyword}">
-                        <input type="submit" value="検索">
-                    </p>
-                </form>
-                <p th:text="${message}" style="color: red;"></p>
+            <!-- 便利機能メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_tools}">
+                    <li class="hidden" name="toolMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
 
-                <div th:if="${!#lists.isEmpty(searchUserList)}">
-                    <table>
-                        <tr>
-                            <th>ユーザーID</th>
-                            <th>ユーザー名</th>
-                            <th></th>
-                        </tr>
-                        <th:block th:each="item : ${searchUserList}">
-                            <tr>
-                                <form action="/setStageMember" method="post">
-                                    <input type="hidden" name="mode" th:value="${mode}">
-                                    <input type="hidden" name="keyword" th:value="${keyword}">
-                                    <input type="hidden" name="searchOffset" th:value="${searchOffset}">
-                                    <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
-                                    <td th:text="${item.user_id}"></td>
-                                    <td th:text="${item.user_name}"></td>
-                                    <td><button name="loginMode" value="invite">招待</button></td>
-                                </form>
-                            </tr>
-                        </th:block>
-                    </table>
-                    <form action="/setStageMember" method="post">
-                        <input type="hidden" name="mode" th:value="${mode}">
-                        <input type="hidden" name="keyword" th:value="${keyword}">
-                        <input type="hidden" name="searchOffset" th:value="${searchOffset}">
-                        <p>
-                            <button type="submit" name="page" value="searchPrev"
-                                th:if="${searchPrev != null}">前へ</button>
-                            <button type="submit" name="page" value="searchNext"
-                                th:if="${searchNext != null}">次へ</button>
-                        </p>
-                    </form>
-                </div>
+            <!-- 団体メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_group}">
+                    <li class="hidden" name="groupMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
 
-                <h3>公演のメンバー一覧</h3>
+            <!-- ユーザーメニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_user}">
+                    <li class="hidden" name="userMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+        </div>
+        <!-- ナビゲーションここまで -->
+
+        <div class="content">
+            <div class="rightView">
                 <div>
-                    <table>
-                        <tr>
-                            <th>ユーザーID</th>
-                            <th>ユーザー名</th>
-                            <th>権限</th>
-                            <th></th>
-                        </tr>
-                        <th:block th:each="item : ${memberList}">
-                            <tr>
-                                <td th:text="${item.user_id}"></td>
-                                <td th:text="${item.user_name}"></td>
-                                <td th:text="${item.authority_name}"></td>
-                                <td
-                                    th:if="${item.sys_user_id == userData.sys_user_id && item.sys_user_id != sysUserId}">
-                                    <span style="color: red;">編集不可</span>
-                                </td>
-                                <td
-                                    th:if="${item.sys_user_id != userData.sys_user_id && item.sys_user_id != sysUserId}">
-                                    <form action="/setStageMember" method="post">
-                                        <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
-                                        <button name="mode" value="select">編集</button>
-                                    </form>
-                                </td>
-                                <td th:if="${item.sys_user_id == sysUserId && mode == 'select'}">
-                                    <form action="/setStageMember" method="post">
-                                        <input type="hidden" name="mode" value="select">
-                                        <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
-                                        <p>
-                                            権限変更 <span th:text="${item.authority_name}"></span> ⇒
-                                            <select name="stageAuthority">
-                                                <th:block th:each="opt : ${authorityList}">
-                                                    <option th:value="${opt.authority_id}"
-                                                        th:text="${opt.authority_name}">
-                                                    </option>
-                                                </th:block>
-                                            </select>
-                                            <button type="submit" name="nextMode" value="inputValue">決定</button>
-                                        </p>
-                                        <p>
-                                            公演から退会 ⇒
-                                            <button type="submit" name="nextMode" value="logout">退会</button>
-                                        </p>
-                                    </form>
-                                </td>
-                            </tr>
-                        </th:block>
-                    </table>
+
+                    <!-- 右側画面タイトル -->
+                    <h1 th:text="${title}"></h1>
+                    <h2 th:text="${title2}"></h2>
+
+                    <!-- 区切り線 -->
+                    <hr>
+
+                    <!-- ページ内容 -->
+                    <h3>ユーザーを検索して招待</h3>
                     <form action="/setStageMember" method="post">
-                        <input type="hidden" name="mode" value="stageList">
-                        <input type="hidden" name="listOffset" th:value="${listOffset}">
+                        <input type="hidden" name="searchOffset" th:value="${searchOffset}">
+                        <input type="hidden" name="page" value="">
                         <p>
-                            <button type="submit" name="page" value="prev" th:if="${prev != null}">前へ</button>
-                            <button type="submit" name="page" value="next" th:if="${next != null}">次へ</button>
+                            検索方法
+                            <label class="selectWrapper">
+                                <select name="mode" required>
+                                    <option value="" disabled selected>検索方法を選択してください</option>
+                                    <option value="idSearch">ユーザーID</option>
+                                    <option value="nameSearch">ユーザー名</option>
+                                    <option value="mailSearch">メールアドレス</option>
+                                </select>
+                            </label>
+                        </p>
+                        <p>
+                            <input type="text" name="keyword" th:value="${keyword}">
+                            <button type="submit" class="btn">
+                                <span class="btnText">検索</span>
+                            </button>
                         </p>
                     </form>
-                    <p th:text="${listMessage}"></p>
-                </div>
+                    <p th:text="${message}" style="color: red;"></p>
 
+                    <div th:if="${!#lists.isEmpty(searchUserList)}">
+                        <div class="tableWrapper">
+                            <table class="stripedTable">
+                                <tr>
+                                    <th>ユーザーID</th>
+                                    <th>ユーザー名</th>
+                                    <th></th>
+                                </tr>
+                                <th:block th:each="item : ${searchUserList}">
+                                    <tr>
+                                        <form action="/setStageMember" method="post">
+                                            <input type="hidden" name="mode" th:value="${mode}">
+                                            <input type="hidden" name="keyword" th:value="${keyword}">
+                                            <input type="hidden" name="searchOffset" th:value="${searchOffset}">
+                                            <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
+                                            <td th:text="${item.user_id}"></td>
+                                            <td th:text="${item.user_name}"></td>
+                                            <td>
+                                                <button name="loginMode" value="invite" class="btn">
+                                                    <span class="btnText">招待</span>
+                                                </button>
+                                            </td>
+                                        </form>
+                                    </tr>
+                                </th:block>
+                            </table>
+                        </div>
+                        <form action="/setStageMember" method="post">
+                            <input type="hidden" name="mode" th:value="${mode}">
+                            <input type="hidden" name="keyword" th:value="${keyword}">
+                            <input type="hidden" name="searchOffset" th:value="${searchOffset}">
+                            <p>
+                                <button type="submit" name="page" value="searchPrev" th:if="${searchPrev != null}"
+                                    class="btn">
+                                    <span class="btnText">前へ</span>
+                                </button>
+                                <button type="submit" name="page" value="searchNext" th:if="${searchNext != null}"
+                                    class="btn">
+                                    <span class="btnText">次へ</span>
+                                </button>
+                            </p>
+                        </form>
+                    </div>
+
+                    <h3>公演のメンバー一覧</h3>
+                    <div>
+                        <div class="tableWrapper">
+                            <table class="stripedTable">
+                                <tr>
+                                    <th>ユーザーID</th>
+                                    <th>ユーザー名</th>
+                                    <th>権限</th>
+                                    <th></th>
+                                </tr>
+                                <th:block th:each="item : ${memberList}">
+                                    <tr>
+                                        <td th:text="${item.user_id}"></td>
+                                        <td th:text="${item.user_name}"></td>
+                                        <td th:text="${item.authority_name}"></td>
+                                        <td
+                                            th:if="${item.sys_user_id == userData.sys_user_id && item.sys_user_id != sysUserId}">
+                                            <span style="color: red;">編集不可</span>
+                                        </td>
+                                        <td
+                                            th:if="${item.sys_user_id != userData.sys_user_id && item.sys_user_id != sysUserId}">
+                                            <form action="/setStageMember" method="post">
+                                                <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
+                                                <button name="mode" value="select" class="btn">
+                                                    <span class="btnText">編集</span>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td th:if="${item.sys_user_id == sysUserId && mode == 'select'}">
+                                            <form action="/setStageMember" method="post">
+                                                <input type="hidden" name="mode" value="select">
+                                                <input type="hidden" name="sysUserId" th:value="${item.sys_user_id}">
+                                                <p>
+                                                    権限変更 <span th:text="${item.authority_name}"></span> ⇒
+                                                    <label class="selectWrapper">
+                                                        <select name="stageAuthority">
+                                                            <th:block th:each="opt : ${authorityList}">
+                                                                <option th:value="${opt.authority_id}"
+                                                                    th:text="${opt.authority_name}">
+                                                                </option>
+                                                            </th:block>
+                                                        </select>
+                                                    </label>
+                                                    <button type="submit" name="nextMode" value="inputValue"
+                                                        class="btn">
+                                                        <span class="btnText">決定</span>
+                                                    </button>
+                                                </p>
+                                                <p>
+                                                    公演から退会 ⇒
+                                                    <button type="submit" name="nextMode" value="logout" class="btn">
+                                                        <span class="btnText">退会</span>
+                                                    </button>
+                                                </p>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                            </table>
+                        </div>
+                        <form action="/setStageMember" method="post">
+                            <input type="hidden" name="mode" value="stageList">
+                            <input type="hidden" name="listOffset" th:value="${listOffset}">
+                            <p>
+                                <button type="submit" name="page" value="prev" th:if="${prev != null}" class="btn">
+                                    <span class="btnText">前へ</span>
+                                </button>
+                                <button type="submit" name="page" value="next" th:if="${next != null}" class="btn">
+                                    <span class="btnText">次へ</span>
+                                </button>
+                            </p>
+                        </form>
+                        <p th:text="${listMessage}"></p>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <!-- フッター -->
+        <div class="footer">
+            <nav>
+                <!-- 公演メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'stage'}">
+                    <a href="javascript:void(0)" class="stage footerLink" name="stage">
+                        <h4 th:text="${menuList_stage_title}"></h4>
+                    </a>
+                    <a href="javascript:void(0)" class="manage footerLink" name="manage">
+                        <h4 th:text="${menuList_manage_title}">
+                        </h4>
+                    </a>
+                    <a href="javascript:void(0)" class="tool footerLink" name="tool">
+                        <h4 th:text="${menuList_tools_title}"></h4>
+                    </a>
+                </th:block>
+
+                <!-- 団体メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'group'}">
+                    <a href="javascript:void(0)" class="group footerLink" name="group">
+                        <h4 th:text="${menuList_group_title}"></h4>
+                    </a>
+                </th:block>
+
+                <!-- 個人メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'account'}">
+                    <a href="javascript:void(0)" class="user footerLink" name="user">
+                        <h4 th:text="${menuList_user_title}"></h4>
+                    </a>
+                </th:block>
+            </nav>
         </div>
 
 

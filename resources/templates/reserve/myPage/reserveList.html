@@ -11,7 +11,7 @@
 <body>
     <div class="custPage" name="custPage">
 
-        <!-- ナビゲーション -->
+        <!-- ナビゲーションここから -->
         <button class="hamburger-overlay" name="hamburgerOverlay" aria-label="メニュー" aria-controls="overlay-menu"
             aria-expanded="false">
             <span class="hamburger-overlay__line"></span>
@@ -219,7 +219,7 @@
                 <tr th:if="${stageInfo.stage_story != null && stageInfo.stage_story != ''}">
                     <th class="firstCol" colspan="2">あらすじ</th>
                 </tr>
-                <tr>
+                <tr th:if="${stageInfo.stage_story != null && stageInfo.stage_story != ''}">
                     <td colspan="2">
                         <th:block th:each="str, stat : ${stageInfo.stage_story.split('\r\n|\r|\n', -1)}">
                             <th:block th:text="${str}" />

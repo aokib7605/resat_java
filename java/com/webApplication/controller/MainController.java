@@ -33,6 +33,7 @@ import com.webApplication.service.SetUserService;
 import lombok.RequiredArgsConstructor;
 
 
+
 @Controller
 @RequiredArgsConstructor
 public class MainController {
@@ -133,6 +134,11 @@ public class MainController {
 			model.addAttribute("message", Env.logoutCompMessage);
 		}
 		return goLoginPage(model);
+	}
+	
+	@GetMapping("/logout")
+	public String exeLogout(Model model) {
+		return accessLogin(model, "logout");
 	}
 
 	@GetMapping("/index")
@@ -501,11 +507,17 @@ public class MainController {
 		return goSetFirstStage(model);
 	}
 
+	/**
+	 * 公演基本設定画面に遷移します
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/setStage")
 	public String goSetStage(Model model){
 		try {
 			setEnvData(model, "manager");
 			sss.setPageInfo(model);
+			setViewMode(model, "stage");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -577,11 +589,17 @@ public class MainController {
 		return goSetStage(model);
 	}
 
+	/**
+	 * 予約フォーム作成画面に遷移します
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/setForm")
 	public String goSetForm(Model model) {
 		try {
 			setEnvData(model, "manager");
 			sfs.setPageInfo(model);
+			setViewMode(model, "stage");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -652,11 +670,17 @@ public class MainController {
 		return goSetForm(model);
 	}
 
+	/**
+	 * 座席設定画面に遷移します
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/setSeat")
 	public String goSetSeat(Model model) {
 		try {
 			setEnvData(model, "manager");
 			sss2.setPageInfo(model);
+			setViewMode(model, "stage");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -684,11 +708,17 @@ public class MainController {
 		return goSetSeat(model);
 	}
 
+	/**
+	 * 宣伝情報画面に遷移します
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/setAdvertisement")
 	public String goSetAdvertisement(Model model) {
 		try {
 			setEnvData(model, "manager");
 			sas.setPageInfo(model);
+			setViewMode(model, "stage");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -768,11 +798,19 @@ public class MainController {
 		return goSetAdvertisement(model);
 	}
 
+	/**
+	 * 公演メンバー設定画面に遷移します
+	 * @param model
+	 * @param offset
+	 * @param page
+	 * @return
+	 */
 	@GetMapping("/setStageMember")
 	public String goSetStageMember(Model model, Integer offset, String page) {
 		try {
 			setEnvData(model, "manager");
 			ssms.setPageInfo(model);
+			setViewMode(model, "stage");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -827,11 +865,17 @@ public class MainController {
 		return goSetStageMember(model, offset, page);
 	}
 
+	/**
+	 * 予約一覧画面に遷移します
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("checkReserveList")
 	public String goCheckReserveList(Model model) {
 		try {
 			setEnvData(model, "manager");
 			crls.setPageInfo(model);
+			setViewMode(model, "stage");
 		} catch (Exception e) {
 			System.out.println(e);
 			// TODO: handle exception
@@ -864,10 +908,16 @@ public class MainController {
 		return goCheckReserveList(model);
 	}
 
+	/**
+	 * 予約集計画面に遷移します
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("countReserve")
 	public String goCountReserve(Model model) {
 		try {
 			setEnvData(model, "manager");
+			setViewMode(model, "stage");
 			crs.setPageInfo(model);
 		} catch (Exception e) {
 			//			System.out.println(e);
@@ -875,11 +925,17 @@ public class MainController {
 		return goAnyPage(model, "countReserve");
 	}
 
+	/**
+	 * 予約フォーム一覧画面に遷移します
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("checkFormList")
 	public String goCheckFormList(Model model) {
 		try {
 			setEnvData(model, "manager");
 			cfls.setPageInfo(model);
+			setViewMode(model, "stage");
 		} catch (Exception e) {
 			System.out.println(e);
 			// TODO: handle exception
@@ -887,11 +943,18 @@ public class MainController {
 		return goAnyPage(model, "checkFormList");
 	}
 
+	/**
+	 * 公演新規作成画面に遷移します
+	 * @param model
+	 * @param mode
+	 * @return
+	 */
 	@GetMapping("/createStage")
 	public String goCreateStage(Model model, String mode) {
 		try {
 			setEnvData(model, "manager");
 			css.setPageInfo(model);
+			setViewMode(model, "group");
 			switch (mode) {
 			case "inputSysGroupId": {
 				model.addAttribute("mode", "inputSysGroupId");
@@ -954,11 +1017,19 @@ public class MainController {
 		}
 	}
 
+	/**
+	 * 公演一覧・参加画面に遷移します
+	 * @param model
+	 * @param offset
+	 * @param page
+	 * @return
+	 */
 	@GetMapping("/checkStageList")
 	public String goCheckStageList(Model model, Integer offset, String page) {
 		try {
 			setEnvData(model, "manager");
 			csls.setPageInfo(model, offset, page);
+			setViewMode(model, "account");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -990,11 +1061,17 @@ public class MainController {
 		return goCheckStageList(model, offset, page);
 	}
 
+	/**
+	 * 団体基本情報画面に遷移します
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/setGroup")
 	public String goSetGroup(Model model) {
 		try {
 			setEnvData(model, "manager");
 			sgs.setPageInfo(model);
+			setViewMode(model, "group");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -1042,11 +1119,19 @@ public class MainController {
 		return goSetGroup(model);
 	}
 
+	/**
+	 * 団体メンバー設定画面に遷移します
+	 * @param model
+	 * @param offset
+	 * @param page
+	 * @return
+	 */
 	@GetMapping("/setGroupMember")
 	public String goSetGroupMember(Model model, Integer offset, String page) {
 		try {
 			setEnvData(model, "manager");
 			sgms.setPageInfo(model);
+			setViewMode(model, "group");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -1101,11 +1186,19 @@ public class MainController {
 		return goSetGroupMember(model, offset, page);
 	}
 
+	/**
+	 * 公演一覧・参加画面に遷移します
+	 * @param model
+	 * @param offset
+	 * @param page
+	 * @return
+	 */
 	@GetMapping("/changeStage")
 	public String goChangeStage(Model model, Integer offset, String page) {
 		try {
 			setEnvData(model, "manager");
 			chss.setPageInfo(model, offset, page);
+			setViewMode(model, "account");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -1152,6 +1245,7 @@ public class MainController {
 		try {
 			setEnvData(model, "manager");
 			chgs.setPageInfo(model, offset, page);
+			setViewMode(model, "account");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -1198,6 +1292,7 @@ public class MainController {
 		try {
 			setEnvData(model, "manager");
 			sus.setPageInfo(model);
+			setViewMode(model, "account");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -1275,6 +1370,7 @@ public class MainController {
 		try {
 			setEnvData(model, "manager");
 			cgs.setPageInfo(model);
+			setViewMode(model, "account");
 			switch (mode) {
 			case "inputGroupId": {
 				model.addAttribute("mode", "inputGroupId");
@@ -1321,4 +1417,33 @@ public class MainController {
 			return goRootPage(model);
 		}
 	}
+	
+	@PostMapping("/home")
+	public String setViewModeToHome(Model model) {
+		model.addAttribute("viewMode", "home");
+		return goRootPage(model);
+	}
+	
+	@PostMapping("/stage")
+	public String setViewModeToStage(Model model) {
+		model.addAttribute("viewMode", "stage");
+		return goSetStage(model);
+	}
+	
+	@PostMapping("/group")
+	public String setViewModeToGroup(Model model) {
+		model.addAttribute("viewMode", "group");
+		return goSetGroup(model);
+	}
+	
+	@PostMapping("/account")
+	public String setViewModeToAccount(Model model) {
+		model.addAttribute("viewMode", "account");
+		return goSetUser(model);
+	}
+	
+	public static void setViewMode(Model model, String value) {
+		model.addAttribute("viewMode", value);
+	}
+	
 }

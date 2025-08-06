@@ -1,25 +1,6 @@
 @import './style/0000_cmnMenu.css';
 @import './style/0101_managerLogin.css';
-@import './style/0201_managerTop.css';
-@import './style/0202_setStage.css';
-@import './style/0203_setForm.css';
-@import './style/0204_setSeat.css';
-@import './style/0205_setAdvertisement.css';
-@import './style/0206_setStageMember.css';
-@import './style/0301_checkReserveList.css';
 @import './style/0302_countReserve.css';
-@import './style/0303_checkFormList.css';
-@import './style/0401_sendMail.css';
-@import './style/0402_exportExcel.css';
-@import './style/0501_createStage.css';
-@import './style/0502_checkStageList.css';
-@import './style/0503_setGroup.css';
-@import './style/0504_setGroupMember.css';
-@import './style/0601_changeStage.css';
-@import './style/0602_changeGroup.css';
-@import './style/0603_setUser.css';
-@import './style/0604_createGroup.css';
-@import './style/0701_createUser.css';
 @import './style/0702_setFirstStage.css';
 @import './style/0801_inputForm.css';
 @import './style/0901_custLogin.css';
@@ -27,15 +8,55 @@
 @import './style/1001_myPage.css';
 @import './style/1002_setCust.css';
 @import './style/1003_reserveList.css';
+@import './style/pc_cmn.css';
+@import './style/mobile_cmn.css';
+@import './style/pc_manage.css';
+@import './style/mobile_manage.css';
+@import './style/pc_cust.css';
+@import './style/mobile_cust.css';
+@import './style/cmn_header.css';
+@import './style/cmn_footer.css';
+@import './style/cmn_leftSide.css';
+@import './style/cmn_managerMenu.css';
+@import './style/cmn_table.css';
+@import './style/cmn_button.css';
+@import './style/cmn_input.css';
+@import './style/cmn_select.css';
+@import './style/cmn_midashi.css';
+
+/* 1. ブラウザの余白をリセット */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 html,
 body {
-    margin: 0;
-    padding: 0;
     height: 100%;
+    overflow-x: hidden;
     word-break: keep-all;
     white-space: normal;
     overflow-wrap: break-word;
+}
+
+nav {
+    width: 100%;
+}
+
+.pc nav {
+  width: 80vw;
+  display: flex;
+  justify-content: space-around;
+}
+
+.pc nav ul {
+  width: 50%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding-bottom: 0%;
+  margin-bottom: 0%;
 }
 
 .pc p,
@@ -51,18 +72,8 @@ body {
     font-size: 1.2vw;
 }
 
-.pc input {
-    width: 30vw;
-    height: 3vh;
-}
-
-.pc select {
-    height: 5vh;
-    /* 標準のスタイルを無効にする */
-    border: none;
-    appearance: none;
-    outline: none;
-    background: transparent;
+.pc li {
+  list-style: none;
 }
 
 .mobile {
@@ -82,25 +93,10 @@ body {
     font-size: 4.2vw;
 }
 
-.mobile h2 {
-    font-size: 6.5vw;
-}
-
-.mobile h3 {
-    font-size: 5.5vw;
-}
-
-.mobile input {
-    height: 3vh;
-}
-
-.mobile select {
-    height: 5vh;
-    /* 標準のスタイルを無効にする */
-    border: none;
-    appearance: none;
-    outline: none;
-    background: transparent;
+.mobile .rightView {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .mobile table {
@@ -147,4 +143,13 @@ body {
     color: blue;
     cursor: pointer;
     border-bottom: solid 1px blue;
+}
+
+.rightView .setStage {
+    align-items: center;
+}
+
+.setStageForm p {
+    font-size: small;
+    color: #999;
 }

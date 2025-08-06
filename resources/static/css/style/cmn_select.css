@@ -1,0 +1,77 @@
+.pc select {
+    height: 5vh;
+    /* 標準のスタイルを無効にする */
+    border: none;
+    appearance: none;
+    outline: none;
+    background: transparent;
+}
+
+.pc .sel select {
+    width: 100%;
+    padding-left: 1vw;
+    color: #000000;
+    cursor: pointer;
+    z-index: 1;
+}
+
+/* モバイル版対応 */
+.mobile select {
+    height: 5vh;
+    /* 標準のスタイルを無効にする */
+    /* border: none;
+    appearance: none;
+    outline: none;
+    background: transparent; */
+    font-size: 2.5rem;
+}
+
+.mobile .sel select {
+    width: fit-content;
+    text-align: center;
+    padding-left: 1vw;
+    color: #000000;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.rightView .selectWrapper select {
+    appearance: none;
+    min-width: 230px;
+    height: 2.8em;
+    padding: .4em calc(.8em + 30px) .4em .8em;
+    border: none;
+    border-bottom: 2px solid #d0d0d0;
+    background-color: #fff;
+    color: #333333;
+    font-size: 1em;
+    cursor: pointer;
+    margin-bottom: 2vh;
+}
+
+.rightView .selectWrapper select:focus {
+    outline: none;
+}
+
+.rightView .selectWrapper::after {
+    position: absolute;
+    right: 15px;
+    width: 10px;
+    height: 7px;
+    background-color: #535353;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    content: '';
+    pointer-events: none;
+}
+
+.rightView .selectWrapper {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+
+/* ログイン画面で使用 */
+.center_container .selectBox {
+    padding-top: 5vh;
+    color: #999;
+}

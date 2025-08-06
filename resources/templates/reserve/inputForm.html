@@ -26,7 +26,7 @@
             <div>
                 <form action="/reserve" method="post" th:if="${mode == 'inputDate'}">
                     <p>日時を選択してください</p>
-                    <label class="inputFormSelect">
+                    <label class="selectWrapper">
                         <select name="sysDateId">
                             <th:block th:each="item : ${dateFormList}">
                                 <option th:value="${item.sys_date_id}"

@@ -1,0 +1,53 @@
+/* しましまボーダーテーブル */
+.pc .stripedTable {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-top: 5vh;
+}
+
+.pc .stripedTable tr {
+    height: 7vh;
+}
+
+.pc .stripedTable tr:nth-child(odd) {
+    background-color: #eee
+}
+
+.pc .stripedTable td,
+.pc .stripedTable th {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.mobile .tableWrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* iOS対策 */
+    width: 100%;
+}
+
+.mobile .stripedTable {
+    width: max-content; /* 内容に応じた幅を確保 */
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-top: 5vh;
+}
+
+.mobile .stripedTable tr {
+    height: 8vh;
+    /* モバイルでは行の高さをやや広げる */
+}
+
+.mobile .stripedTable tr:nth-child(odd) {
+    background-color: #eee;
+}
+
+.mobile .stripedTable td,
+.mobile .stripedTable th {
+    padding-left: 2vw;
+    /* モバイルでは相対単位で余白調整 */
+    padding-right: 2vw;
+    word-break: break-word;
+    /* モバイルでの折り返し対策 */
+    text-align: left;
+}

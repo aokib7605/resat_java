@@ -492,4 +492,35 @@ public class InputFormService {
 			return "noneUserReserveComp";
 		}
 	}
+	
+	/**
+	 * 外部サービスからの予約登録を実行します
+	 * @param model
+	 * @param traData
+	 * @return true ... 成功の場合
+	 * @return false ... 失敗の場合
+	 */
+	public Boolean registOtherServiceTransaction(Model model, DataEntity traData) {
+		try {
+			ArrayList<DataEntity> traDataList = new ArrayList<DataEntity>();
+			
+			// 予約登録メソッドに渡すオブジェクト型配列の準備
+			String sysNoneUserId = Pub.createUuid();
+			traData.setSys_none_user_id(sysNoneUserId);
+			traData.setNone_user_name(traData.getUser_name());
+			traData.setNone_user_kana_name(traData.getUser_kana_name());
+			traData.setNone_user_mail(traData.getUser_mail());
+			traData.setNone_user_tell(traData.getUser_tell());			
+			traDataList.add(traData);
+			
+			// 予約登録メソッドの実行
+			registTransaction(model, "true", traDataList);
+			
+			return true;
+			
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		}
+	}
 }

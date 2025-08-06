@@ -1,0 +1,86 @@
+.mobile .header {
+    /* 固定表示 */
+    position: fixed;
+
+    /* 上端に配置 */
+    top: 0;
+
+    /* 幅いっぱいに広げる */
+    left: 0;
+    width: 100%;
+
+    /* 最前面に表示 */
+    z-index: 9999;
+
+    background-color: rgb(255, 174, 43);
+    padding-top: 1.5vh;
+    padding-bottom: 1.5vh;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+    /* ロゴ⇒ナビゲーションの順で縦並び */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    /* 任意：影をつけると固定感UP */
+    display: flex;
+
+    /* 左右に分ける */
+    justify-content: space-between;
+
+    flex-wrap: wrap;
+}
+
+.mobile .content {
+    /* ヘッダー分の余白を追加 */
+    padding-top: 17vh;
+}
+
+.mobile .header .topLogo {
+    height: 8vh;
+    margin-bottom: 1.5vh;
+    position: static;
+    transform: none;
+}
+
+.mobile .header nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    /* 折り返し防止 */
+    flex-wrap: nowrap;
+
+    /* 適度な間隔 */
+    gap: 1rem;
+}
+
+.mobile .header .headerLink {
+    font-size: 2.5rem;
+    /* 縮まないように */
+    flex-shrink: 0;
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    /* リンクの下線などを削除 */
+    text-decoration: none;
+
+    /* 親要素と同じ色にしたい場合 */
+    color: inherit;
+}
+
+.mobile .userIconWrapper {
+    position: absolute;
+    top: 1.5vh;
+    right: 2vw;
+}
+
+.mobile .userIcon {
+    width: 10vw;
+    border-radius: 50%;
+    object-fit: cover;
+    /* はみ出さないように */
+    border: 2px solid white;
+    /* 任意：白縁 */
+}

@@ -11,14 +11,48 @@
 <body>
     <div class="managerMenu" name="managerMenu">
 
-        <div class="leftMenu">
+        <!-- モバイル版ヘッダー -->
+        <div class="header">
+            <div class="iconArea">
+                <div class="topLogo">
+                    <img th:src="@{/img/0101/application_logo.png}" class="topLogo" />
+                </div>
+                <!-- ユーザーアイコン -->
+                <div class="userIconWrapper">
+                    <img src="./img/userIcon_temp.png" alt="ユーザー" class="userIcon" name="headerAccount">
+                </div>
+            </div>
+            <nav>
+
+                <!-- 初期メニュー項目 -->
+                <a href="javascript:void(0)" class="headerLink">
+                    <h4 name="headerHome">ホーム</h4>
+                </a>
+
+                <!-- 公演が選択されている場合のみ表示されるメニュー項目 -->
+                <th:block th:if="${menuList_ctegory_stage != null && menuList_ctegory_stage != ''}">
+                    <span class="headerLink">
+                        <h4 th:text="${menuList_ctegory_stage}" name="headerStage"></h4>
+                    </span>
+                </th:block>
+
+                <!-- 団体が選択されている場合のみ表示されるメニュー項目 -->
+                <th:block th:if="${menuList_ctegory_group != null && menuList_ctegory_group != ''}">
+                    <span class="headerLink">
+                        <h4 th:text="${menuList_ctegory_group}" name="headerGroup"></h4>
+                    </span>
+                </th:block>
+            </nav>
+        </div>
+
+        <!-- PC版サイドメニュー -->
+        <div class="leftMenu" id="leftMenu">
             <div class="menuLogo">
-                <img src="./img/0101/application_logo.png" class="topLogo">
+                <img th:src="@{/img/0101/application_logo.png}" class="topLogo" />
             </div>
             <div class="menuContent">
                 <!-- <h1 th:text="${title}"></h1> -->
                 <h2 th:text="${title2}"></h2>
-
                 <hr>
 
                 <!-- 各種メニュー -->
@@ -102,54 +136,144 @@
             </div>
         </div>
 
-        <div class="rightView">
-            <div>
+        <!-- オーバーレイ背景 -->
+        <div id="overLayBackground" class="overLayBackground"></div>
 
-                <!-- 右側画面タイトル -->
-                <h1 th:text="${title}"></h1>
-                <h2 th:text="${title2}"></h2>
+        <!-- オーバーレイメニュー本体 -->
+        <div class="hidden overLayMenu" name="overLayMenu">
+            <!-- 各種メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_stage}">
+                    <li class="hidden" name="stageMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
 
-                <!-- 区切り線 -->
-                <hr>
+            <!-- 票券管理メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_manage}">
+                    <li class="hidden" name="manageMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
 
-                <!-- ページ内容 -->
+            <!-- 便利機能メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_tools}">
+                    <li class="hidden" name="toolMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+
+            <!-- 団体メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_group}">
+                    <li class="hidden" name="groupMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+
+            <!-- ユーザーメニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_user}">
+                    <li class="hidden" name="userMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+        </div>
+        <!-- ナビゲーションここまで -->
+
+        <div class="content">
+            <div class="rightView">
                 <div>
-                    <p>各公演日時ごとの座席数（予約登録可能数）を設定します</p>
-                    <form action="/setSeat" method="post">
-                        <table>
-                            <tr>
-                                <th>公演日時</th>
-                                <th>座席数</th>
-                            </tr>
-                            <th:block th:each="item : ${dateList}">
-                                <tr>
-                                    <td
-                                        th:text="${#temporals.format(item.st_date, 'yyyy-MM-dd HH:mm') + ' ' + item.st_info}">
-                                    </td>
-                                    <td>
-                                        <input type="hidden" name="sysDateId" th:value="${item.sys_date_id}">
-                                        <input type="number" name="stSeat" th:value="${item.st_seat}">
-                                    </td>
-                                </tr>
-                            </th:block>
-                        </table>
-                        <button type="submit" name="mode" value="setSeat">登録</button>
-                    </form>
 
-                    <form action="/setSeat" method="post">
-                        <p>
-                            全日程一括変更<br>
-                            座席数：<input type="number" name="stSeat">
-                            <th:block th:each="item : ${dateList}">
-                                <input type="hidden" name="sysDateId" th:value="${item.sys_date_id}">
-                            </th:block>
-                            <button type="submit" name="mode" value="setAllSeat">一括登録</button>
-                        </p>
-                    </form>
+                    <!-- 右側画面タイトル -->
+                    <h1 th:text="${title}"></h1>
+                    <h2 th:text="${title2}"></h2>
+
+                    <!-- 区切り線 -->
+                    <hr>
+
+                    <!-- ページ内容 -->
+                    <div>
+                        <p>各公演日時ごとの座席数（予約登録可能数）を設定します</p>
+                        <form action="/setSeat" method="post">
+                            <div class="tableWrapper">
+                                <table class="stripedTable">
+                                    <tr>
+                                        <th>公演日時</th>
+                                        <th>座席数</th>
+                                    </tr>
+                                    <th:block th:each="item : ${dateList}">
+                                        <tr>
+                                            <td
+                                                th:text="${#temporals.format(item.st_date, 'yyyy-MM-dd HH:mm') + ' ' + item.st_info}">
+                                            </td>
+                                            <td>
+                                                <input type="hidden" name="sysDateId" th:value="${item.sys_date_id}">
+                                                <input type="number" name="stSeat" th:value="${item.st_seat}">
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                </table>
+                            </div>
+                            <button type="submit" name="mode" value="setSeat" class="btn">
+                                <span class="btnText">登録</span>
+                            </button>
+                        </form>
+
+                        <hr>
+
+                        <form action="/setSeat" method="post">
+                            <h3>全日程一括変更</h3>
+                            <p>
+                                座席数：<input type="number" name="stSeat">
+                                <th:block th:each="item : ${dateList}">
+                                    <input type="hidden" name="sysDateId" th:value="${item.sys_date_id}">
+                                </th:block>
+                                <br>
+                                <button type="submit" name="mode" value="setAllSeat" class="btn">
+                                    <span class="btnText">一括登録</span>
+                                </button>
+                            </p>
+                        </form>
+                    </div>
+
                 </div>
-
             </div>
+        </div>
 
+        <!-- フッター -->
+        <div class="footer">
+            <nav>
+                <!-- 公演メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'stage'}">
+                    <a href="javascript:void(0)" class="stage footerLink" name="stage">
+                        <h4 th:text="${menuList_stage_title}"></h4>
+                    </a>
+                    <a href="javascript:void(0)" class="manage footerLink" name="manage">
+                        <h4 th:text="${menuList_manage_title}">
+                        </h4>
+                    </a>
+                    <a href="javascript:void(0)" class="tool footerLink" name="tool">
+                        <h4 th:text="${menuList_tools_title}"></h4>
+                    </a>
+                </th:block>
+
+                <!-- 団体メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'group'}">
+                    <a href="javascript:void(0)" class="group footerLink" name="group">
+                        <h4 th:text="${menuList_group_title}"></h4>
+                    </a>
+                </th:block>
+
+                <!-- 個人メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'account'}">
+                    <a href="javascript:void(0)" class="user footerLink" name="user">
+                        <h4 th:text="${menuList_user_title}"></h4>
+                    </a>
+                </th:block>
+            </nav>
         </div>
 
     </div>

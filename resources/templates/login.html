@@ -12,7 +12,7 @@
     <div name="startDiv">
         <div class="managerLoginContainer">
 
-            <div class="leftSide">
+            <div class="leftSide" id="leftMenu">
                 <img th:src="@{/img/0101/application_logo.png}" class="topLogo" />
                 <div class="innerBox">
                     <h1>管理者画面にログイン</h1>
@@ -63,6 +63,12 @@
                         アカウント新規作成は<a href="/createUser?mode=start">こちら</a>
                     </p>
                 </div>
+            </div>
+            <div class="mobileFooter" id="mobileFooter">
+                <p class="offered">
+                    ver <span th:text="${applicationVer}"></span><br>
+                    開発 劇団抜きにくい釘<br>
+                </p>
             </div>
         </div>
     </div>

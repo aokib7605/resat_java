@@ -2,17 +2,17 @@ package com.webApplication.entity;
 
 public class Env {
 	//アプリケーション名
-	public static String applicationTitle = "予約管理システム Globe";
-	public static String custApplicationTitle = "Globe";
+	public static String applicationTitle = "予約管理システム Grobe";
+	public static String custApplicationTitle = "Grobe";
 	public static String customerServiceName = custApplicationTitle + "運営事務局";
 	
 	//ドメイン名
-	public static String domainName = "http://localhost:8080";
-//	public static String domainName = "https://grobe-reserve.com";
+//	public static String domainName = "http://localhost:8080";
+	public static String domainName = "https://grobe-reserve.com";
 	public static String sendFromMail = "globe.reserveticket@gmail.com";
 	
 	// バージョン
-	public static String applicationVer = "1.0.0";
+	public static String applicationVer = "1.0.4";
 	
 	/*
 	 * 各ページのメニュータイトル

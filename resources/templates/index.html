@@ -5,19 +5,54 @@
     <meta charset="UTF-8">
     <title th:text="${title}"></title>
     <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" th:href="@{./css/style.css}">
 </head>
 
 <body>
     <div class="managerMenu" name="managerMenu">
-        <div class="leftMenu">
+
+        <!-- モバイル版ヘッダー -->
+        <div class="header">
+            <div class="iconArea">
+                <div class="topLogo">
+                    <img th:src="@{/img/0101/application_logo.png}" class="topLogo" />
+                </div>
+                <!-- ユーザーアイコン -->
+                <div class="userIconWrapper">
+                    <img src="./img/userIcon_temp.png" alt="ユーザー" class="userIcon" name="headerAccount">
+                </div>
+            </div>
+            <nav>
+
+                <!-- 初期メニュー項目 -->
+                <a href="javascript:void(0)" class="headerLink">
+                    <h4 name="headerHome">ホーム</h4>
+                </a>
+
+                <!-- 公演が選択されている場合のみ表示されるメニュー項目 -->
+                <th:block th:if="${menuList_ctegory_stage != null && menuList_ctegory_stage != ''}">
+                    <span class="headerLink">
+                        <h4 th:text="${menuList_ctegory_stage}" name="headerStage"></h4>
+                    </span>
+                </th:block>
+
+                <!-- 団体が選択されている場合のみ表示されるメニュー項目 -->
+                <th:block th:if="${menuList_ctegory_group != null && menuList_ctegory_group != ''}">
+                    <span class="headerLink">
+                        <h4 th:text="${menuList_ctegory_group}" name="headerGroup"></h4>
+                    </span>
+                </th:block>
+            </nav>
+        </div>
+
+        <!-- PC版サイドメニュー -->
+        <div class="leftMenu" id="leftMenu">
             <div class="menuLogo">
-                <img src="./img/0101/application_logo.png" class="topLogo">
+                <img th:src="@{/img/0101/application_logo.png}" class="topLogo" />
             </div>
             <div class="menuContent">
                 <!-- <h1 th:text="${title}"></h1> -->
                 <h2 th:text="${title2}"></h2>
-
                 <hr>
 
                 <!-- 各種メニュー -->
@@ -101,13 +136,109 @@
             </div>
         </div>
 
-        <div class="rightView">
+        <!-- オーバーレイ背景 -->
+        <div id="overLayBackground" class="overLayBackground"></div>
 
+        <!-- オーバーレイメニュー本体 -->
+        <!-- オーバーレイ背景 -->
+        <div id="overLayBackground" class="overLayBackground"></div>
+
+        <!-- オーバーレイメニュー本体 -->
+        <div class="hidden overLayMenu" name="overLayMenu">
+            <!-- 各種メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_stage}">
+                    <li class="hidden" name="stageMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+
+            <!-- 票券管理メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_manage}">
+                    <li class="hidden" name="manageMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+
+            <!-- 便利機能メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_tools}">
+                    <li class="hidden" name="toolMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+
+            <!-- 団体メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_group}">
+                    <li class="hidden" name="groupMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+
+            <!-- ユーザーメニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_user}">
+                    <li class="hidden" name="userMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+        </div>
+        <!-- ナビゲーションここまで -->
+
+        <div class="content">
+            <div class="rightView" id="rightView">
+                <h3>お知らせ</h3>
+                <ul>
+                    <li>モバイル画面をリニューアルしました</li>
+                </ul>
+            </div>
+
+            <div id="logoutBtn">
+                <form action="/login" method="post">
+                    <button type="submit" name="mode" value="logout" class="logoutBtn hidden" id="logoutBtn">ログアウト</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- フッター -->
+        <div class="footer">
+            <nav>
+                <!-- 公演メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'stage'}">
+                    <a href="javascript:void(0)" class="stage footerLink" name="stage">
+                        <h4 th:text="${menuList_stage_title}"></h4>
+                    </a>
+                    <a href="javascript:void(0)" class="manage footerLink" name="manage">
+                        <h4 th:text="${menuList_manage_title}">
+                        </h4>
+                    </a>
+                    <a href="javascript:void(0)" class="tool footerLink" name="tool">
+                        <h4 th:text="${menuList_tools_title}"></h4>
+                    </a>
+                </th:block>
+
+                <!-- 団体メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'group'}">
+                    <a href="javascript:void(0)" class="group footerLink" name="group">
+                        <h4 th:text="${menuList_group_title}"></h4>
+                    </a>
+                </th:block>
+
+                <!-- 個人メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'account'}">
+                    <a href="javascript:void(0)" class="user footerLink" name="user">
+                        <h4 th:text="${menuList_user_title}"></h4>
+                    </a>
+                </th:block>
+            </nav>
         </div>
     </div>
 
 
-    <script type="module" src="./js/main.js"></script>
+
+    <script type="module" th:src="@{./js/main.js}"></script>
 </body>
 
 </html>

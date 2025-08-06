@@ -1,0 +1,138 @@
+/* 共通Btn */
+.pc .btn {
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+}
+
+.pc .btn {
+    margin-left: 12em;
+}
+
+.pc .btn {
+    width: 12vw;
+    height: 90%;
+    border: none;
+    background: none;
+}
+
+.pc .btn .btnText {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: auto;
+    max-width: 250px;
+    padding: 10px 25px;
+    color: #333;
+    font-family: "Noto Sans Japanese";
+    text-decoration: none;
+    line-height: 1.8;
+    transition: 0.3s ease-in-out;
+    font-weight: 500;
+    background: #eee;
+    border-radius: 9999px;
+    border-bottom: 2px solid #999;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+}
+
+.pc .btn .disableBtnText {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: auto;
+    max-width: 250px;
+    padding: 10px 25px;
+    color: #9b0000;
+    font-family: "Noto Sans Japanese";
+    text-decoration: none;
+    line-height: 1.8;
+    transition: 0.3s ease-in-out;
+    font-weight: 500;
+    background: #959595;
+    border-radius: 9999px;
+    border-bottom: 2px solid #999;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+}
+
+.pc .btn .btnText:hover {
+    color: #fff;
+    background: #999;
+    border-bottom: 2px solid #fff;
+    transform: translateY(3px);
+}
+
+/* ボタンスタイル（モバイル対応版） */
+.mobile .btn {
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+}
+
+.mobile .btn {
+    height: 90%;
+    border: none;
+    background: none;
+}
+
+.mobile .btn .btnText {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: auto;
+    max-width: none;
+    /* モバイル画面幅にフィット */
+    padding: 4vw 6vw;
+    /* モバイル向けに相対的な余白調整 */
+    color: #333;
+    font-family: "Noto Sans Japanese", sans-serif;
+    text-decoration: none;
+    line-height: 1.8;
+    transition: 0.3s ease-in-out;
+    font-weight: 500;
+    background: #eee;
+    border-radius: 9999px;
+    border-bottom: 2px solid #999;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+    font-size: 4vw;
+    /* モバイル向けフォントサイズ */
+    white-space: nowrap;
+}
+
+.mobile .btn .disableBtnText {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: auto;
+    max-width: none;
+    padding: 4vw 6vw;
+    color: #9b0000;
+    font-family: "Noto Sans Japanese", sans-serif;
+    text-decoration: none;
+    line-height: 1.8;
+    transition: 0.3s ease-in-out;
+    font-weight: 500;
+    background: #959595;
+    border-radius: 9999px;
+    border-bottom: 2px solid #999;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+    font-size: 4vw;
+    white-space: nowrap;
+}
+
+.mobile .btn .btnText:hover {
+    color: #fff;
+    background: #999;
+    border-bottom: 2px solid #fff;
+    transform: translateY(2px);
+    /* モバイル向けに控えめな動き */
+}
+
+.mobile .setStage .btn {
+    margin-left: 12em;
+}

@@ -1,0 +1,53 @@
+/* h1 */
+.pc .leftMenu h1 {
+    font-size: 0.8vw;
+    color: rgb(62, 1, 1);
+}
+
+.leftSide h1 {
+    font-size: 2.2vw;
+}
+
+.pc .rightView h1 {
+    padding-bottom: 2rem;
+}
+
+/* h2 */
+.pc .leftMenu h2 {
+    color: rgb(62, 1, 1);
+    padding-bottom: 0.5rem;
+}
+
+.pc .rightView h2 {
+    padding-bottom: 1rem;
+}
+
+.mobile h2 {
+    font-size: 6.5vw;
+    padding-bottom: 1rem;
+}
+
+
+/* h3 */
+.pc .leftMenu h3 {
+    color: rgb(114, 114, 114);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.pc .rightView h3 {
+    padding-top: 2rem;
+}
+
+.mobile h3 {
+    font-size: 5.5vw;
+    padding-top: 3rem;
+}
+
+
+/* h4 */
+.pc .leftMenu h4 {
+    color: rgb(62, 1, 1);
+    text-decoration: underline;
+    padding-left: 1em;
+}

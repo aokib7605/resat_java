@@ -11,14 +11,48 @@
 <body>
     <div class="managerMenu" name="managerMenu">
 
-        <div class="leftMenu">
+        <!-- モバイル版ヘッダー -->
+        <div class="header">
+            <div class="iconArea">
+                <div class="topLogo">
+                    <img th:src="@{/img/0101/application_logo.png}" class="topLogo" />
+                </div>
+                <!-- ユーザーアイコン -->
+                <div class="userIconWrapper">
+                    <img src="./img/userIcon_temp.png" alt="ユーザー" class="userIcon" name="headerAccount">
+                </div>
+            </div>
+            <nav>
+
+                <!-- 初期メニュー項目 -->
+                <a href="javascript:void(0)" class="headerLink">
+                    <h4 name="headerHome">ホーム</h4>
+                </a>
+
+                <!-- 公演が選択されている場合のみ表示されるメニュー項目 -->
+                <th:block th:if="${menuList_ctegory_stage != null && menuList_ctegory_stage != ''}">
+                    <span class="headerLink">
+                        <h4 th:text="${menuList_ctegory_stage}" name="headerStage"></h4>
+                    </span>
+                </th:block>
+
+                <!-- 団体が選択されている場合のみ表示されるメニュー項目 -->
+                <th:block th:if="${menuList_ctegory_group != null && menuList_ctegory_group != ''}">
+                    <span class="headerLink">
+                        <h4 th:text="${menuList_ctegory_group}" name="headerGroup"></h4>
+                    </span>
+                </th:block>
+            </nav>
+        </div>
+
+        <!-- PC版サイドメニュー -->
+        <div class="leftMenu" id="leftMenu">
             <div class="menuLogo">
-                <img src="./img/0101/application_logo.png" class="topLogo">
+                <img th:src="@{/img/0101/application_logo.png}" class="topLogo" />
             </div>
             <div class="menuContent">
                 <!-- <h1 th:text="${title}"></h1> -->
                 <h2 th:text="${title2}"></h2>
-
                 <hr>
 
                 <!-- 各種メニュー -->
@@ -102,133 +136,237 @@
             </div>
         </div>
 
-        <div class="rightView">
-            <div>
-                <!-- 右側画面タイトル -->
-                <h1 th:text="${title}"></h1>
-                <h2 th:text="${title2}"></h2>
+        <!-- オーバーレイ背景 -->
+        <div id="overLayBackground" class="overLayBackground"></div>
 
-                <!-- 区切り線 -->
-                <hr>
+        <!-- オーバーレイメニュー本体 -->
+        <div class="hidden overLayMenu" name="overLayMenu">
+            <!-- 各種メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_stage}">
+                    <li class="hidden" name="stageMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
 
+            <!-- 票券管理メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_manage}">
+                    <li class="hidden" name="manageMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+
+            <!-- 便利機能メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_tools}">
+                    <li class="hidden" name="toolMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+
+            <!-- 団体メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_group}">
+                    <li class="hidden" name="groupMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+
+            <!-- ユーザーメニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_user}">
+                    <li class="hidden" name="userMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+        </div>
+        <!-- ナビゲーションここまで -->
+
+        <div class="content">
+            <div class="rightView">
                 <div>
-                    <p th:text="${message}" style="color: red;"></p>
-                    <div th:if="${transactionList != null}">
-                        <table>
-                            <tr>
-                                <th>番号</th>
-                                <th>日時</th>
-                                <th>お名前</th>
-                                <th>フリガナ</th>
-                                <th>チケット</th>
-                                <th>金額</th>
-                                <th>枚数</th>
-                                <th>お支払い</th>
-                                <th>扱い</th>
-                                <th>備考</th>
-                                <th>団体側メモ</th>
-                                <th>編集</th>
-                            </tr>
-                            <th:block th:each="data, stat: ${transactionList}">
-                                <tr>
-                                    <td th:text="${stat.count}"></td>
-                                    <td th:text="${#temporals.format(data.st_date, 'yyyy-MM-dd HH:mm')}"></td>
-                                    <td th:text="${data.cust_name}"></td>
-                                    <td th:text="${data.cust_kana_name}"></td>
-                                    <td th:text="${data.ticket_name}"></td>
-                                    <td th:text="${data.ticket_price}"></td>
-                                    <td th:text="${data.tra_amount}"></td>
-                                    <td th:text="${data.ticket_price * data.tra_amount}"></td>
-                                    <td th:text="${data.manager_name}"></td>
-                                    <td th:text="${data.tra_memo}"></td>
-                                    <td th:text="${data.tra_comment}"></td>
-                                    <td>
-                                        <form action="checkReserveList" method="post">
-                                            <input type="hidden" name="sysTransactionId" th:value="${data.sys_tra_id}">
-                                            <button type="submit" name="mode" value="edit">編集</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <tr th:if="${sysTransactionId == data.sys_tra_id && edit == true}">
-                                    <td></td>
-                                    <td colspan="9">
-                                        <form action="" method="post">
-                                            <p>
-                                                日時<br>
-                                                <select name="sysDateId">
-                                                    <th:block th:each="date: ${dateFormList}">
-                                                        <th:block th:if="${data.sys_date_id == date.sys_date_id}">
-                                                            <option th:value="${date.sys_date_id}" selected>
-                                                                <span th:text="${date.st_date}"></span>
-                                                            </option>
-                                                        </th:block>
-                                                        <th:block th:if="${data.sys_date_id != date.sys_date_id}">
-                                                            <option th:value="${date.sys_date_id}">
-                                                                <span th:text="${date.st_date}"></span>
-                                                            </option>
-                                                        </th:block>
-                                                    </th:block>
-                                                </select>
-                                            </p>
-                                            <p>
-                                                チケット<br>
-                                                <select name="sysTicketId">
-                                                    <th:block th:each="ticket: ${ticketFormList}">
-                                                        <th:block th:if="${data.sys_ticket_id == ticket.sys_ticket_id}">
-                                                            <option th:value="${ticket.sys_ticket_id}" selected>
-                                                                <span
-                                                                    th:text="${ticket.ticket_name + ' ' + ticket.ticket_price + '円'}"></span>
-                                                            </option>
-                                                        </th:block>
-                                                        <th:block th:if="${data.sys_ticket_id != ticket.sys_ticket_id}">
-                                                            <option th:value="${ticket.sys_ticket_id}">
-                                                                <span
-                                                                    th:text="${ticket.ticket_name + ' ' + ticket.ticket_price + '円'}"></span>
-                                                            </option>
-                                                        </th:block>
-                                                    </th:block>
-                                                </select>
-                                            </p>
-                                            <p>
-                                                枚数<br>
-                                                <input type="number" name="traAmount" th:value="${data.tra_amount}">
-                                            </p>
-                                            <p>
-                                                団体側メモ<br>
-                                                <textarea name="traComment" th:text="${data.tra_comment}"></textarea>
-                                            </p>
-                                            <p>
-                                                <input type="hidden" name="sysTransactionId"
-                                                    th:value="${data.sys_tra_id}">
-                                                <button type="submit" name="mode" value="update">変更内容の確定</button>
-                                            </p>
+                    <!-- 右側画面タイトル -->
+                    <h1 th:text="${title}"></h1>
+                    <h2 th:text="${title2}"></h2>
 
-                                        </form>
-                                    </td>
-                                    <td>
-                                        <th:block th:if="${deleteMode != true}">
-                                            <form action="checkReserveList" method="post">
-                                                <input type="hidden" name="sysTransactionId"
-                                                    th:value="${data.sys_tra_id}">
-                                                <input type="hidden" name="nextMode" value="first">
-                                                <button type="submit" name="mode" value="delete">予約を削除</button>
-                                            </form>
-                                        </th:block>
-                                        <th:block th:if="${deleteMode == true}">
-                                            <form action="checkReserveList" method="post">
-                                                <input type="hidden" name="sysTransactionId"
-                                                    th:value="${data.sys_tra_id}">
-                                                <input type="hidden" name="nextMode" value="second">
-                                                <button type="submit" name="mode" value="delete">削除実行</button>
-                                            </form>
-                                        </th:block>
-                                    </td>
-                                </tr>
-                            </th:block>
-                        </table>
+                    <!-- 区切り線 -->
+                    <hr>
+
+                    <div>
+                        <p th:text="${message}" style="color: red;"></p>
+                        <div th:if="${transactionList != null}">
+                            <div class="tableWrapper">
+                                <table class="stripedTable">
+                                    <tr>
+                                        <th>番号</th>
+                                        <th>日時</th>
+                                        <th>お名前</th>
+                                        <th>フリガナ</th>
+                                        <th>チケット</th>
+                                        <th>金額</th>
+                                        <th>枚数</th>
+                                        <th>お支払い</th>
+                                        <th>扱い</th>
+                                        <th>備考</th>
+                                        <th>団体側メモ</th>
+                                        <th>編集</th>
+                                    </tr>
+                                    <th:block th:each="data, stat: ${transactionList}">
+                                        <tr>
+                                            <td th:text="${stat.count}"></td>
+                                            <td th:text="${#temporals.format(data.st_date, 'yyyy-MM-dd HH:mm')}"></td>
+                                            <td th:text="${data.cust_name}"></td>
+                                            <td th:text="${data.cust_kana_name}"></td>
+                                            <td th:text="${data.ticket_name}"></td>
+                                            <td th:text="${data.ticket_price}"></td>
+                                            <td th:text="${data.tra_amount}"></td>
+                                            <td th:text="${data.ticket_price * data.tra_amount}"></td>
+                                            <td th:text="${data.manager_name}"></td>
+                                            <td th:text="${data.tra_memo}"></td>
+                                            <td th:text="${data.tra_comment}"></td>
+                                            <td>
+                                                <form action="checkReserveList" method="post">
+                                                    <input type="hidden" name="sysTransactionId"
+                                                        th:value="${data.sys_tra_id}">
+                                                    <button type="submit" name="mode" value="edit" class="btn">
+                                                        <span class="btnText">編集</span>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <tr th:if="${sysTransactionId == data.sys_tra_id && edit == true}">
+                                            <td></td>
+                                            <td colspan="9">
+                                                <form action="" method="post">
+                                                    <p>
+                                                        日時<br>
+                                                        <label class="selectWrapper">
+                                                            <select name="sysDateId">
+                                                                <th:block th:each="date: ${dateFormList}">
+                                                                    <th:block
+                                                                        th:if="${data.sys_date_id == date.sys_date_id}">
+                                                                        <option th:value="${date.sys_date_id}" selected>
+                                                                            <span th:text="${date.st_date}"></span>
+                                                                        </option>
+                                                                    </th:block>
+                                                                    <th:block
+                                                                        th:if="${data.sys_date_id != date.sys_date_id}">
+                                                                        <option th:value="${date.sys_date_id}">
+                                                                            <span th:text="${date.st_date}"></span>
+                                                                        </option>
+                                                                    </th:block>
+                                                                </th:block>
+                                                            </select>
+                                                        </label>
+                                                    </p>
+                                                    <p>
+                                                        チケット<br>
+                                                        <label class="selectWrapper">
+                                                            <select name="sysTicketId">
+                                                                <th:block th:each="ticket: ${ticketFormList}">
+                                                                    <th:block
+                                                                        th:if="${data.sys_ticket_id == ticket.sys_ticket_id}">
+                                                                        <option th:value="${ticket.sys_ticket_id}"
+                                                                            selected>
+                                                                            <span
+                                                                                th:text="${ticket.ticket_name + ' ' + ticket.ticket_price + '円'}"></span>
+                                                                        </option>
+                                                                    </th:block>
+                                                                    <th:block
+                                                                        th:if="${data.sys_ticket_id != ticket.sys_ticket_id}">
+                                                                        <option th:value="${ticket.sys_ticket_id}">
+                                                                            <span
+                                                                                th:text="${ticket.ticket_name + ' ' + ticket.ticket_price + '円'}"></span>
+                                                                        </option>
+                                                                    </th:block>
+                                                                </th:block>
+                                                            </select>
+                                                        </label>
+                                                    </p>
+                                                    <p>
+                                                        枚数<br>
+                                                        <input type="number" name="traAmount"
+                                                            th:value="${data.tra_amount}">
+                                                    </p>
+                                                    <p>
+                                                        団体側メモ<br>
+                                                        <textarea name="traComment"
+                                                            th:text="${data.tra_comment}"></textarea>
+                                                    </p>
+                                                    <p>
+                                                        <input type="hidden" name="sysTransactionId"
+                                                            th:value="${data.sys_tra_id}">
+                                                        <button type="submit" name="mode" value="update" class="btn">
+                                                            <span class="btnText">変更内容の確定</span>
+                                                        </button>
+                                                    </p>
+
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <th:block th:if="${deleteMode != true}">
+                                                    <form action="checkReserveList" method="post">
+                                                        <input type="hidden" name="sysTransactionId"
+                                                            th:value="${data.sys_tra_id}">
+                                                        <input type="hidden" name="nextMode" value="first">
+                                                        <button type="submit" name="mode" value="delete" class="btn">
+                                                            <span class="btnText">予約を削除</span>
+                                                        </button>
+                                                    </form>
+                                                </th:block>
+                                                <th:block th:if="${deleteMode == true}">
+                                                    <form action="checkReserveList" method="post">
+                                                        <input type="hidden" name="sysTransactionId"
+                                                            th:value="${data.sys_tra_id}">
+                                                        <input type="hidden" name="nextMode" value="second">
+                                                        <button type="submit" name="mode" value="delete" class="btn">
+                                                            <span class="btnText">削除実行</span>
+                                                        </button>
+                                                    </form>
+                                                </th:block>
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- フッター -->
+        <div class="footer">
+            <nav>
+                <!-- 公演メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'stage'}">
+                    <a href="javascript:void(0)" class="stage footerLink" name="stage">
+                        <h4 th:text="${menuList_stage_title}"></h4>
+                    </a>
+                    <a href="javascript:void(0)" class="manage footerLink" name="manage">
+                        <h4 th:text="${menuList_manage_title}">
+                        </h4>
+                    </a>
+                    <a href="javascript:void(0)" class="tool footerLink" name="tool">
+                        <h4 th:text="${menuList_tools_title}"></h4>
+                    </a>
+                </th:block>
+
+                <!-- 団体メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'group'}">
+                    <a href="javascript:void(0)" class="group footerLink" name="group">
+                        <h4 th:text="${menuList_group_title}"></h4>
+                    </a>
+                </th:block>
+
+                <!-- 個人メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'account'}">
+                    <a href="javascript:void(0)" class="user footerLink" name="user">
+                        <h4 th:text="${menuList_user_title}"></h4>
+                    </a>
+                </th:block>
+            </nav>
         </div>
 
     </div>

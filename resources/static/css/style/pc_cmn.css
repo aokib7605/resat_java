@@ -1,0 +1,31 @@
+/*  managerMenu クラス
+    ※PC画面でのみ表示されるブロックのデザイン
+*/
+.managerMenu {
+    display: flex;
+    min-height: 100vh;
+    height: auto;
+}
+
+.leftMenu .logoutBtn {
+    margin-left: 2em;
+    width: 9vw;
+    height: 4vh;
+}
+
+/* 
+    rightView クラス
+*/
+.pc .rightView {
+    flex: 5;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    margin-top: 5vh;
+    padding-left: 7vw;
+}
+
+.pc .menuLogo .topLogo {
+    width: 10vw;
+}

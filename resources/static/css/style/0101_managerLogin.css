@@ -1,36 +1,3 @@
-.pc .managerLoginContainer {
-    display: flex;
-    min-height: 100vh;
-    height: auto;
-}
-
-.pc .leftSide {
-    flex: 3;
-    background-color: #ffab87;
-    color: #ffffff;
-}
-
-.leftSide .topLogo {
-    width: 12vh;
-}
-
-.leftSide h1 {
-    font-size: 2.2vw;
-}
-
-.leftSide .innerBox {
-    margin: 5vh;
-    margin-top: 25vh;
-    margin-bottom: 40vh;
-    text-align: center;
-}
-
-.leftSide .offered {
-    padding-left: 1vh;
-    color: rgb(255, 229, 202);
-    size: small;
-}
-
 .pc .rightSide {
     flex: 7;
     background-color: #ffffff;
@@ -47,29 +14,40 @@
     text-align: center;
 }
 
-.center_container .selectBox {
-    padding-top: 5vh;
-    color: #999;
-}
-
-.center_container .inputBox,
-.center_container .inputVal {
-    text-align: left;
-    padding-top: 5vh;
-    color: #999;
-}
-
-.center_container .submitBox {
+.pc .center_container .submitBox {
     padding-top: 5vh;
 }
 
-.loginBtn .loginText {
+.pc .loginBtn .loginText {
     position: relative;
     display: flex;
     justify-content: space-around;
     align-items: center;
     margin: auto;
     max-width: 250px;
+    padding: 10px 25px;
+    color: #333;
+    font-family: "Noto Sans Japanese";
+    text-decoration: none;
+    color: #333;
+    line-height: 1.8;
+    transition: 0.3s ease-in-out;
+    font-weight: 500;
+    background: #eee;
+    border-radius: 9999px;
+    border-bottom: 2px solid #999;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+}
+
+.mobile .loginBtn .loginText {
+    text-align: center;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: auto;
+    width: 30vw;
     padding: 10px 25px;
     color: #333;
     font-family: "Noto Sans Japanese";
@@ -96,33 +74,24 @@
     padding-top: 3vh;
 }
 
-.rightSide input {
-    margin-bottom: 10px;
-}
-
-.rightSide input {
-    font-size: 1em;
-    padding: 15px 10px 10px;
-    font-family: 'Source Sans Pro', arial, sans-serif;
-    border: 1px solid #cecece;
-    background: #f8f8f8;
-    color: #000000;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    -moz-background-clip: padding;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-}
-
-.rightSide button {
+.pc .rightSide button {
     width: 12vw;
     height: 5vh;
     border: none;
     background: white;
 }
 
-.sel {
+.mobile .rightSide button {
+    height: 5vh;
+    border: none;
+    background: white;
+}
+
+.managerLoginContainer .mobileFooter {
+    margin-top: 15vh;
+}
+
+.pc .sel {
     position: relative;
     display: flex;
     align-items: center;
@@ -131,7 +100,7 @@
 }
 
 /*プルダウンの三角を設定*/
-.sel::before {
+.pc .sel::before {
     position: absolute;
     right: 1vw;
     content: '';
@@ -139,12 +108,4 @@
     height: 8px;
     background: #666666;
     clip-path: polygon(0 0, 100% 0, 50% 100%);
-}
-
-.sel select {
-    width: 100%;
-    padding-left: 1vw;
-    color: #000000;
-    cursor: pointer;
-    z-index: 1;
 }

@@ -1,0 +1,53 @@
+.footer {
+    /* 画面に固定 */
+    position: fixed;
+
+    /* 下に貼り付け */
+    bottom: 0;
+
+    /* 横幅いっぱいに */
+    left: 0;
+    width: 100%;
+
+    /* 最前面に表示 */
+    z-index: 9999;
+
+    padding-top: 1.5vh;
+    padding-bottom: 1.5vh;
+    background-color: rgb(255, 174, 43);
+    text-align: center;
+
+    /* 任意：上に影を付けて浮かせ感 */
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.content {
+    /* フッター分の余白を追加 */
+    padding-bottom: 8vh;
+}
+
+.footer nav {
+    display: flex;
+    /* 横スクロールを有効に */
+    overflow-x: auto;
+
+    /* 折り返し防止 */
+    white-space: nowrap;
+
+    /* 適度な間隔 */
+    gap: 1rem;
+}
+
+.footer .footerLink {
+    font-size: 2.5rem;
+    /* 縮まないように */
+    flex-shrink: 0;
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    /* リンクの下線などを削除 */
+    text-decoration: none;
+
+    /* 親要素と同じ色にしたい場合 */
+    color: inherit;
+}

@@ -1,50 +1,44 @@
 $(function () {
-
-    $(function () {
+    // 画面サイズに応じて画面要素に適切なクラスを付与する
+    function applyResponsiveClass(target) {
         if (window.matchMedia(commonElement.responsiveWidth).matches) {
-            $(commonElement.startDiv).addClass("mobile");
-            $(commonElement.startDiv).removeClass("pc");
+            // モバイルの場合
+            $(target).addClass("mobile").removeClass("pc");
             $(commonElement.mobileMessage).removeClass("hidden");
+            $(commonElement.leftMenu).addClass("hidden");
+            $(commonElement.logoutBtn).removeClass("hidden");
+            $(commonElement.managerMenu).removeClass("managerMenu");
+            $(commonElement.header).removeClass("hidden");
+            $(commonElement.footer).removeClass("hidden");
+            $(commonElement.overLayMenu).removeClass("hidden");
+            $(commonElement.hamburger_overlay).removeClass('hidden');
+            $(commonElement.navContent).removeClass('hidden');
+            $(commonElement.menuContent).addClass('hidden');
+            $(commonElement.logoutBtn).addClass("hidden");
         } else {
-            $(commonElement.startDiv).addClass("pc");
-            $(commonElement.startDiv).removeClass("mobile");
+            // PCの場合
+            $(target).addClass("pc").removeClass("mobile");
             $(commonElement.mobileMessage).addClass("hidden");
-        };
-    });
+            $(commonElement.leftMenu).removeClass("hidden");
+            $(commonElement.logoutBtn).addClass("hidden");
+            $(commonElement.managerMenu).addClass("managerMenu");
+            $(commonElement.header).addClass("hidden");
+            $(commonElement.footer).addClass("hidden");
+            $(commonElement.overLayMenu).addClass("hidden");
+            $(commonElement.hamburger_overlay).addClass("hidden");
+            $(commonElement.navContent).addClass('hidden');
+            $(commonElement.menuContent).removeClass('hidden');
+            $(commonElement.logoutBtn).removeClass("hidden");
+        }
+    }
 
+    // 画面初期表示時に実行
+    applyResponsiveClass(commonElement.startDiv);
+    applyResponsiveClass(commonElement.custPage);
+
+    // 画面リサイズ時にも実行
     $(window).resize(function () {
-        if (window.matchMedia(commonElement.responsiveWidth).matches) {
-            $(commonElement.startDiv).addClass("mobile");
-            $(commonElement.startDiv).removeClass("pc");
-            $(commonElement.mobileMessage).removeClass("hidden");
-        } else {
-            $(commonElement.startDiv).addClass("pc");
-            $(commonElement.startDiv).removeClass("mobile");
-            $(commonElement.mobileMessage).addClass("hidden");
-        };
-    });
-
-    $(function () {
-        if (window.matchMedia(commonElement.responsiveWidth).matches) {
-            $(commonElement.custPage).addClass("mobile");
-            $(commonElement.custPage).removeClass("pc");
-            $(commonElement.mobileMessage).removeClass("hidden");
-        } else {
-            $(commonElement.custPage).addClass("pc");
-            $(commonElement.custPage).removeClass("mobile");
-            $(commonElement.mobileMessage).addClass("hidden");
-        };
-    });
-
-    $(window).resize(function () {
-        if (window.matchMedia(commonElement.responsiveWidth).matches) {
-            $(commonElement.custPage).addClass("mobile");
-            $(commonElement.custPage).removeClass("pc");
-            $(commonElement.mobileMessage).removeClass("hidden");
-        } else {
-            $(commonElement.custPage).addClass("pc");
-            $(commonElement.custPage).removeClass("mobile");
-            $(commonElement.mobileMessage).addClass("hidden");
-        };
+        applyResponsiveClass(commonElement.startDiv);
+        applyResponsiveClass(commonElement.custPage);
     });
 });

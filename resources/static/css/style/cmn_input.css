@@ -1,0 +1,78 @@
+.pc input {
+    width: 30vw;
+    height: 3vh;
+}
+
+.pc .center_container .inputBox,
+.pc .center_container .inputVal {
+    text-align: left;
+    padding-top: 5vh;
+    color: #999;
+}
+
+.pc input {
+    font-size: 1em;
+    padding: 15px 10px 10px;
+    font-family: 'Source Sans Pro', arial, sans-serif;
+    border: 1px solid #cecece;
+    background: #f8f8f8;
+    color: #000000;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+}
+
+.pc .inputForm input {
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+}
+
+.pc .setStageForm input {
+    margin-bottom: 2vh;
+}
+
+.mobile input {
+    height: 3vh;
+}
+
+.mobile input {
+    font-size: 1em;
+    padding: 15px 10px 10px;
+    font-family: 'Source Sans Pro', arial, sans-serif;
+    border: 1px solid #cecece;
+    background: #f8f8f8;
+    color: #000000;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+}
+
+.mobile .rightSide input {
+    width: 60%;
+}
+
+.custLogin input {
+    margin-bottom: 2vh;
+}
+
+.custLogin input {
+    font-size: 1em;
+    width: 90%;
+    padding: 15px 10px 10px;
+    font-family: 'Source Sans Pro', arial, sans-serif;
+    border: 1px solid #cecece;
+    background: #f8f8f8;
+    color: #000000;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+}

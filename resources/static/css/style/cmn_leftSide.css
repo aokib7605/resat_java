@@ -1,0 +1,32 @@
+.pc .managerLoginContainer {
+    display: flex;
+    min-height: 100vh;
+    height: auto;
+}
+
+.pc .leftSide {
+    flex: 3;
+    background-color: #ffab87;
+    color: #ffffff;
+}
+
+.pc .leftSide .topLogo {
+    width: 12vh;
+}
+
+.mobile .leftSide .topLogo {
+    width: 20vh;
+}
+
+.leftSide .innerBox {
+    margin: 5vh;
+    margin-top: 25vh;
+    margin-bottom: 40vh;
+    text-align: center;
+}
+
+.leftSide .offered {
+    padding-left: 1vh;
+    color: rgb(255, 229, 202);
+    size: small;
+}

@@ -11,14 +11,48 @@
 <body>
     <div class="managerMenu" name="managerMenu">
 
-        <div class="leftMenu">
+        <!-- モバイル版ヘッダー -->
+        <div class="header">
+            <div class="iconArea">
+                <div class="topLogo">
+                    <img th:src="@{/img/0101/application_logo.png}" class="topLogo" />
+                </div>
+                <!-- ユーザーアイコン -->
+                <div class="userIconWrapper">
+                    <img src="./img/userIcon_temp.png" alt="ユーザー" class="userIcon" name="headerAccount">
+                </div>
+            </div>
+            <nav>
+
+                <!-- 初期メニュー項目 -->
+                <a href="javascript:void(0)" class="headerLink">
+                    <h4 name="headerHome">ホーム</h4>
+                </a>
+
+                <!-- 公演が選択されている場合のみ表示されるメニュー項目 -->
+                <th:block th:if="${menuList_ctegory_stage != null && menuList_ctegory_stage != ''}">
+                    <span class="headerLink">
+                        <h4 th:text="${menuList_ctegory_stage}" name="headerStage"></h4>
+                    </span>
+                </th:block>
+
+                <!-- 団体が選択されている場合のみ表示されるメニュー項目 -->
+                <th:block th:if="${menuList_ctegory_group != null && menuList_ctegory_group != ''}">
+                    <span class="headerLink">
+                        <h4 th:text="${menuList_ctegory_group}" name="headerGroup"></h4>
+                    </span>
+                </th:block>
+            </nav>
+        </div>
+
+        <!-- PC版サイドメニュー -->
+        <div class="leftMenu" id="leftMenu">
             <div class="menuLogo">
-                <img src="./img/0101/application_logo.png" class="topLogo">
+                <img th:src="@{/img/0101/application_logo.png}" class="topLogo" />
             </div>
             <div class="menuContent">
                 <!-- <h1 th:text="${title}"></h1> -->
                 <h2 th:text="${title2}"></h2>
-
                 <hr>
 
                 <!-- 各種メニュー -->
@@ -102,103 +136,199 @@
             </div>
         </div>
 
-        <div class="rightView">
-            <div>
+        <!-- オーバーレイ背景 -->
+        <div id="overLayBackground" class="overLayBackground"></div>
 
-                <!-- 右側画面タイトル -->
-                <h1 th:text="${title}"></h1>
-                <h2 th:text="${title2}"></h2>
+        <!-- オーバーレイメニュー本体 -->
+        <div class="hidden overLayMenu" name="overLayMenu">
+            <!-- 各種メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_stage}">
+                    <li class="hidden" name="stageMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
 
-                <!-- 区切り線 -->
-                <hr>
+            <!-- 票券管理メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_manage}">
+                    <li class="hidden" name="manageMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
 
-                <!-- ページ内容 -->
+            <!-- 便利機能メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_tools}">
+                    <li class="hidden" name="toolMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+
+            <!-- 団体メニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_group}">
+                    <li class="hidden" name="groupMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+
+            <!-- ユーザーメニュー -->
+            <ul class="menuUl">
+                <th:block th:each="column : ${menuList_user}">
+                    <li class="hidden" name="userMenu"><a th:href="${column.page_url}"><span
+                                th:text="${column.page_name}"></span></a></li>
+                </th:block>
+            </ul>
+        </div>
+        <!-- ナビゲーションここまで -->
+
+        <div class="content">
+            <div class="rightView">
                 <div>
-                    <div th:if="${mode == 'inputGroupId'}">
-                        <p>任意の団体IDを入力してください</p>
-                        <form action="/createGroup" method="post">
-                            <input type="text" name="groupId" th:value="${groupId}"><br>
-                            <button type="submit" name="mode" value="inputGroupId">確認</button>
-                        </form>
-                        <p th:text="${message}"></p>
+
+                    <!-- 右側画面タイトル -->
+                    <h1 th:text="${title}"></h1>
+                    <h2 th:text="${title2}"></h2>
+
+                    <!-- 区切り線 -->
+                    <hr>
+
+                    <!-- ページ内容 -->
+                    <div>
+                        <div th:if="${mode == 'inputGroupId'}">
+                            <p>任意の団体IDを入力してください</p>
+                            <form action="/createGroup" method="post">
+                                <input type="text" name="groupId" th:value="${groupId}"><br>
+                                <button type="submit" name="mode" value="inputGroupId" class="btn">
+                                    <span class="btnText">確認</span>
+                                </button>
+                            </form>
+                            <p th:text="${message}"></p>
+                        </div>
+
+                        <div th:if="${mode == 'inputGroupData'}">
+                            <p>団体情報を入力してください</p>
+                            <form action="/createGroup" method="post">
+                                <input type="hidden" name="groupId" th:value="${groupId}">
+                                <p>
+                                    団体名<br>
+                                    <input type="text" name="groupName" required th:value="${groupName}">
+                                </p>
+                                <p>
+                                    団体名（フリガナ）<br>
+                                    <input type="text" name="groupKanaName" required th:value="${groupKanaName}">
+                                </p>
+                                <p>
+                                    パスワード<br>
+                                    <input type="password" name="groupPass" required>
+                                </p>
+                                <p>
+                                    パスワード再入力<br>
+                                    <input type="password" name="rePass" required>
+                                </p>
+                                <p>
+                                    メールアドレス<br>
+                                    <input type="email" name="groupMail" th:value="${groupMail}">
+                                </p>
+                                <button type="submit" name="mode" value="inputGroupData" class="btn">
+                                    <span class="btnText">確認</span>
+                                </button>
+                            </form>
+                            <form action="/createGroup" method="post">
+                                <input type="hidden" name="back" value="back">
+                                <input type="hidden" name="groupId" th:value="${groupId}">
+                                <button type="submit" name="mode" value="inputGroupData" class="btn">
+                                    <span class="btnText">戻る</span>
+                                </button>
+                            </form>
+                            <p th:text="${message}"></p>
+                        </div>
+
+                        <div th:if="${mode == 'confiResult'}">
+                            <p>
+                                下記の内容で団体を登録します。<br>
+                                よろしければ「確定」を、修正する場合は「戻る」を押してください。
+                            </p>
+                            <div class="tableWrapper">
+                                <table class="stripedTable">
+                                    <tr>
+                                        <th>団体ID</th>
+                                        <td th:text="${groupId}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>団体名</th>
+                                        <td th:text="${groupName}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>団体名（フリガナ）</th>
+                                        <td th:text="${groupKanaName}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>パスワード</th>
+                                        <td th:text="${groupPass}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>メールアドレス</th>
+                                        <td th:text="${groupMail}"></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <form action="/createGroup" method="post">
+                                <input type="hidden" name="mode" value="confiResult">
+                                <input type="hidden" name="groupId" th:value="${groupId}">
+                                <input type="hidden" name="groupName" th:value="${groupName}">
+                                <input type="hidden" name="groupKanaName" th:value="${groupKanaName}">
+                                <input type="hidden" name="groupPass" th:value="${groupPass}">
+                                <input type="hidden" name="groupMail" th:value="${groupMail}">
+                                <p>
+                                    <button type="submit" class="btn">
+                                        <span class="btnText">確定</span>
+                                    </button>　
+                                    <button type="submit" name="back" value="back" class="btn">
+                                        <span class="btnText">戻る</span>
+                                    </button>
+                                </p>
+                            </form>
+                        </div>
                     </div>
 
-                    <div th:if="${mode == 'inputGroupData'}">
-                        <p>団体情報を入力してください</p>
-                        <form action="/createGroup" method="post">
-                            <input type="hidden" name="groupId" th:value="${groupId}">
-                            <p>
-                                団体名<br>
-                                <input type="text" name="groupName" required th:value="${groupName}">
-                            </p>
-                            <p>
-                                団体名（フリガナ）<br>
-                                <input type="text" name="groupKanaName" required th:value="${groupKanaName}">
-                            </p>
-                            <p>
-                                パスワード<br>
-                                <input type="password" name="groupPass" required>
-                            </p>
-                            <p>
-                                パスワード再入力<br>
-                                <input type="password" name="rePass" required>
-                            </p>
-                            <p>
-                                メールアドレス<br>
-                                <input type="email" name="groupMail" th:value="${groupMail}">
-                            </p>
-                            <button type="submit" name="mode" value="inputGroupData">確認</button>
-                        </form>
-                        <form action="/createGroup" method="post">
-                            <input type="hidden" name="back" value="back">
-                            <input type="hidden" name="groupId" th:value="${groupId}">
-                            <button type="submit" name="mode" value="inputGroupData">戻る</button>
-                        </form>
-                        <p th:text="${message}"></p>
-                    </div>
-
-                    <div th:if="${mode == 'confiResult'}">
-                        <p>
-                            下記の内容で団体を登録します。<br>
-                            よろしければ「確定」を、修正する場合は「戻る」を押してください。
-                        </p>
-                        <table>
-                            <tr>
-                                <th>団体ID</th>
-                                <td th:text="${groupId}"></td>
-                            </tr>
-                            <tr>
-                                <th>団体名</th>
-                                <td th:text="${groupName}"></td>
-                            </tr>
-                            <tr>
-                                <th>団体名（フリガナ）</th>
-                                <td th:text="${groupKanaName}"></td>
-                            </tr>
-                            <tr>
-                                <th>パスワード</th>
-                                <td th:text="${groupPass}"></td>
-                            </tr>
-                            <tr>
-                                <th>メールアドレス</th>
-                                <td th:text="${groupMail}"></td>
-                            </tr>
-                        </table>
-                        <form action="/createGroup" method="post">
-                            <input type="hidden" name="mode" value="confiResult">
-                            <input type="hidden" name="groupId" th:value="${groupId}">
-                            <input type="hidden" name="groupName" th:value="${groupName}">
-                            <input type="hidden" name="groupKanaName" th:value="${groupKanaName}">
-                            <input type="hidden" name="groupPass" th:value="${groupPass}">
-                            <input type="hidden" name="groupMail" th:value="${groupMail}">
-                            <p><button type="submit">確定</button>　<button type="submit" name="back"
-                                    value="back">戻る</button></p>
-                        </form>
-                    </div>
                 </div>
-
             </div>
+        </div>
 
+        <!-- フッター -->
+        <div class="footer">
+            <nav>
+                <!-- 公演メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'stage'}">
+                    <a href="javascript:void(0)" class="stage footerLink" name="stage">
+                        <h4 th:text="${menuList_stage_title}"></h4>
+                    </a>
+                    <a href="javascript:void(0)" class="manage footerLink" name="manage">
+                        <h4 th:text="${menuList_manage_title}">
+                        </h4>
+                    </a>
+                    <a href="javascript:void(0)" class="tool footerLink" name="tool">
+                        <h4 th:text="${menuList_tools_title}"></h4>
+                    </a>
+                </th:block>
+
+                <!-- 団体メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'group'}">
+                    <a href="javascript:void(0)" class="group footerLink" name="group">
+                        <h4 th:text="${menuList_group_title}"></h4>
+                    </a>
+                </th:block>
+
+                <!-- 個人メニューで表示される機能項目 -->
+                <th:block th:if="${viewMode != null && viewMode == 'account'}">
+                    <a href="javascript:void(0)" class="user footerLink" name="user">
+                        <h4 th:text="${menuList_user_title}"></h4>
+                    </a>
+                </th:block>
+            </nav>
         </div>
 
     </div>

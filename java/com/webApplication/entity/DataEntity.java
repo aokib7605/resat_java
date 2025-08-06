@@ -118,13 +118,13 @@ public class DataEntity {
 	private String sys_ticket_id;
 	//    private String sys_stage_id;
 	private String ticket_name;
-	private int ticket_price;
+	private Integer ticket_price;
 
 	//dates
 	private String sys_date_id;
 	//    private String sys_stage_id;
 	private LocalDateTime st_date;
-	private int st_seat;
+	private Integer st_seat;
 	private String st_info;
 
 	//formset
@@ -139,12 +139,12 @@ public class DataEntity {
 	//    private String sys_stage_id;
 	//    private String sys_date_id;
 	//    private String sys_ticket_id;
-	private int tra_amount;
+	private Integer tra_amount;
 	private String tra_manager_id;
 	private String tra_memo;
 	private Date tra_cre_date;
 	private String tra_comment;
-	private int tra_discount;
+	private Integer tra_discount;
 	private String no_login;
 
 	// none_users
